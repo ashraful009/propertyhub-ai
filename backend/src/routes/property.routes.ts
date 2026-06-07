@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProperty, getAllProperties } from '../controllers/property.controller';
+import { createProperty, getAllProperties, updateProperty, deleteProperty } from '../controllers/property.controller';
 import { verifyToken, authorizeRoles } from '../middlewares/auth.middleware';
 import { upload } from '../config/cloudinary';
 
@@ -15,6 +15,24 @@ router.post(
   authorizeRoles('VENDOR', 'ADMIN'), 
   upload.array('images', 5), 
   createProperty
+);
+
+
+// 3. Update Property Route
+router.put(
+  '/:id', 
+  verifyToken, 
+  authorizeRoles('VENDOR', 'ADMIN'), 
+  upload.array('images', 5),
+  updateProperty
+);
+
+// ৪. Delete Property Route
+router.delete(
+  '/:id', 
+  verifyToken, 
+  authorizeRoles('VENDOR', 'ADMIN'), 
+  deleteProperty
 );
 
 export default router;
