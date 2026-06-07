@@ -1,7 +1,7 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import pool from "../config/db";
+import { findUserByEmail, createUser } from "../repositories/user.repository";
 
 //                                   User Registration
 
@@ -15,11 +15,8 @@ export const register = async (req: Request, res: Response) => {
     }
 
     // check exist user
-    const userExists = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email],
-    );
-    if (userExists.rows.length > 0) {
+    const userExists = await findUserByEmail(email);
+    if (userExists) {
       res.status(400).json({ error: "User already exist" });
       return;
     }
@@ -29,15 +26,17 @@ export const register = async (req: Request, res: Response) => {
     const hashPassword = await bcrypt.hash(password, salt);
 
     // Insert new User
-    const newUser = await pool.query(
-      "INSERT INTO users (name, email, password, role) VALUES($1, $2, $3, $4) RETURNING id, name, email, role",
-      [name, email, hashPassword, role || "CUSTOMER"],
-    );
+    const newUser = await createUser({
+      name,
+      email,
+      password: hashPassword,
+      role: role || "CUSTOMER",
+    });
 
     res.status(201).json({
       success: true,
       message: "User Registered Successfully",
-      data: newUser.rows[0],
+      data: newUser,
     });
   } catch (error) {
     console.log("Registration error:", error);
@@ -52,18 +51,13 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     // Find User
-
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (result.rows.length === 0) {
+    const user = await findUserByEmail(email);
+    if (!user) {
       res.status(400).json({ error: "Invalid credintials" });
       return;
     }
 
-    const user = result.rows[0];
-
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password as string);
     if (!isMatch) {
       res.status(400).json({ error: "Invalid Credential" });
       return;
@@ -90,7 +84,6 @@ export const login = async (req: Request, res: Response) => {
         sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000
     });
-
 
     res.status(200).json({
         success: true,

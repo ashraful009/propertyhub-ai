@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 
 import authRoutes from './routes/auth.routes'
 import userRouter from './routes/user.routes'
+import propertyRoutes from './routes/property.routes'
+
 const app = express(); 
 
 
@@ -25,7 +27,7 @@ app.use(cookieParser());
 // Router API
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRouter);
-
+app.use('/api/v1/properties', propertyRoutes)
 
 
 
