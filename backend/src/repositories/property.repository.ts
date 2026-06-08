@@ -86,3 +86,4 @@ export const deletePropertyById = async (propertyId: string, userId: string, use
   const result = await pool.query(query, values);
   return (result.rowCount ?? 0) > 0;
 };
+
