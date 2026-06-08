@@ -1,9 +1,20 @@
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
+
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+
 export default function App() {
   return (
-    <div className="flex h-screen items-center justify-center bg-green-500">
-      <h1 className="text-4xl font-bold text-white">
-        Tailwind v4 is Working! 🚀
-      </h1>
-    </div>
+    <>
+    <BrowserRouter>
+    <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
+        
+    </Routes>
+    </BrowserRouter>
+    </>
   )
 }
