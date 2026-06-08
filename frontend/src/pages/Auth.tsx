@@ -1,22 +1,61 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { useState } from 'react';
+import { useForm, type FieldValues } from 'react-hook-form';
+import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { api } from '../services/api';
+import { useAuthStore } from '../store/authStore';
+import axios from 'axios';
 
 export default function Auth() {
-  // এই State-টি নির্ধারণ করবে এখন লগইন ফর্ম দেখাবে নাকি রেজিস্ট্রেশন ফর্ম
-  const [isLogin, setIsLogin] = useState(true);
+const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // React Hook Form সেটআপ
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
-  const onSubmit = (data: any) => {
-    console.log(isLogin ? "Login Data:" : "Register Data:", data);
-    // পরবর্তীতে এখানে API কল করবো
+  const { register, handleSubmit, reset } = useForm();
+
+const onSubmit = async (data: FieldValues) => {
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      if (isLogin) {                                              // Execute Login API Request
+        const response = await api.post('/auth/login', {
+          email: data.email,
+          password: data.password,
+        });
+        
+                                                                   // Save token and user data to Zustand store
+        setAuth(response.data.user, response.data.accessToken);
+        
+                                                                    // Redirect to Home Dashboard
+        navigate('/'); 
+      } else {                                                        // Execute Registration API Request
+        await api.post('/auth/register', {
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          role: 'CUSTOMER'                                               // Defaulting to CUSTOMER for now
+        });
+        
+                                                                         // On success, reset form and slide to Login panel
+        reset();
+        setIsLogin(true);
+        alert('Registration successful! Please sign in.');
+      }
+    } catch (error) {
+      console.error('Auth Error:', error);
+      let message = 'Authentication failed. Please try again.';
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data?.error || message;
+      }
+      setErrorMessage(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -27,7 +66,7 @@ export default function Auth() {
           isLogin ? "flex-row" : "flex-row-reverse"
         }`}
       >
-        {/* ================= FORM PANEL (White Side) ================= */}
+                                                                   {/* ================= FORM PANEL (White Side) ================= */}
         <div className="w-1/2 p-12 flex flex-col justify-center bg-white transition-all duration-500 relative z-10">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-800 mb-2">
@@ -41,7 +80,7 @@ export default function Auth() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Name Field (Only for Registration) */}
+                                                                             {/* Name Field (Only for Registration) */}
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -59,7 +98,7 @@ export default function Auth() {
               </div>
             )}
 
-            {/* Email Field */}
+                                                                                           {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 E-mail
@@ -75,7 +114,7 @@ export default function Auth() {
               </div>
             </div>
 
-            {/* Password Field */}
+                                                                                         {/* Password Field */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Password
@@ -102,7 +141,7 @@ export default function Auth() {
               </div>
             </div>
 
-            {/* Remember Me & Forgot Password (Only for Login) */}
+                                                                            {/* Remember Me & Forgot Password (Only for Login) */}
             {isLogin && (
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center space-x-2 cursor-pointer">
@@ -121,12 +160,12 @@ export default function Auth() {
               </div>
             )}
 
-            {/* Submit Button */}
+                                                                                              {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-[#153B28] hover:bg-[#112d1e] text-white font-semibold py-3 rounded-lg transition-colors mt-4"
-            >
-              {isLogin ? "Sign in" : "Sign up"}
+            > {errorMessage && <p className="text-red-500 text-sm text-center mt-2">{errorMessage}</p>}
+              {isLoading ? 'Processing...' : (isLogin ? 'Sign in' : 'Sign up')}
             </button>
           </form>
 
