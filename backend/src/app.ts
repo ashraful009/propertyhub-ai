@@ -11,7 +11,7 @@ import userRouter from './routes/user.routes'
 import propertyRoutes from './routes/property.routes'
 import searchRoutes from './routes/search.routes'
 import compareRoutes from './routes/compare.routes'
-
+import bookingRoutes from './routes/booking.routes';
 const app = express(); 
 
 
@@ -32,7 +32,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/properties', propertyRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/compare', compareRoutes);
-
+app.use('/api/v1/bookings', bookingRoutes);
 
 
 
