@@ -14,6 +14,7 @@ import compareRoutes from './routes/compare.routes'
 import bookingRoutes from './routes/booking.routes';
 import vendorRoute from './routes/vendor.routes'
 import installmentRoutes from './routes/installment.routes'
+import paymentRoutes from './routes/payment.routes';
 const app = express(); 
 
 
@@ -37,7 +38,7 @@ app.use('/api/v1/compare', compareRoutes);
 app.use('/api/v1/bookings', bookingRoutes);
 app.use('/api/v1/vendor', vendorRoute);
 app.use('./api/v1/installments', installmentRoutes)
-
+app.use('/api/v1/payment', paymentRoutes);
 
 
 
