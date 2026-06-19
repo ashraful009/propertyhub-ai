@@ -15,6 +15,7 @@ import bookingRoutes from './routes/booking.routes';
 import vendorRoute from './routes/vendor.routes'
 import installmentRoutes from './routes/installment.routes'
 import paymentRoutes from './routes/payment.routes';
+import refundRoutes from './routes/refund.routes';
 const app = express(); 
 
 
@@ -39,7 +40,7 @@ app.use('/api/v1/bookings', bookingRoutes);
 app.use('/api/v1/vendor', vendorRoute);
 app.use('./api/v1/installments', installmentRoutes)
 app.use('/api/v1/payment', paymentRoutes);
-
+app.use('/api/v1/refunds', refundRoutes);
 
 
 
