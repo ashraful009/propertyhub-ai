@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { api } from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 import axios from 'axios';
@@ -11,7 +12,6 @@ export default function Auth() {
   const [isLogin, setIsLogin] = useState(location.pathname === '/login');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -20,7 +20,6 @@ export default function Auth() {
 
   const onSubmit = async (data: FieldValues) => {
     setIsLoading(true);
-    setErrorMessage('');
 
     try {
       if (isLogin) {
@@ -30,6 +29,7 @@ export default function Auth() {
         });
         
         setAuth(response.data.data.user, response.data.data.accessToken);
+        toast.success('Successfully logged in!');
         navigate('/'); 
       } else {
         await api.post('/auth/register', {
@@ -42,7 +42,7 @@ export default function Auth() {
         reset();
         setIsLogin(true);
         navigate('/login');
-        alert('Registration successful! Please sign in.');
+        toast.success('Registration successful! Please sign in.');
       }
     } catch (error) {
       console.error('Auth Error:', error);
@@ -50,7 +50,7 @@ export default function Auth() {
       if (axios.isAxiosError(error)) {
         message = error.response?.data?.error || message;
       }
-      setErrorMessage(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }
@@ -158,7 +158,6 @@ export default function Auth() {
             > 
               {isLoading ? 'Processing...' : (isLogin ? 'Sign in' : 'Sign up')}
             </button>
-            {errorMessage && <p className="text-red-500 text-sm text-center mt-2">{errorMessage}</p>}
           </form>
 
           <div className="mt-8">
