@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserRole } from '../types/shared.types';
+import type { UserRole } from '../types/shared.types';
 
 interface User {
   id: string;

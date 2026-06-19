@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { useAuthStore } from '../../../store/authStore';
+import { useAuthStore } from '../../store/authStore';
 import { LogOut, User as UserIcon } from 'lucide-react';
-import { cn } from '../../../utils/cn';
+import { cn } from '../../utils/cn';
 
 export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore();

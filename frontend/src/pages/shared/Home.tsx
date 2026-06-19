@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function Home() {
   return (
     <div className="flex flex-col items-center">
-      {/* Hero Section */}
+
       <section className="w-full relative py-32 flex flex-col items-center text-center px-4 bg-gradient-to-b from-indigo-50 to-slate-50">
         <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
           Find your dream home <br className="hidden md:block" />
@@ -20,7 +20,7 @@ export default function Home() {
         </Link>
       </section>
 
-      {/* Placeholder for Featured Properties */}
+
       <section className="w-full max-w-7xl mx-auto py-20 px-4">
         <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">Featured Properties</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
