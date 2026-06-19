@@ -1,19 +1,15 @@
 import { Request, Response } from 'express';
-// এখন প্রপার্টি রিপোজিটরির বদলে নতুন সার্চ রিপোজিটরি থেকে ইমপোর্ট করবো
-import { findPropertiesByFilter } from '../../repositories/shared/search.repository'; 
+import { findPropertiesByFilter } from '../../repositories/shared/search.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
 export const searchProperties = async (req: Request, res: Response): Promise<void> => {
   try {
     const filters = req.query;
     const properties = await findPropertiesByFilter(filters);
-
-    res.status(200).json({
-      success: true,
-      count: properties.length,
-      data: properties,
-    });
+    ApiResponse.success(res, RESPONSE_MESSAGES.SEARCH.FETCHED, properties);
   } catch (error) {
-    console.error('Error in search:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };

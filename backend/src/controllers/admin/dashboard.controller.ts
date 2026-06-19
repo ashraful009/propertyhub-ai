@@ -1,19 +1,20 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
 import { getAdminStats } from '../../repositories/admin/dashboard.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
 export const getAdminDashboardData = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const user = req.user;
     if (!user || user.role !== 'ADMIN') {
-      res.status(403).json({ error: 'Unauthorized or invalid user role' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.DASHBOARD.UNAUTHORIZED_ROLE, 403);
     }
 
     const data = await getAdminStats();
-    res.status(200).json({ success: true, data });
+    ApiResponse.success(res, RESPONSE_MESSAGES.DASHBOARD.FETCHED, data);
   } catch (error) {
-    console.error('Admin Dashboard Error:', error);
-    res.status(500).json({ error: 'Internal Server Error fetching dashboard stats.' });
+    ApiResponse.error(res, ERROR_MESSAGES.DASHBOARD.FETCH_FAILED, 500);
   }
 };

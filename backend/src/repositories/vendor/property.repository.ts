@@ -1,7 +1,5 @@
-import pool from '../../config/db';
+import pool from '../../database/db';
 import { IProperty } from '../../models/shared/property.model';
-
-// Property insert quary
 export const insertProperty = async (propertyData: IProperty): Promise<IProperty> => {
   const query = `
     INSERT INTO properties 
@@ -27,14 +25,10 @@ export const insertProperty = async (propertyData: IProperty): Promise<IProperty
   const result = await pool.query(query, values);
   return result.rows[0];
 };
-
-// property Update query
 export const updatePropertyById = async (propertyId: string, userId: string, userRole: string, updateData: any): Promise<IProperty | null> => {
   const fields = [];
   const values = [];
   let paramIndex = 1;
-
-  // dynamic query
   for (const [key, value] of Object.entries(updateData)) {
     fields.push(`${key} = $${paramIndex}`);
     values.push(value);
@@ -47,8 +41,6 @@ export const updatePropertyById = async (propertyId: string, userId: string, use
   const queryIdIndex = paramIndex;
   
   let query = `UPDATE properties SET ${fields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${queryIdIndex}`;
-
-  // Only admin and vendor can update his property
   if (userRole !== 'ADMIN') {
     values.push(userId);
     query += ` AND vendor_id = $${queryIdIndex + 1}`;
@@ -59,8 +51,6 @@ export const updatePropertyById = async (propertyId: string, userId: string, use
   const result = await pool.query(query, values);
   return result.rows[0];
 };
-
-// Property delete query
 export const deletePropertyById = async (propertyId: string, userId: string, userRole: string): Promise<boolean> => {
   let query = `DELETE FROM properties WHERE id = $1`;
   const values = [propertyId];

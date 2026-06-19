@@ -1,103 +1,45 @@
-import { Request, Response } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { findUserByEmail, createUser } from "../../repositories/shared/user.repository";
+import { Request, Response } from 'express';
+import { AuthService } from '../../services/shared/auth.service';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-//                                   User Registration
-
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password, role } = req.body;
 
-    // input validation
     if (!name || !email || !password || !role) {
-      return res.status(400).json({ error: "All fields are required" });
+      return ApiResponse.error(res, ERROR_MESSAGES.AUTH.ALL_FIELDS_REQUIRED, 400);
     }
 
-    // check exist user
-    const userExists = await findUserByEmail(email);
-    if (userExists) {
-      res.status(400).json({ error: "User already exist" });
-      return;
-    }
-
-    // Hash Password
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(password, salt);
-
-    // Insert new User
-    const newUser = await createUser({
-      name,
-      email,
-      password: hashPassword,
-      role: role || "CUSTOMER",
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "User Registered Successfully",
-      data: newUser,
-    });
-  } catch (error) {
-    console.log("Registration error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    const newUser = await AuthService.register(name, email, password, role);
+    ApiResponse.success(res, RESPONSE_MESSAGES.AUTH.REGISTER_SUCCESS, newUser, 201);
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    ApiResponse.error(res, error.message || ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, statusCode);
   }
 };
 
-//                            User Login
-
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
 
-    // Find User
-    const user = await findUserByEmail(email);
-    if (!user) {
-      res.status(400).json({ error: "Invalid credintials" });
-      return;
+    if (!email || !password) {
+      return ApiResponse.error(res, ERROR_MESSAGES.AUTH.EMAIL_PASSWORD_REQUIRED, 400);
     }
 
-    const isMatch = await bcrypt.compare(password, user.password as string);
-    if (!isMatch) {
-      res.status(400).json({ error: "Invalid Credential" });
-      return;
-    }
-
-    // Gen JWT
-    const accessToken = jwt.sign(
-      { id: user.id, role: user.role },
-      process.env.JWT_ACCESS_SECRET as string,
-      { expiresIn: "15m" },
-    );
-
-    const refreshToken = jwt.sign(
-        {id: user.id},
-        process.env.JWT_REFRESH_SECRET as string, 
-        {expiresIn: '7d'}
-    );
-    
-    // set refresh token in HttpOnly
+    const { user, accessToken, refreshToken } = await AuthService.login(email, password);
 
     res.cookie('refreshToken', refreshToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(200).json({
-        success: true,
-        message: "Login successful",
-        accessToken,
-        user: {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-        },
-    });
-  } catch (error) {
-    console.log("Login error:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    ApiResponse.success(res, RESPONSE_MESSAGES.AUTH.LOGIN_SUCCESS, { accessToken, user });
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    ApiResponse.error(res, error.message || ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, statusCode);
   }
 };

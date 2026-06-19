@@ -1,42 +1,33 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
-import { findAllApplications, updateApplicationAndRole } from '../../repositories/admin/vendor.repository';
+import { findAllApplications } from '../../repositories/admin/vendor.repository';
+import { AdminVendorService } from '../../services/admin/vendor.service';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-// ৩. Get All Applications (Admin)
 export const getAllApplications = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const applications = await findAllApplications();
-    res.status(200).json({ success: true, data: applications });
+    ApiResponse.success(res, RESPONSE_MESSAGES.VENDOR.APPLICATIONS_FETCHED, applications);
   } catch (error) {
-    console.error('Error fetching applications:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
 
-// ৪. Review Application (Admin Approve/Reject)
 export const reviewApplication = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params; // Application ID
-    const { status, user_id } = req.body; // status: 'APPROVED' or 'REJECTED', and the applicant's user_id
+    const { id } = req.params;
+    const { status, user_id } = req.body;
 
     if (!['APPROVED', 'REJECTED'].includes(status)) {
-      res.status(400).json({ error: 'Invalid status. Must be APPROVED or REJECTED.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.VENDOR.INVALID_REVIEW_STATUS, 400);
     }
 
-    const success = await updateApplicationAndRole(id as string, status, user_id);
-
-    if (!success) {
-      res.status(500).json({ error: 'Failed to update application status.' });
-      return;
-    }
-
-    res.status(200).json({
-      success: true,
-      message: `Application ${status.toLowerCase()} successfully. ${status === 'APPROVED' ? 'User is now a VENDOR.' : ''}`,
-    });
-  } catch (error) {
-    console.error('Error reviewing application:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    await AdminVendorService.reviewApplication(id as string, status, user_id);
+    ApiResponse.success(res, RESPONSE_MESSAGES.VENDOR.APPLICATION_REVIEWED(status));
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    ApiResponse.error(res, error.message || ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, statusCode);
   }
 };

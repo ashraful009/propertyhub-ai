@@ -1,4 +1,4 @@
-import pool from '../../config/db';
+import pool from '../../database/db';
 import { IProperty } from '../../models/shared/property.model';
 
 export const findPropertiesById = async (ids: string[]): Promise<IProperty[]> => {

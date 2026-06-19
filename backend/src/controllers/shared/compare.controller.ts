@@ -1,25 +1,21 @@
-import {Request, Response} from 'express';
-import {findPropertiesById} from '../../repositories/shared/compare.repository';
+import { Request, Response } from 'express';
+import { findPropertiesById } from '../../repositories/shared/compare.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-export const compareProperties = async(req: Request, res:Response): Promise<void> => {
-    try{
-        const {ids} = req.query;
+export const compareProperties = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { ids } = req.query;
 
-        if(!ids || typeof ids !== 'string'){
-            res.status(400).json({error: 'Please provide valid property IDs.'})
-            return;
-        }
-
-        const idArray = ids.split(',');
-        const properties = await findPropertiesById(idArray);
-
-        res.status(200).json({
-            success: true,
-            count: properties.length,
-            data: properties,
-        })
-    } catch(err){
-        console.error('Error in compareProperties:', err);
-        res.status(500).json({error: 'Internal Server Error'})
+    if (!ids || typeof ids !== 'string') {
+      return ApiResponse.error(res, ERROR_MESSAGES.COMPARE.INVALID_IDS, 400);
     }
+
+    const idArray = ids.split(',');
+    const properties = await findPropertiesById(idArray);
+    ApiResponse.success(res, RESPONSE_MESSAGES.COMPARE.FETCHED, properties);
+  } catch (err) {
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
+  }
 };

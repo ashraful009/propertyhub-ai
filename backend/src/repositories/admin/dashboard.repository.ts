@@ -1,13 +1,8 @@
-import pool from '../../config/db';
-
-// ADMIN DASHBOARD 
+import pool from '../../database/db';
 export const getAdminStats = async () => {
   const client = await pool.connect();
   try {
-    // Total Revenue
     const revenueRes = await client.query(`SELECT COALESCE(SUM(amount), 0) as total_revenue FROM platform_commissions`);
-    
-    // Revenue Breakdown by Company 
     const companyRevenueRes = await client.query(`
       SELECT va.company_name, COALESCE(SUM(pc.amount), 0) as revenue
       FROM platform_commissions pc
@@ -17,19 +12,13 @@ export const getAdminStats = async () => {
       GROUP BY va.company_name
       ORDER BY revenue DESC
     `);
-
-    // User Statistics
     const usersRes = await client.query(`
       SELECT role, COUNT(*) as count FROM users 
       WHERE role IN ('CUSTOMER', 'VENDOR') GROUP BY role
     `);
-
-    // Property Status
     const propertiesRes = await client.query(`
       SELECT status, COUNT(*) as count FROM properties GROUP BY status
     `);
-
-    // Pending Vendor Actions
     const pendingVendorsRes = await client.query(`
       SELECT COUNT(*) as count FROM vendor_applications WHERE status = 'PENDING'
     `);

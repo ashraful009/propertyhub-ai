@@ -1,63 +1,41 @@
-import pool from '../../config/db';
-import {IBooking} from '../../models/customer/booking.model';
+import pool from '../../database/db';
+import { IBooking } from '../../models/customer/booking.model';
 
-
-// new booking (customer)
-
-export const insertBooking = async (bookingData: IBooking): Promise<IBooking> => {
-    const query = `
-    INSERT INTO bookings (property_id, customer_id, vendor_id, booking_amount) VALUES ($1, $2, $3, $4) RETURNING *`;
-
-    const values = [
-        bookingData.property_id,
-        bookingData.customer_id,
-        bookingData.vendor_id,
-        bookingData.booking_amount
-    ];
-
-    const result = await pool.query(query, values);
-    return result.rows[0];
+export const insertBooking = async (property_id: string, customer_id: string, vendor_id: string, booking_amount: number): Promise<IBooking> => {
+  const query = `
+    INSERT INTO bookings (property_id, customer_id, vendor_id, booking_amount, status)
+    VALUES ($1, $2, $3, $4, 'PENDING')
+    RETURNING *;
+  `;
+  const result = await pool.query(query, [property_id, customer_id, vendor_id, booking_amount]);
+  return result.rows[0];
 };
 
+export const findBookingByUser = async (customerId: string): Promise<IBooking[]> => {
+  const query = `
+    SELECT * FROM bookings WHERE customer_id = $1 ORDER BY created_at DESC;
+  `;
+  const result = await pool.query(query, [customerId]);
+  return result.rows;
+};
 
-export const findBookingByUser = async (userId: string, role: string): Promise<any[]> => {
-    let query = `
-    SELECT b.*, p.title as property_title, p.location, u.name as customer_name
-    FROM bookings b
-    JOIN properties p ON b.property_id = p.id
-    JOIN users u ON b.customer_id = u.id
-    WHERE 
-    `;
+export const updateBookingStatusInDb = async (bookingId: string, status: string): Promise<IBooking> => {
+  const query = `
+    UPDATE bookings SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *;
+  `;
+  const result = await pool.query(query, [status, bookingId]);
+  return result.rows[0];
+};
+export const getBookingByIdAndUser = async (client: any, bookingId: string, userId: string) => {
+  const query = `SELECT * FROM bookings WHERE id = $1 AND customer_id = $2`;
+  const res = await client.query(query, [bookingId, userId]);
+  return res.rows[0];
+};
 
-    if(role === 'CUSTOMER'){
-        query += 'b.customer_id = $1'
-    }else if(role === 'VENDOR'){
-        query += 'b.vendor_id = $1'
+export const updateBookingStatus = async (client: any, bookingId: string, status: string) => {
+  await client.query(`UPDATE bookings SET status = $1 WHERE id = $2`, [status, bookingId]);
+};
 
-    }else{
-        query = `
-        SELECT b.* p.title as property_title, p.location, u.name as customer_name
-        FROM booking b
-        JOIN properties p ON b.property_id = p.id
-        JOIN users u ON b.customer_id = u.id`;
-        const adminResult = await pool.query(query);
-        return adminResult.rows;
-    }
-    query += `ORDER BY b.created_at DESC`;
-    const result = await pool.query(query, [userId]);
-    return result.rows;
-    
-}
-
-// Booking Status update (Vendor & Admin)
-
-export const updateBookingStatusInDb = async (bookingId: string, status: string): Promise<IBooking | null> =>{
-    const query = `
-    UPDATE bookings
-    SET status = $1, updated_at = CURRENT_TIMESTAMP
-    WHERE id = $2 
-    RETURNING *`;
-
-    const result = await pool.query(query, [status, bookingId]);
-    return result.rows[0];
+export const updatePropertyStatus = async (client: any, propertyId: string, status: string) => {
+  await client.query(`UPDATE properties SET status = $1 WHERE id = $2`, [status, propertyId]);
 };

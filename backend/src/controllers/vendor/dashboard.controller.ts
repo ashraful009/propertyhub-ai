@@ -1,19 +1,20 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
 import { getVendorStats } from '../../repositories/vendor/dashboard.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
 export const getVendorDashboardData = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const user = req.user;
     if (!user || user.role !== 'VENDOR') {
-      res.status(403).json({ error: 'Unauthorized or invalid user role' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.DASHBOARD.UNAUTHORIZED_ROLE, 403);
     }
 
     const data = await getVendorStats(user.id);
-    res.status(200).json({ success: true, data });
+    ApiResponse.success(res, RESPONSE_MESSAGES.DASHBOARD.FETCHED, data);
   } catch (error) {
-    console.error('Vendor Dashboard Error:', error);
-    res.status(500).json({ error: 'Internal Server Error fetching dashboard stats.' });
+    ApiResponse.error(res, ERROR_MESSAGES.DASHBOARD.FETCH_FAILED, 500);
   }
 };

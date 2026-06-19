@@ -1,5 +1,5 @@
 import app from './app';
-import pool from './config/db';
+import pool from './database/db';
 import dotenv from 'dotenv';
 
 

@@ -1,84 +1,52 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
-import { createInstallmentPlanInDb, findInstallmentScheduleByBooking } from '../../repositories/customer/installment.repository';
+import { InstallmentService } from '../../services/customer/installment.service';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-// ১. Preview Installment Calculation 
 export const previewInstallment = (req: Request, res: Response): void => {
   try {
     const { totalDue, totalInstallments } = req.body;
 
     if (!totalDue || !totalInstallments || totalInstallments > 24 || totalInstallments < 1) {
-      res.status(400).json({ error: 'Invalid input. Installments must be between 1 and 24.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.INSTALLMENT.INVALID_INPUT, 400);
     }
 
-    let chargePercentage = 0;
-    if (totalInstallments > 6 && totalInstallments <= 10) chargePercentage = 5;
-    else if (totalInstallments > 10 && totalInstallments <= 15) chargePercentage = 7;
-    else if (totalInstallments > 15 && totalInstallments <= 24) chargePercentage = 10;
-
-    const totalChargeAmount = Number(totalDue) * (chargePercentage / 100);
-    const totalPayableAmount = Number(totalDue) + totalChargeAmount;
-    const perInstallmentAmount = totalPayableAmount / totalInstallments;
-
-    res.status(200).json({
-      success: true,
-      data: {
-        total_due: totalDue,
-        number_of_installments: totalInstallments,
-        charge_percentage: chargePercentage,
-        total_charge_amount: totalChargeAmount,
-        total_payable_amount: totalPayableAmount,
-        per_installment_amount: perInstallmentAmount.toFixed(2),
-      }
-    });
+    const data = InstallmentService.previewInstallment(totalDue, totalInstallments);
+    ApiResponse.success(res, RESPONSE_MESSAGES.INSTALLMENT.PREVIEW_GENERATED, data);
   } catch (error) {
-    console.error('Error in preview calculation:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
 
-// ২. Generate and Save Installments
 export const generateInstallments = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { booking_id, totalDue, totalInstallments } = req.body;
 
     if (!booking_id || !totalDue || !totalInstallments) {
-      res.status(400).json({ error: 'Missing required fields' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.MISSING_REQUIRED_FIELDS, 400);
     }
 
-    const plan = await createInstallmentPlanInDb(booking_id, totalDue, totalInstallments);
-
-    res.status(201).json({
-      success: true,
-      message: 'Installment schedule generated successfully.',
-      data: plan,
-    });
+    const plan = await InstallmentService.generateInstallmentPlan(booking_id, totalDue, totalInstallments);
+    ApiResponse.success(res, RESPONSE_MESSAGES.INSTALLMENT.SCHEDULE_GENERATED, plan, 201);
   } catch (error) {
-    console.error('Error generating installments:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
 
-// ৩. Get Installment Schedule 
 export const getInstallmentSchedule = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { booking_id } = req.params;
-    
-    const schedule = await findInstallmentScheduleByBooking(booking_id as string);
+
+    const schedule = await InstallmentService.getSchedule(booking_id as string);
 
     if (!schedule) {
-      res.status(404).json({ error: 'No installment plan found for this booking.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.INSTALLMENT.SCHEDULE_NOT_FOUND, 404);
     }
 
-    res.status(200).json({
-      success: true,
-      data: schedule,
-    });
+    ApiResponse.success(res, RESPONSE_MESSAGES.INSTALLMENT.SCHEDULE_FETCHED, schedule);
   } catch (error) {
-    console.error('Error fetching installment schedule:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };

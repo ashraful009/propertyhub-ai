@@ -2,23 +2,23 @@ import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { AuthRequest } from '../../middlewares/auth.middleware';
 import { createInvoice, updatePaymentSuccess } from '../../repositories/customer/payment.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2026-05-27.dahlia', 
+  apiVersion: '2026-05-27.dahlia',
 });
 
-// Make Checkout Session 
 export const createCheckoutSession = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     const { booking_id, milestone_id, amount, description } = req.body;
 
     if (!userId || !booking_id || !amount) {
-      res.status(400).json({ error: 'Missing required fields.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.MISSING_REQUIRED_FIELDS, 400);
     }
 
-    // Stripe Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -28,7 +28,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response): Pr
             product_data: {
               name: description || 'Property Payment',
             },
-            unit_amount: Math.round(amount * 100), // Stripe cent calculate
+            unit_amount: Math.round(amount * 100),
           },
           quantity: 1,
         },
@@ -38,50 +38,33 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response): Pr
       cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
     });
 
-    // Save into database Pending Invoice 
-    await createInvoice({
-      user_id: userId,
-      booking_id,
-      milestone_id,
-      stripe_session_id: session.id,
-      amount,
-    });
-
-    res.status(200).json({
-      success: true,
-      checkout_url: session.url, 
-    });
+    await createInvoice(booking_id, userId, amount, session.id);
+    ApiResponse.success(res, RESPONSE_MESSAGES.PAYMENT.CHECKOUT_CREATED, { checkout_url: session.url });
   } catch (error) {
-    console.error('Error creating Stripe session:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
 
-// ২. Payment Success verify
 export const verifyPayment = async (req: Request, res: Response): Promise<void> => {
   try {
     const { session_id } = req.body;
 
     if (!session_id) {
-      res.status(400).json({ error: 'Session ID is required.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.PAYMENT.SESSION_ID_REQUIRED, 400);
     }
 
-    // check stripe session  
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
     if (session.payment_status === 'paid') {
       const success = await updatePaymentSuccess(session_id);
-      
+
       if (success) {
-        res.status(200).json({ success: true, message: 'Payment verified and invoice updated.' });
-        return;
+        return ApiResponse.success(res, RESPONSE_MESSAGES.PAYMENT.VERIFIED);
       }
     }
 
-    res.status(400).json({ error: 'Payment not successful or already verified.' });
+    ApiResponse.error(res, ERROR_MESSAGES.PAYMENT.PAYMENT_NOT_SUCCESSFUL, 400);
   } catch (error) {
-    console.error('Error verifying payment:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };

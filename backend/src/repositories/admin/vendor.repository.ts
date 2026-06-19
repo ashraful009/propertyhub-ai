@@ -1,6 +1,5 @@
-import pool from '../../config/db';
+import pool from '../../database/db';
 
-// ৩. Admin will see all vendor application 
 export const findAllApplications = async (): Promise<any[]> => {
   const query = `
     SELECT va.*, u.name as applicant_name, u.email as applicant_email 
@@ -12,29 +11,12 @@ export const findAllApplications = async (): Promise<any[]> => {
   return result.rows;
 };
 
-// ৪. Application approve/reject 
-export const updateApplicationAndRole = async (applicationId: string, status: string, userId: string): Promise<boolean> => {
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN'); // Transaction Shuru
+export const updateApplicationStatus = async (client: any, applicationId: string, status: string) => {
+  const appQuery = `UPDATE vendor_applications SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *`;
+  await client.query(appQuery, [status, applicationId]);
+};
 
-    // Application status update
-    const appQuery = `UPDATE vendor_applications SET status = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2 RETURNING *`;
-    await client.query(appQuery, [status, applicationId]);
-
-    // jodi APPROVED hoi, tobe users table-e role change hoye VENDOR hobe
-    if (status === 'APPROVED') {
-      const userQuery = `UPDATE users SET role = 'VENDOR' WHERE id = $1`;
-      await client.query(userQuery, [userId]);
-    }
-
-    await client.query('COMMIT'); // Shob thik thakle save hobe
-    return true;
-  } catch (error) {
-    await client.query('ROLLBACK'); // Error hole ageer moto hoye jabe
-    console.error("Transaction Error in vendor application:", error);
-    return false;
-  } finally {
-    client.release();
-  }
+export const updateUserRole = async (client: any, userId: string, role: string) => {
+  const userQuery = `UPDATE users SET role = $1 WHERE id = $2`;
+  await client.query(userQuery, [role, userId]);
 };

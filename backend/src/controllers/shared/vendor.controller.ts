@@ -1,13 +1,14 @@
 import { Response, Request } from 'express';
 import { getVendorPolicyFromDb } from '../../repositories/shared/vendor.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-// ১. Get Policy 
 export const getVendorPolicy = async (req: Request, res: Response): Promise<void> => {
   try {
     const policy = await getVendorPolicyFromDb();
-    res.status(200).json({ success: true, data: policy });
+    ApiResponse.success(res, RESPONSE_MESSAGES.VENDOR.POLICY_FETCHED, policy);
   } catch (error) {
-    console.error('Error fetching policy:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };

@@ -3,11 +3,7 @@ import { createCheckoutSession, verifyPayment } from '../../controllers/customer
 import { verifyToken } from '../../middlewares/auth.middleware';
 
 const router = Router();
-
-// payment session 
 router.post('/create-session', verifyToken, createCheckoutSession);
-
-// verify payment
 router.post('/verify', verifyToken, verifyPayment);
 
 export default router;

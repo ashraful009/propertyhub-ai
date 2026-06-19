@@ -1,14 +1,15 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
 import { insertVendorApplication } from '../../repositories/customer/vendor.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-// ২. Submit Application 
 export const submitApplication = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
     if (!userId || req.user?.role !== 'CUSTOMER') {
-      res.status(403).json({ error: 'Only customers can apply to become a vendor.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.VENDOR.CUSTOMER_ONLY_APPLY, 403);
     }
 
     const { company_name, location, full_address, company_mail, phone, document_url } = req.body;
@@ -20,18 +21,12 @@ export const submitApplication = async (req: AuthRequest, res: Response): Promis
       full_address,
       company_mail,
       phone,
-      document_url
+      document_url,
     };
 
     const newApplication = await insertVendorApplication(applicationData);
-
-    res.status(201).json({
-      success: true,
-      message: 'Application submitted successfully. Waiting for admin approval.',
-      data: newApplication,
-    });
+    ApiResponse.success(res, RESPONSE_MESSAGES.VENDOR.APPLICATION_SUBMITTED, newApplication, 201);
   } catch (error) {
-    console.error('Error submitting application:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };

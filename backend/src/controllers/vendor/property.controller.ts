@@ -1,41 +1,34 @@
 import { Response } from 'express';
 import { AuthRequest } from '../../middlewares/auth.middleware';
 import { insertProperty, updatePropertyById, deletePropertyById } from '../../repositories/vendor/property.repository';
+import { ApiResponse } from '../../responses/ApiResponse';
+import { ERROR_MESSAGES } from '../../errors/errorMessages';
+import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-// ১. Create Property (Vendor/Admin)
 export const createProperty = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const vendor_id = req.user?.id; 
+    const vendor_id = req.user?.id;
 
     if (!vendor_id) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.UNAUTHORIZED, 401);
     }
 
     const files = req.files as Express.Multer.File[];
     const images = files ? files.map(file => file.path) : [];
 
-    // Model/Interface অনুযায়ী ডাটা সাজানো
     const propertyData = {
       ...req.body,
       images,
-      vendor_id
+      vendor_id,
     };
 
     const newProperty = await insertProperty(propertyData);
-
-    res.status(201).json({
-      success: true,
-      message: 'Property added successfully',
-      data: newProperty,
-    });
+    ApiResponse.success(res, RESPONSE_MESSAGES.PROPERTY.CREATED, newProperty, 201);
   } catch (error) {
-    console.error('Error creating property:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
 
-// ৩. Update Property
 export const updateProperty = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -43,29 +36,21 @@ export const updateProperty = async (req: AuthRequest, res: Response): Promise<v
     const userRole = req.user?.role;
 
     if (!userId || !userRole) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.UNAUTHORIZED, 401);
     }
 
     const updatedProperty = await updatePropertyById(id as string, userId, userRole, req.body);
 
     if (!updatedProperty) {
-      res.status(404).json({ error: 'Property not found or you do not have permission to update it.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.PROPERTY.NOT_FOUND_OR_NO_UPDATE_PERMISSION, 404);
     }
 
-    res.status(200).json({
-      success: true,
-      message: 'Property updated successfully',
-      data: updatedProperty,
-    });
+    ApiResponse.success(res, RESPONSE_MESSAGES.PROPERTY.UPDATED, updatedProperty);
   } catch (error) {
-    console.error('Error updating property:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
 
-// ৪. Delete Property
 export const deleteProperty = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
@@ -73,23 +58,17 @@ export const deleteProperty = async (req: AuthRequest, res: Response): Promise<v
     const userRole = req.user?.role;
 
     if (!userId || !userRole) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.UNAUTHORIZED, 401);
     }
 
     const isDeleted = await deletePropertyById(id as string, userId, userRole);
 
     if (!isDeleted) {
-      res.status(404).json({ error: 'Property not found or you do not have permission to delete it.' });
-      return;
+      return ApiResponse.error(res, ERROR_MESSAGES.PROPERTY.NOT_FOUND_OR_NO_DELETE_PERMISSION, 404);
     }
 
-    res.status(200).json({
-      success: true,
-      message: 'Property deleted successfully',
-    });
+    ApiResponse.success(res, RESPONSE_MESSAGES.PROPERTY.DELETED);
   } catch (error) {
-    console.error('Error deleting property:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };

@@ -1,7 +1,5 @@
-import pool from '../../config/db';
+import pool from '../../database/db';
 import { IVendorApplication } from '../../models/vendor/vendor.model';
-
-// ১. Vendor application submit 
 export const insertVendorApplication = async (data: IVendorApplication): Promise<IVendorApplication> => {
   const query = `
     INSERT INTO vendor_applications (user_id, company_name, location, full_address, company_mail, phone, document_url)

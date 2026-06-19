@@ -1,4 +1,4 @@
-import pool from '../../config/db';
+import pool from '../../database/db';
 import { IUser } from '../../models/shared/user.model';
 
 export const findUserByEmail = async (email: string): Promise<IUser | null> => {

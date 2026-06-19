@@ -1,7 +1,5 @@
-import pool from '../../config/db';
+import pool from '../../database/db';
 import { IProperty } from '../../models/shared/property.model';
-
-// Property read query
 export const findAllProperties = async (): Promise<IProperty[]> => {
   const query = `
     SELECT * FROM properties 
