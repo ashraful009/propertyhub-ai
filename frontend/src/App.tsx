@@ -1,19 +1,12 @@
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './routes/AppRoutes';
 
-import Home from './pages/Home';
-import Auth from './pages/Auth';
-
-export default function App() {
+function App() {
   return (
-    <>
     <BrowserRouter>
-    <Routes>
-        <Route path="/" element={<Home/>} />
-        <Route path="/login" element={<Auth/>} />
-        <Route path="/register" element={<Auth/>} />
-        
-    </Routes>
+      <AppRoutes />
     </BrowserRouter>
-    </>
-  )
+  );
 }
+
+export default App;
