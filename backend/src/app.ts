@@ -6,23 +6,23 @@ import cookieParser from 'cookie-parser';
 
 
 
-import authRoutes from './routes/auth.routes'
-import userRouter from './routes/user.routes'
-import propertyRoutes from './routes/property.routes'
-import searchRoutes from './routes/search.routes'
-import compareRoutes from './routes/compare.routes'
-import bookingRoutes from './routes/booking.routes';
-import vendorRoute from './routes/vendor.routes'
-import installmentRoutes from './routes/installment.routes'
-import paymentRoutes from './routes/payment.routes';
-import refundRoutes from './routes/refund.routes';
-import dashboardRoutes from './routes/dashboard.routes';
+import authRoutes from './routes/shared/auth.routes';
+import userRouter from './routes/shared/user.routes';
+import propertyRoutes from './routes/shared/property.routes';
+import searchRoutes from './routes/shared/search.routes';
+import compareRoutes from './routes/shared/compare.routes';
+import sharedVendorRoutes from './routes/shared/vendor.routes';
+
+import adminRoutes from './routes/admin/admin.routes';
+import vendorRoutes from './routes/vendor/vendor.routes';
+import customerRoutes from './routes/customer/customer.routes';
+
+import bookingRoutes from './routes/customer/booking.routes';
+import installmentRoutes from './routes/customer/installment.routes';
+import paymentRoutes from './routes/customer/payment.routes';
+import refundRoutes from './routes/customer/refund.routes';
 
 const app = express(); 
-
-
-
-
 
 // middlewares
 app.use(express.json());
@@ -30,20 +30,24 @@ app.use(cors({origin: true, credentials:true}));
 app.use(helmet());
 app.use(cookieParser());
 
-
-
-// Router API
+// Shared & Public Router API
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/properties', propertyRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/compare', compareRoutes);
+app.use('/api/v1/vendor-policy', sharedVendorRoutes);
+
+// Domain Router API
+app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/vendor', vendorRoutes);
+app.use('/api/v1/customer', customerRoutes);
+
+// Customer Specific Feature Routes
 app.use('/api/v1/bookings', bookingRoutes);
-app.use('/api/v1/vendor', vendorRoute);
-app.use('./api/v1/installments', installmentRoutes)
+app.use('/api/v1/installments', installmentRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/refunds', refundRoutes);
-app.use('/api/v1/dashboard', dashboardRoutes);
 
 
 
