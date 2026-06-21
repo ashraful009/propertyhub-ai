@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Calculator, CalendarCheck } from 'lucide-react';
 import InstallmentCalculatorModal from './InstallmentCalculatorModal';
+import BookingPolicyModal from '../policy/BokingPolicyModal';
 
 export default function BookingCard() {
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [isPolicyOpen, setIsPolicyOpen] = useState(false); // নতুন স্টেট
+  
   const propertyPrice = 25000000; // 2.5 Crore BDT
 
   return (
@@ -26,7 +29,11 @@ export default function BookingCard() {
             Calculate Installment
           </button>
 
-          <button className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20">
+          {/* Book Now Button triggers Policy Modal */}
+          <button 
+            onClick={() => setIsPolicyOpen(true)}
+            className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
+          >
             <CalendarCheck size={20} />
             Book Now
           </button>
@@ -42,11 +49,17 @@ export default function BookingCard() {
         </div>
       </div>
 
-      {/* Insert Modal Component */}
+      {/* Modals */}
       <InstallmentCalculatorModal 
         isOpen={isCalculatorOpen} 
         onClose={() => setIsCalculatorOpen(false)} 
         totalPrice={propertyPrice}
+      />
+      
+      <BookingPolicyModal 
+        isOpen={isPolicyOpen}
+        onClose={() => setIsPolicyOpen(false)}
+        propertyId="prop-123" // Test ID
       />
     </>
   );
