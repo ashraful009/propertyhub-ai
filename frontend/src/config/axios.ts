@@ -2,18 +2,18 @@ import axios from 'axios';
 import { ENV } from './env';
 import { useAuthStore } from '../store/authStore';
 
-export const api = axios.create({
+const apiClient = axios.create({
   baseURL: ENV.API_URL,
-  withCredentials: true, 
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-api.interceptors.request.use(
+// Request Interceptor: Auto-attach Token
+apiClient.interceptors.request.use(
   (config) => {
-    const token = useAuthStore.getState().accessToken;
-    if (token) {
+    const token = useAuthStore.getState().token;
+    if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -21,26 +21,16 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-api.interceptors.response.use(
+// Response Interceptor: Handle Global Errors (e.g., Token Expiry)
+apiClient.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        
-        
-        
-        
-        
-        
-        
-        
-        useAuthStore.getState().logout();
-      } catch (err) {
-        useAuthStore.getState().logout();
-      }
+  (error) => {
+    if (error.response?.status === 401) {
+      useAuthStore.getState().logout();
+      window.location.href = '/login'; // Redirect to auth page
     }
     return Promise.reject(error);
   }
 );
+
+export default apiClient;

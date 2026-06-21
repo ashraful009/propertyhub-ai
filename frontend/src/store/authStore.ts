@@ -1,25 +1,34 @@
 import { create } from 'zustand';
-import type { UserRole } from '../types/shared.types';
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: UserRole;
+  role: 'CUSTOMER' | 'VENDOR' | 'ADMIN';
 }
 
 interface AuthState {
   user: User | null;
-  accessToken: string | null;
+  token: string | null;
   isAuthenticated: boolean;
-  setAuth: (user: User, token: string) => void;
+  login: (user: User, token: string) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  accessToken: null,
-  isAuthenticated: false,
-  setAuth: (user, token) => set({ user, accessToken: token, isAuthenticated: true }),
-  logout: () => set({ user: null, accessToken: null, isAuthenticated: false }),
+  user: JSON.parse(localStorage.getItem('user') || 'null'),
+  token: localStorage.getItem('token') || null,
+  isAuthenticated: !!localStorage.getItem('token'),
+
+  login: (user, token) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem('token', token);
+    set({ user, token, isAuthenticated: true });
+  },
+
+  logout: () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    set({ user: null, token: null, isAuthenticated: false });
+  },
 }));
