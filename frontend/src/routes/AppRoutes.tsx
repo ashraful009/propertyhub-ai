@@ -14,6 +14,7 @@ import VendorManagement from "../pages/admin/VendorManagement";
 import PolicyManager from "../pages/admin/PolicyManager";
 import VendorLayout from "../layouts/VendorLayout";
 import VendorDashboard from "../pages/vendor/VendorDashboard";
+import AddProperty from '../pages/vendor/AddProperty';
 export default function AppRoutes() {
   return (
     <Routes>
@@ -34,7 +35,7 @@ export default function AppRoutes() {
       </Route>
       <Route path="/vendor" element={<VendorLayout />}>
         <Route path="dashboard" element={<VendorDashboard />} />
-        {/* Future routes: vendor properties, customers, earnings */}
+        <Route path="add-property" element={<AddProperty />} />
       </Route>
       <Route path="/login" element={<Auth />} />
       <Route path="/register" element={<Auth />} />

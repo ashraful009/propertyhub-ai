@@ -39,9 +39,9 @@ export default function VendorLayout() {
         </div>
 
         <div className="p-4">
-          <button className="w-full flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-indigo-900/20">
+          <Link to="/vendor/add-property" className="w-full flex items-center justify-center gap-2 bg-indigo-500 hover:bg-indigo-400 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-indigo-900/20">
             <PlusCircle size={18} /> Add Property
-          </button>
+          </Link>
         </div>
 
         <nav className="flex-1 px-4 py-4 space-y-2">
