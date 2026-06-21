@@ -15,6 +15,7 @@ import PolicyManager from "../pages/admin/PolicyManager";
 import VendorLayout from "../layouts/VendorLayout";
 import VendorDashboard from "../pages/vendor/VendorDashboard";
 import AddProperty from '../pages/vendor/AddProperty';
+import CustomersAndDues from '../pages/vendor/CustomersAndDues';
 export default function AppRoutes() {
   return (
     <Routes>
@@ -36,6 +37,7 @@ export default function AppRoutes() {
       <Route path="/vendor" element={<VendorLayout />}>
         <Route path="dashboard" element={<VendorDashboard />} />
         <Route path="add-property" element={<AddProperty />} />
+        <Route path="customers" element={<CustomersAndDues />} />
       </Route>
       <Route path="/login" element={<Auth />} />
       <Route path="/register" element={<Auth />} />
