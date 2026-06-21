@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { User, LayoutDashboard, LogOut } from 'lucide-react';
 import { useAuthStore } from '../../../store/authStore';
 import { cn } from '../../../utils/cn';
+import toast from 'react-hot-toast'; 
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,7 +11,7 @@ export default function ProfileDropdown() {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // বাইরে ক্লিক করলে ড্রপডাউন বন্ধ হওয়ার লজিক
+  
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -21,22 +22,32 @@ export default function ProfileDropdown() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ইউজার লগইন করা না থাকলে Login বাটন দেখাবে
-  if (!user) {
-    return (
-      <Link to="/login" className="px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all">
-        Login
-      </Link>
-    );
-  }
 
   const handleLogout = () => {
     logout();
     setIsOpen(false);
-    navigate('/login');
+    toast.success('Successfully logged out!');
+    navigate('/'); 
   };
+  if (!user) {
+    return (
+      <div className="flex items-center gap-2 sm:gap-4">
+        <Link 
+          to="/login" 
+          className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+        >
+          Login
+        </Link>
+        <Link 
+          to="/register" 
+          className="px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+        >
+          Sign Up
+        </Link>
+      </div>
+    );
+  }
 
-  // রোল অনুযায়ী ড্যাশবোর্ডের লিংক (যেমন: /admin/dashboard)
   const dashboardLink = `/${user.role.toLowerCase()}/dashboard`;
   const avatarUrl = `https://ui-avatars.com/api/?name=${user.name}&background=eff6ff&color=2563eb&bold=true`;
 
@@ -49,7 +60,7 @@ export default function ProfileDropdown() {
         <img src={avatarUrl} alt="Profile" className="w-full h-full object-cover" />
       </button>
 
-      {/* 3D Glassmorphism Dropdown Menu */}
+    
       <div className={cn(
         "absolute right-0 mt-3 w-56 bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/50 py-2 z-50 transform transition-all duration-200 origin-top-right",
         isOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"

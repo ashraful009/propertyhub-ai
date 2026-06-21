@@ -3,7 +3,7 @@ import { useForm, type FieldValues } from 'react-hook-form';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { api } from '../../config/axios';
+import apiClient from '../../config/axios'; // Updated to our axios instance
 import { useAuthStore } from '../../store/authStore';
 import axios from 'axios';
 
@@ -14,7 +14,8 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const setAuth = useAuthStore((state) => state.setAuth);
+  // Connected with our zustand store
+  const loginAuth = useAuthStore((state) => state.login);
 
   const { register, handleSubmit, reset } = useForm();
 
@@ -23,16 +24,17 @@ export default function Auth() {
 
     try {
       if (isLogin) {
-        const response = await api.post('/auth/login', {
+        const response = await apiClient.post('/auth/login', {
           email: data.email,
           password: data.password,
         });
         
-        setAuth(response.data.data.user, response.data.data.accessToken);
+        // Pass user data and token to Zustand
+        loginAuth(response.data.data.user, response.data.data.accessToken);
         toast.success('Successfully logged in!');
         navigate('/'); 
       } else {
-        await api.post('/auth/register', {
+        await apiClient.post('/auth/register', {
           name: data.name,
           email: data.email,
           password: data.password,
@@ -57,7 +59,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gray-50">
       <div
         className={`relative w-full max-w-5xl h-[650px] bg-white rounded-3xl shadow-2xl overflow-hidden flex transition-all duration-700 ease-in-out ${
           isLogin ? "flex-row" : "flex-row-reverse"
@@ -87,7 +89,7 @@ export default function Auth() {
                     type="text"
                     {...register("name", { required: !isLogin })}
                     placeholder="John Doe"
-                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                   />
                 </div>
               </div>
@@ -103,7 +105,7 @@ export default function Auth() {
                   type="email"
                   {...register("email", { required: true })}
                   placeholder="example@gmail.com"
-                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
@@ -118,18 +120,14 @@ export default function Auth() {
                   type={showPassword ? "text" : "password"}
                   {...register("password", { required: true })}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent outline-none transition-all"
+                  className="w-full pl-10 pr-10 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -137,16 +135,10 @@ export default function Auth() {
             {isLogin && (
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="rounded text-indigo-600 focus:ring-indigo-600"
-                  />
+                  <input type="checkbox" className="rounded text-blue-600 focus:ring-blue-600" />
                   <span className="text-slate-600">Remember me</span>
                 </label>
-                <a
-                  href="#"
-                  className="font-semibold text-indigo-600 hover:underline"
-                >
+                <a href="#" className="font-semibold text-blue-600 hover:underline">
                   Forgot Password?
                 </a>
               </div>
@@ -154,12 +146,13 @@ export default function Auth() {
 
             <button
               type="submit"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-colors mt-4 shadow-sm shadow-indigo-600/30"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors mt-4 shadow-sm shadow-blue-600/30"
             > 
               {isLoading ? 'Processing...' : (isLogin ? 'Sign in' : 'Sign up')}
             </button>
           </form>
 
+          {/* Social Login Separator... */}
           <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -172,22 +165,19 @@ export default function Auth() {
 
             <div className="mt-6 space-y-3">
               <button className="w-full flex items-center justify-center space-x-2 border border-slate-300 rounded-lg py-2.5 hover:bg-slate-50 transition-colors text-slate-700 font-medium">
-                <img
-                  src="https://www.svgrepo.com/show/475656/google-color.svg"
-                  alt="Google"
-                  className="w-5 h-5"
-                />
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
                 <span>Continue with Google</span>
               </button>
             </div>
           </div>
         </div>
 
-        <div className="w-1/2 bg-indigo-600 text-white p-12 flex flex-col justify-center items-center text-center relative z-20">
+        {/* Right Side Info Panel */}
+        <div className="w-1/2 bg-blue-600 text-white p-12 flex flex-col justify-center items-center text-center relative z-20">
           {isLogin ? (
             <>
               <h2 className="text-4xl font-bold mb-4">Hello, Friend!</h2>
-              <p className="mb-8 text-indigo-100 text-lg">
+              <p className="mb-8 text-blue-100 text-lg">
                 Enter your personal details and start your journey with us.
                 Don't have an account yet?
               </p>
@@ -196,7 +186,7 @@ export default function Auth() {
                   setIsLogin(false);
                   navigate('/register');
                 }}
-                className="px-8 py-3 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition-colors duration-300"
+                className="px-8 py-3 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-300"
               >
                 Sign Up Now
               </button>
@@ -204,7 +194,7 @@ export default function Auth() {
           ) : (
             <>
               <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
-              <p className="mb-8 text-indigo-100 text-lg">
+              <p className="mb-8 text-blue-100 text-lg">
                 To keep connected with us please login with your personal info.
                 Already have an account?
               </p>
@@ -213,7 +203,7 @@ export default function Auth() {
                   setIsLogin(true);
                   navigate('/login');
                 }}
-                className="px-8 py-3 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-indigo-600 transition-colors duration-300"
+                className="px-8 py-3 border-2 border-white rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-300"
               >
                 Sign In
               </button>
@@ -221,7 +211,7 @@ export default function Auth() {
           )}
 
           <div className="absolute top-10 right-10 w-24 h-24 bg-white opacity-5 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-10 left-10 w-32 h-32 bg-indigo-400 opacity-20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 left-10 w-32 h-32 bg-blue-400 opacity-20 rounded-full blur-3xl"></div>
         </div>
       </div>
     </div>
