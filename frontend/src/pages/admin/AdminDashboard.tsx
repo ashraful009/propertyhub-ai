@@ -1,16 +1,32 @@
-import { Wallet, Building, Users, TrendingUp, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { Wallet, Building, Users, TrendingUp, ArrowUpRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { useAdminDashboard } from '../../hooks/api/useDashboard';
 
 export default function AdminDashboard() {
+  const { data: dashboardData, isLoading, isError } = useAdminDashboard();
+
   const formatBDT = (amount: number) => 
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(amount);
 
-  // ডামি ভেন্ডর রেভিনিউ ডাটা (ভবিষ্যতে API থেকে আসবে)
-  const vendorRevenues = [
-    { id: 1, name: "BuildWell Properties", totalSales: 150000000, commission: 7500000, properties: 12, status: "top-tier" },
-    { id: 2, name: "Skyline Developers", totalSales: 85000000, commission: 4250000, properties: 8, status: "active" },
-    { id: 3, name: "Metro Housing Ltd.", totalSales: 45000000, commission: 2250000, properties: 4, status: "active" },
-    { id: 4, name: "Urban Living Real Estate", totalSales: 12000000, commission: 600000, properties: 2, status: "new" },
-  ];
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isError || !dashboardData) {
+    return (
+      <div className="text-center text-red-500 p-4">
+        Failed to load dashboard data. Please try again later.
+      </div>
+    );
+  }
+
+  const totalCommission = Number(dashboardData.totalRevenue || 0);
+  const totalSales = totalCommission / 0.05; // Assumed 5% commission
+  const activeProperties = dashboardData.propertyStatus.reduce((sum, item) => sum + Number(item.count), 0);
+  const activeVendors = Number(dashboardData.userStatistics.find(u => u.role === 'VENDOR')?.count || 0);
 
   return (
     <div className="space-y-8">
@@ -26,7 +42,7 @@ export default function AdminDashboard() {
             <ShieldCheck size={24} />
           </div>
           <p className="text-sm font-medium text-gray-500 mb-1">Total Platform Revenue (5%)</p>
-          <h3 className="text-2xl font-extrabold text-gray-900">{formatBDT(14600000)}</h3>
+          <h3 className="text-2xl font-extrabold text-gray-900">{formatBDT(totalCommission)}</h3>
           <p className="text-xs text-green-600 font-medium mt-2 flex items-center gap-1">
             <ArrowUpRight size={14} /> +12% from last month
           </p>
@@ -37,15 +53,15 @@ export default function AdminDashboard() {
             <Wallet size={24} />
           </div>
           <p className="text-sm font-medium text-gray-500 mb-1">Total Property Sales (GMV)</p>
-          <h3 className="text-2xl font-extrabold text-gray-900">{formatBDT(292000000)}</h3>
+          <h3 className="text-2xl font-extrabold text-gray-900">{formatBDT(totalSales)}</h3>
         </div>
 
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <div className="w-12 h-12 bg-orange-50 text-orange-600 rounded-xl flex items-center justify-center mb-4">
             <Building size={24} />
           </div>
-          <p className="text-sm font-medium text-gray-500 mb-1">Active Properties</p>
-          <h3 className="text-2xl font-extrabold text-gray-900">124</h3>
+          <p className="text-sm font-medium text-gray-500 mb-1">Total Properties</p>
+          <h3 className="text-2xl font-extrabold text-gray-900">{activeProperties}</h3>
         </div>
 
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
@@ -53,7 +69,7 @@ export default function AdminDashboard() {
             <Users size={24} />
           </div>
           <p className="text-sm font-medium text-gray-500 mb-1">Active Vendors</p>
-          <h3 className="text-2xl font-extrabold text-gray-900">32</h3>
+          <h3 className="text-2xl font-extrabold text-gray-900">{activeVendors}</h3>
         </div>
       </div>
 
@@ -74,25 +90,31 @@ export default function AdminDashboard() {
             <thead>
               <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
                 <th className="py-4 px-6 font-medium">Vendor Name</th>
-                <th className="py-4 px-6 font-medium">Properties Sold</th>
                 <th className="py-4 px-6 font-medium">Total Sales (GMV)</th>
                 <th className="py-4 px-6 font-bold text-blue-700 bg-blue-50/50">Our Commission (5%)</th>
               </tr>
             </thead>
             <tbody className="text-sm">
-              {vendorRevenues.map((vendor) => (
-                <tr key={vendor.id} className="border-b border-gray-50 last:border-none hover:bg-gray-50/50 transition-colors">
-                  <td className="py-4 px-6">
-                    <div className="font-semibold text-gray-900">{vendor.name}</div>
-                    <div className="text-xs text-gray-500 mt-0.5 capitalize">{vendor.status} Vendor</div>
-                  </td>
-                  <td className="py-4 px-6 text-gray-600 font-medium">{vendor.properties} Units</td>
-                  <td className="py-4 px-6 text-gray-600">{formatBDT(vendor.totalSales)}</td>
-                  <td className="py-4 px-6 font-extrabold text-blue-700 bg-blue-50/30">
-                    {formatBDT(vendor.commission)}
+              {dashboardData.revenueByCompany.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="py-8 text-center text-gray-500">
+                    No revenue data available
                   </td>
                 </tr>
-              ))}
+              ) : (
+                dashboardData.revenueByCompany.map((vendor, index) => (
+                  <tr key={index} className="border-b border-gray-50 last:border-none hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4 px-6">
+                      <div className="font-semibold text-gray-900">{vendor.company_name}</div>
+                      <div className="text-xs text-gray-500 mt-0.5 capitalize">Active Vendor</div>
+                    </td>
+                    <td className="py-4 px-6 text-gray-600">{formatBDT(Number(vendor.revenue) / 0.05)}</td>
+                    <td className="py-4 px-6 font-extrabold text-blue-700 bg-blue-50/30">
+                      {formatBDT(Number(vendor.revenue))}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

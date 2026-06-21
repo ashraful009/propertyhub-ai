@@ -16,31 +16,45 @@ import VendorLayout from "../layouts/VendorLayout";
 import VendorDashboard from "../pages/vendor/VendorDashboard";
 import AddProperty from '../pages/vendor/AddProperty';
 import CustomersAndDues from '../pages/vendor/CustomersAndDues';
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+
 export default function AppRoutes() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/properties/:id" element={<PropertyDetails />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/vendor-application" element={<VendorApplication />} />
+        <Route path="/login" element={<Auth />} />
+        <Route path="/register" element={<Auth />} />
+        {/* Only Authenticated users can checkout or apply as vendor */}
+        <Route element={<ProtectedRoute allowedRoles={['CUSTOMER', 'VENDOR', 'ADMIN']} />}>
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/vendor-application" element={<VendorApplication />} />
+        </Route>
       </Route>
-      <Route path="/customer" element={<CustomerLayout />}>
-        <Route path="dashboard" element={<CustomerDashboard />} />
-        <Route path="installments" element={<Installments />} />
+
+      <Route path="/customer" element={<ProtectedRoute allowedRoles={['CUSTOMER']} />}>
+        <Route element={<CustomerLayout />}>
+          <Route path="dashboard" element={<CustomerDashboard />} />
+          <Route path="installments" element={<Installments />} />
+        </Route>
       </Route>
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route path="dashboard" element={<AdminDashboard />} />
-        <Route path="vendors" element={<VendorManagement />} />
-        <Route path="policies" element={<PolicyManager />} />
+
+      <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+        <Route element={<AdminLayout />}>
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="vendors" element={<VendorManagement />} />
+          <Route path="policies" element={<PolicyManager />} />
+        </Route>
       </Route>
-      <Route path="/vendor" element={<VendorLayout />}>
-        <Route path="dashboard" element={<VendorDashboard />} />
-        <Route path="add-property" element={<AddProperty />} />
-        <Route path="customers" element={<CustomersAndDues />} />
+
+      <Route path="/vendor" element={<ProtectedRoute allowedRoles={['VENDOR']} />}>
+        <Route element={<VendorLayout />}>
+          <Route path="dashboard" element={<VendorDashboard />} />
+          <Route path="add-property" element={<AddProperty />} />
+          <Route path="customers" element={<CustomersAndDues />} />
+        </Route>
       </Route>
-      <Route path="/login" element={<Auth />} />
-      <Route path="/register" element={<Auth />} />
     </Routes>
   );
 }

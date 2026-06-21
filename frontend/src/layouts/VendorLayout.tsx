@@ -4,10 +4,12 @@ import {
   LayoutDashboard, Building, Users, Banknote, 
   Menu, Bell, Store, PlusCircle 
 } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
 
 export default function VendorLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuthStore();
 
   const navItems = [
     { name: 'Dashboard', path: '/vendor/dashboard', icon: LayoutDashboard },
@@ -87,11 +89,11 @@ export default function VendorLayout() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold">
-                B
+              <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold uppercase">
+                {user?.name?.charAt(0) || 'V'}
               </div>
               <div className="hidden md:block text-sm">
-                <p className="font-semibold text-gray-700">BuildWell Prop.</p>
+                <p className="font-semibold text-gray-700">{user?.name || 'Vendor'}</p>
                 <p className="text-xs text-indigo-600 font-medium">Verified Vendor</p>
               </div>
             </div>

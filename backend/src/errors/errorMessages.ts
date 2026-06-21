@@ -37,6 +37,10 @@ export const ERROR_MESSAGES = {
     REVIEW_FAILED: 'Failed to review application',
   },
 
+  POLICY: {
+    NOT_FOUND_OR_MANDATORY: 'Policy not found or is a mandatory system policy that cannot be modified',
+  },
+
   INSTALLMENT: {
     INVALID_INPUT: 'Invalid input. Installments must be between 1 and 24',
     SCHEDULE_NOT_FOUND: 'No installment plan found for this booking',

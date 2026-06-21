@@ -6,12 +6,13 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { useCreateProperty } from '../../hooks/api/useVendor';
 
 export default function AddProperty() {
   const { register, handleSubmit } = useForm();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const navigate = useNavigate();
+  const { mutateAsync: createProperty, isPending: isSubmitting } = useCreateProperty();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -30,15 +31,35 @@ export default function AddProperty() {
       return;
     }
     
-    setIsSubmitting(true);
-    // API কল সিমুলেশন
-    setTimeout(() => {
-      console.log('Property Data:', data);
-      console.log('Images:', images);
-      setIsSubmitting(false);
-      toast.success('Property submitted successfully! Waiting for Admin approval.');
+    try {
+      const formData = new FormData();
+      formData.append('title', data.title);
+      formData.append('type', data.type);
+      formData.append('location', data.location);
+      formData.append('address', data.location); // Mapping location to address for backend
+      formData.append('description', data.description);
+      formData.append('price', data.totalPrice);
+      formData.append('total_installments', String(Number(data.maxDuration) * 12));
+      
+      // Features
+      const features = {
+        area: data.area,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+      };
+      formData.append('features', JSON.stringify(features));
+
+      images.forEach((image) => {
+        formData.append('images', image);
+      });
+
+      await createProperty(formData);
+      
+      toast.success('Property submitted successfully!');
       navigate('/vendor/dashboard');
-    }, 2000);
+    } catch (error) {
+      console.error('Failed to create property', error);
+    }
   };
 
   return (

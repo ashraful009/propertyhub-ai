@@ -1,62 +1,47 @@
 import { useState } from 'react';
-import { Search, Eye, CheckCircle2, XCircle, FileText, Building2, User } from 'lucide-react';
-import toast from 'react-hot-toast';
-
-// ডামি ইন্টারফেস ও ডাটা
-interface VendorApp {
-  id: string;
-  companyName: string;
-  contactPerson: string;
-  email: string;
-  phone: string;
-  status: 'pending' | 'approved' | 'rejected';
-  appliedDate: string;
-  documents: {
-    nid: string;
-    tradeLicense: string;
-    tin: string;
-    bin: string;
-  };
-}
-
-const mockApplications: VendorApp[] = [
-  {
-    id: "REQ-001",
-    companyName: "Prime Space Properties",
-    contactPerson: "Ahmed Hasan",
-    email: "ahmed@primespace.com",
-    phone: "+880 1711 000000",
-    status: "pending",
-    appliedDate: "21 Jun, 2026",
-    documents: { nid: "NID_1234567890", tradeLicense: "TRAD/DSCC/123/2026", tin: "TIN-987654321", bin: "BIN-11223344" }
-  },
-  {
-    id: "REQ-002",
-    companyName: "BuildWell Properties",
-    contactPerson: "John Doe",
-    email: "john@buildwell.com",
-    phone: "+880 1811 000000",
-    status: "approved",
-    appliedDate: "18 Jun, 2026",
-    documents: { nid: "NID_0987654321", tradeLicense: "TRAD/DNCC/456/2026", tin: "TIN-123456789", bin: "BIN-55667788" }
-  }
-];
+import { Search, Eye, CheckCircle2, XCircle, FileText, Building2, User, Loader2 } from 'lucide-react';
+import { useVendorApplications, useReviewApplication } from '../../hooks/api/useAdmin';
+import type { IVendorApplication } from '../../types/shared.types';
 
 export default function VendorManagement() {
-  const [applications, setApplications] = useState<VendorApp[]>(mockApplications);
-  const [selectedVendor, setSelectedVendor] = useState<VendorApp | null>(null);
+  const { data: applications, isLoading, isError } = useVendorApplications();
+  const { mutateAsync: reviewApplication, isPending } = useReviewApplication();
+  
+  const [selectedVendor, setSelectedVendor] = useState<IVendorApplication | null>(null);
 
-  const handleApprove = (id: string) => {
-    setApplications(apps => apps.map(app => app.id === id ? { ...app, status: 'approved' } : app));
+  const handleApprove = async (id: string) => {
+    await reviewApplication({ id, status: 'APPROVED' });
     setSelectedVendor(null);
-    toast.success('Vendor Approved Successfully!');
   };
 
-  const handleReject = (id: string) => {
-    setApplications(apps => apps.map(app => app.id === id ? { ...app, status: 'rejected' } : app));
+  const handleReject = async (id: string) => {
+    await reviewApplication({ id, status: 'REJECTED' });
     setSelectedVendor(null);
-    toast.error('Vendor Application Rejected.');
   };
+
+  const parseDocuments = (docString: string) => {
+    try {
+      return JSON.parse(docString);
+    } catch {
+      return {};
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isError || !applications) {
+    return (
+      <div className="text-center text-red-500 p-4">
+        Failed to load vendor applications.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -91,32 +76,40 @@ export default function VendorManagement() {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {applications.map((app) => (
-                <tr key={app.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="py-4 px-6">
-                    <div className="font-bold text-gray-900">{app.companyName}</div>
-                    <div className="text-xs text-gray-500">Req ID: {app.id}</div>
-                  </td>
-                  <td className="py-4 px-6 text-gray-600">
-                    <div className="font-medium text-gray-800">{app.contactPerson}</div>
-                    <div className="text-xs text-gray-500">{app.phone}</div>
-                  </td>
-                  <td className="py-4 px-6 text-gray-600">{app.appliedDate}</td>
-                  <td className="py-4 px-6">
-                    {app.status === 'pending' && <span className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-bold">Pending</span>}
-                    {app.status === 'approved' && <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold">Approved</span>}
-                    {app.status === 'rejected' && <span className="px-3 py-1 bg-red-50 text-red-700 rounded-full text-xs font-bold">Rejected</span>}
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    <button 
-                      onClick={() => setSelectedVendor(app)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
-                    >
-                      <Eye size={16} /> Review
-                    </button>
+              {applications.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="py-8 text-center text-gray-500">
+                    No vendor applications found.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                applications.map((app) => (
+                  <tr key={app.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
+                    <td className="py-4 px-6">
+                      <div className="font-bold text-gray-900">{app.company_name}</div>
+                      <div className="text-xs text-gray-500">Req ID: {app.id.substring(0,8)}</div>
+                    </td>
+                    <td className="py-4 px-6 text-gray-600">
+                      <div className="font-medium text-gray-800">{app.applicant_name}</div>
+                      <div className="text-xs text-gray-500">{app.phone}</div>
+                    </td>
+                    <td className="py-4 px-6 text-gray-600">{new Date(app.created_at || '').toLocaleDateString()}</td>
+                    <td className="py-4 px-6">
+                      {app.status === 'PENDING' && <span className="px-3 py-1 bg-amber-50 text-amber-700 rounded-full text-xs font-bold">Pending</span>}
+                      {app.status === 'APPROVED' && <span className="px-3 py-1 bg-green-50 text-green-700 rounded-full text-xs font-bold">Approved</span>}
+                      {app.status === 'REJECTED' && <span className="px-3 py-1 bg-red-50 text-red-700 rounded-full text-xs font-bold">Rejected</span>}
+                    </td>
+                    <td className="py-4 px-6 text-right">
+                      <button 
+                        onClick={() => setSelectedVendor(app)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-colors"
+                      >
+                        <Eye size={16} /> Review
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -145,10 +138,9 @@ export default function VendorManagement() {
                 <div className="space-y-4">
                   <h4 className="font-bold text-gray-900 flex items-center gap-2 border-b pb-2"><User size={18}/> Applicant Info</h4>
                   <div className="space-y-2 text-sm">
-                    <p><span className="text-gray-500 w-24 inline-block">Name:</span> <span className="font-medium">{selectedVendor.contactPerson}</span></p>
+                    <p><span className="text-gray-500 w-24 inline-block">Name:</span> <span className="font-medium">{selectedVendor.applicant_name}</span></p>
                     <p><span className="text-gray-500 w-24 inline-block">Phone:</span> <span className="font-medium">{selectedVendor.phone}</span></p>
-                    <p><span className="text-gray-500 w-24 inline-block">Email:</span> <span className="font-medium">{selectedVendor.email}</span></p>
-                    <p><span className="text-gray-500 w-24 inline-block">NID No:</span> <span className="font-medium">{selectedVendor.documents.nid}</span></p>
+                    <p><span className="text-gray-500 w-24 inline-block">Email:</span> <span className="font-medium">{selectedVendor.applicant_email}</span></p>
                   </div>
                 </div>
 
@@ -156,41 +148,42 @@ export default function VendorManagement() {
                 <div className="space-y-4">
                   <h4 className="font-bold text-gray-900 flex items-center gap-2 border-b pb-2"><Building2 size={18}/> Business Info</h4>
                   <div className="space-y-2 text-sm">
-                    <p><span className="text-gray-500 w-28 inline-block">Company:</span> <span className="font-bold text-blue-600">{selectedVendor.companyName}</span></p>
-                    <p><span className="text-gray-500 w-28 inline-block">Trade License:</span> <span className="font-medium">{selectedVendor.documents.tradeLicense}</span></p>
-                    <p><span className="text-gray-500 w-28 inline-block">TIN No:</span> <span className="font-medium">{selectedVendor.documents.tin}</span></p>
-                    <p><span className="text-gray-500 w-28 inline-block">BIN No:</span> <span className="font-medium">{selectedVendor.documents.bin}</span></p>
+                    <p><span className="text-gray-500 w-28 inline-block">Company:</span> <span className="font-bold text-blue-600">{selectedVendor.company_name}</span></p>
+                    <p><span className="text-gray-500 w-28 inline-block">Location:</span> <span className="font-medium">{selectedVendor.location}</span></p>
+                    <p><span className="text-gray-500 w-28 inline-block">Address:</span> <span className="font-medium">{selectedVendor.full_address}</span></p>
                   </div>
                 </div>
               </div>
 
-              {/* Uploaded Documents Preview (Simulated) */}
+              {/* Uploaded Documents Preview */}
               <div>
                 <h4 className="font-bold text-gray-900 flex items-center gap-2 border-b pb-2 mb-4"><FileText size={18}/> Submitted Documents</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {['NID Card', 'Trade License', 'TIN Certificate', 'BIN Certificate'].map((doc, idx) => (
-                    <div key={idx} className="border border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors">
+                  {Object.entries(parseDocuments(selectedVendor.document_url)).map(([key, url]) => (
+                    <a href={url as string} target="_blank" rel="noopener noreferrer" key={key} className="border border-gray-200 rounded-xl p-4 flex flex-col items-center justify-center text-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors">
                       <FileText className="text-blue-500" size={32} />
-                      <span className="text-xs font-semibold text-gray-700">{doc}</span>
-                      <span className="text-[10px] text-gray-400">View PDF/IMG</span>
-                    </div>
+                      <span className="text-xs font-semibold text-gray-700 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</span>
+                      <span className="text-[10px] text-gray-400">View Document</span>
+                    </a>
                   ))}
                 </div>
               </div>
             </div>
 
             {/* Actions */}
-            {selectedVendor.status === 'pending' && (
+            {selectedVendor.status === 'PENDING' && (
               <div className="p-6 border-t border-gray-100 bg-gray-50 rounded-b-3xl flex gap-4">
                 <button 
                   onClick={() => handleReject(selectedVendor.id)}
-                  className="flex-1 py-3 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl flex justify-center items-center gap-2 transition-colors"
+                  disabled={isPending}
+                  className="flex-1 py-3 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl flex justify-center items-center gap-2 transition-colors disabled:opacity-50"
                 >
                   <XCircle size={18} /> Reject
                 </button>
                 <button 
                   onClick={() => handleApprove(selectedVendor.id)}
-                  className="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-600/20 flex justify-center items-center gap-2 transition-colors"
+                  disabled={isPending}
+                  className="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-600/20 flex justify-center items-center gap-2 transition-colors disabled:opacity-50"
                 >
                   <CheckCircle2 size={18} /> Approve Vendor
                 </button>

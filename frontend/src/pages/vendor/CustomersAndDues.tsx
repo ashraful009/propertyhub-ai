@@ -1,78 +1,47 @@
 import { useState } from 'react';
-import { Search, Filter, BellRing, CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { Search, Filter, BellRing, AlertCircle, Clock, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-// ডামি কাস্টমার ডাটা
-interface CustomerDue {
-  id: string;
-  name: string;
-  phone: string;
-  property: string;
-  totalPaid: number;
-  totalDue: number;
-  nextInstallmentDate: string;
-  installmentAmount: number;
-  status: 'up-to-date' | 'due-soon' | 'overdue';
-}
-
-const mockCustomers: CustomerDue[] = [
-  {
-    id: "CUST-001",
-    name: "Ashraful Islam",
-    phone: "+880 1711 000000",
-    property: "Oceanview Apt - Unit A4",
-    totalPaid: 908333,
-    totalDue: 24091667,
-    nextInstallmentDate: "15 Jul, 2026",
-    installmentAmount: 408333,
-    status: 'up-to-date'
-  },
-  {
-    id: "CUST-002",
-    name: "Rahim Uddin",
-    phone: "+880 1811 000000",
-    property: "Skyline Villa - Plot 12",
-    totalPaid: 1500000,
-    totalDue: 18500000,
-    nextInstallmentDate: "25 Jun, 2026",
-    installmentAmount: 350000,
-    status: 'due-soon'
-  },
-  {
-    id: "CUST-003",
-    name: "Karim Hassan",
-    phone: "+880 1911 000000",
-    property: "Metro Commercial Space",
-    totalPaid: 500000,
-    totalDue: 45000000,
-    nextInstallmentDate: "10 Jun, 2026",
-    installmentAmount: 750000,
-    status: 'overdue'
-  }
-];
+import { useVendorDashboard } from '../../hooks/api/useDashboard';
 
 export default function CustomersAndDues() {
-  const [customers] = useState<CustomerDue[]>(mockCustomers);
+  const { data: dashboardData, isLoading, isError } = useVendorDashboard();
   const [sendingId, setSendingId] = useState<string | null>(null);
 
   const formatBDT = (amount: number) => 
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(amount);
 
-  const handleSendReminder = (id: string, name: string) => {
-    setSendingId(id);
-    // API কল সিমুলেশন (SMS বা Email পাঠানোর জন্য)
+  const handleSendReminder = (name: string) => {
+    setSendingId(name);
     setTimeout(() => {
       setSendingId(null);
       toast.success(`Payment reminder sent to ${name} via SMS & Email!`);
     }, 1500);
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (isError || !dashboardData) {
+    return (
+      <div className="text-center text-red-500 p-4">
+        Failed to load customer data. Please try again later.
+      </div>
+    );
+  }
+
+  const customers = dashboardData.defaultersLastMonth;
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Customers & Dues</h1>
-          <p className="text-gray-500">Track installment payments and send reminders.</p>
+          <h1 className="text-2xl font-bold text-gray-900">Recent Defaulters</h1>
+          <p className="text-gray-500">Track overdue installment payments and send reminders.</p>
         </div>
         
         <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -97,64 +66,54 @@ export default function CustomersAndDues() {
               <tr className="bg-gray-50 text-gray-500 text-sm border-b border-gray-100">
                 <th className="py-4 px-6 font-medium">Customer Details</th>
                 <th className="py-4 px-6 font-medium">Property</th>
-                <th className="py-4 px-6 font-medium">Payment Progress</th>
-                <th className="py-4 px-6 font-medium">Next Installment</th>
+                <th className="py-4 px-6 font-medium">Overdue Amount</th>
+                <th className="py-4 px-6 font-medium">Due Date</th>
                 <th className="py-4 px-6 font-medium">Status</th>
                 <th className="py-4 px-6 font-medium text-right">Action</th>
               </tr>
             </thead>
             <tbody className="text-sm">
-              {customers.map((customer) => (
-                <tr key={customer.id} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors last:border-0">
-                  <td className="py-4 px-6">
-                    <div className="font-bold text-gray-900">{customer.name}</div>
-                    <div className="text-xs text-gray-500">{customer.phone}</div>
+              {customers.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="py-8 text-center text-gray-500">
+                    No defaulters found. All customers are up to date!
                   </td>
-                  <td className="py-4 px-6">
-                    <div className="font-medium text-gray-800">{customer.property}</div>
-                  </td>
-                  <td className="py-4 px-6">
-                    <div className="text-xs font-semibold text-gray-900 mb-1">Paid: <span className="text-green-600">{formatBDT(customer.totalPaid)}</span></div>
-                    <div className="text-xs text-gray-500">Due: {formatBDT(customer.totalDue)}</div>
-                  </td>
-                  <td className="py-4 px-6">
-                    <div className="font-bold text-gray-900">{formatBDT(customer.installmentAmount)}</div>
-                    <div className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-                      <Clock size={12} /> {customer.nextInstallmentDate}
-                    </div>
-                  </td>
-                  <td className="py-4 px-6">
-                    {customer.status === 'up-to-date' && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-700 rounded-md text-xs font-bold border border-green-100">
-                        <CheckCircle2 size={14} /> Up to date
-                      </span>
-                    )}
-                    {customer.status === 'due-soon' && (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-700 rounded-md text-xs font-bold border border-amber-100">
-                        <AlertCircle size={14} /> Due Soon
-                      </span>
-                    )}
-                    {customer.status === 'overdue' && (
+                </tr>
+              ) : (
+                customers.map((customer, index) => (
+                  <tr key={index} className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors last:border-0">
+                    <td className="py-4 px-6">
+                      <div className="font-bold text-gray-900">{customer.customer_name}</div>
+                      <div className="text-xs text-gray-500">{customer.phone}</div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="font-medium text-gray-800">{customer.property}</div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="font-bold text-red-600">{formatBDT(customer.amount)}</div>
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="text-gray-900 flex items-center gap-1 mt-0.5">
+                        <Clock size={12} /> {new Date(customer.due_date).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td className="py-4 px-6">
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-700 rounded-md text-xs font-bold border border-red-100">
                         <AlertCircle size={14} /> Overdue
                       </span>
-                    )}
-                  </td>
-                  <td className="py-4 px-6 text-right">
-                    {(customer.status === 'due-soon' || customer.status === 'overdue') ? (
+                    </td>
+                    <td className="py-4 px-6 text-right">
                       <button 
-                        onClick={() => handleSendReminder(customer.id, customer.name)}
-                        disabled={sendingId === customer.id}
+                        onClick={() => handleSendReminder(customer.customer_name)}
+                        disabled={sendingId === customer.customer_name}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-bold transition-colors disabled:opacity-50"
                       >
-                        <BellRing size={16} /> {sendingId === customer.id ? 'Sending...' : 'Remind'}
+                        <BellRing size={16} /> {sendingId === customer.customer_name ? 'Sending...' : 'Remind'}
                       </button>
-                    ) : (
-                      <span className="text-gray-400 text-xs font-medium px-3">No Action</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

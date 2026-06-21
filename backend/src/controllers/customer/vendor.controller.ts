@@ -12,7 +12,18 @@ export const submitApplication = async (req: AuthRequest, res: Response): Promis
       return ApiResponse.error(res, ERROR_MESSAGES.VENDOR.CUSTOMER_ONLY_APPLY, 403);
     }
 
-    const { company_name, location, full_address, company_mail, phone, document_url } = req.body;
+    const { company_name, location, full_address, company_mail, phone } = req.body;
+
+    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+    const documents: any = {};
+
+    if (files) {
+      if (files.profileImage) documents.profileImage = files.profileImage[0].path;
+      if (files.nidScan) documents.nidScan = files.nidScan[0].path;
+      if (files.tradeLicenseFile) documents.tradeLicenseFile = files.tradeLicenseFile[0].path;
+      if (files.tinFile) documents.tinFile = files.tinFile[0].path;
+      if (files.binFile) documents.binFile = files.binFile[0].path;
+    }
 
     const applicationData = {
       user_id: userId,
@@ -21,7 +32,7 @@ export const submitApplication = async (req: AuthRequest, res: Response): Promis
       full_address,
       company_mail,
       phone,
-      document_url,
+      document_url: JSON.stringify(documents),
     };
 
     const newApplication = await insertVendorApplication(applicationData);

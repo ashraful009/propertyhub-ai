@@ -1,31 +1,74 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Building2, User, FileText, CreditCard, ChevronRight, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { Building2, User, FileText, CreditCard, ChevronRight, CheckCircle2, ShieldAlert, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { useProperties } from '../../hooks/api/useProperties';
+import { useCreateBooking } from '../../hooks/api/useBookings';
+import { useCreateCheckoutSession } from '../../hooks/api/usePayment';
 
 export default function Checkout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
-  const [isProcessing, setIsProcessing] = useState(false);
+  
+  const searchParams = new URLSearchParams(location.search);
+  const propertyId = searchParams.get('property');
 
-  // ভবিষ্যতে এগুলো Zustand store বা API থেকে আসবে
+  const { data: properties, isLoading: isLoadingProps } = useProperties();
+  const { mutateAsync: createBooking, isPending: isBooking } = useCreateBooking();
+  const { mutateAsync: createCheckoutSession, isPending: isCheckingOut } = useCreateCheckoutSession();
+
+  const property = properties?.find(p => p.id === propertyId);
+  
   const bookingMoney = 500000;
-  const propertyName = "Luxury Oceanview Apartment";
+  const isProcessing = isBooking || isCheckingOut;
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsProcessing(true);
+    if (!property) return toast.error('Property not found');
     
-    // ডামি পেমেন্ট প্রসেসিং (২ সেকেন্ড পর সাকসেস মেসেজ দেখাবে)
-    setTimeout(() => {
-      setIsProcessing(false);
-      toast.success('Payment Successful! Booking Confirmed.');
-      navigate('/customer/dashboard'); // পেমেন্ট শেষে কাস্টমার ড্যাশবোর্ডে যাবে
-    }, 2000);
+    try {
+      // 1. Create booking
+      const booking = await createBooking({
+        property_id: property.id,
+        vendor_id: property.vendor_id,
+        booking_amount: bookingMoney,
+      });
+
+      // 2. Redirect to payment
+      if (paymentMethod === 'card') {
+        await createCheckoutSession({
+          booking_id: booking.id,
+          amount: bookingMoney,
+          description: `Booking Money for ${property.title}`,
+        });
+      } else {
+        toast.error('Mobile banking is not supported yet.');
+      }
+    } catch (error) {
+      console.error('Checkout failed', error);
+    }
   };
 
   const formatBDT = (amount: number) => 
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(amount);
+
+  if (isLoadingProps) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!property) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-10 text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Property Not Found</h2>
+        <button onClick={() => navigate('/')} className="text-blue-600 underline">Go back to Home</button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 py-10">
@@ -51,15 +94,15 @@ export default function Checkout() {
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-6 items-center">
               <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
                 <img 
-                  src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=300&q=80" 
+                  src={property.images?.[0] || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=300&q=80"}
                   alt="Property" 
                   className="w-full h-full object-cover"
                 />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">{propertyName}</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">{property.title}</h3>
                 <p className="text-gray-500 text-sm flex items-center gap-1.5 mb-2">
-                  <Building2 size={16} className="text-blue-500"/> Unit A-4 (2,450 sqft)
+                  <Building2 size={16} className="text-blue-500"/> {property.address}
                 </p>
                 <div className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-sm font-semibold">
                   <CheckCircle2 size={16} /> Selected Plan: 5 Years Installment
@@ -125,7 +168,7 @@ export default function Checkout() {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-gray-600">
                   <span>Property Price</span>
-                  <span className="font-medium">{formatBDT(25000000)}</span>
+                  <span className="font-medium">{formatBDT(Number(property.price))}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Installment Duration</span>

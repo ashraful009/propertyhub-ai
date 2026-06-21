@@ -30,9 +30,13 @@ export default function Auth() {
         });
         
         // Pass user data and token to Zustand
+        const userRole = response.data.data.user.role;
         loginAuth(response.data.data.user, response.data.data.accessToken);
         toast.success('Successfully logged in!');
-        navigate('/'); 
+        
+        if (userRole === 'ADMIN') navigate('/admin/dashboard');
+        else if (userRole === 'VENDOR') navigate('/vendor/dashboard');
+        else navigate('/customer/dashboard');
       } else {
         await apiClient.post('/auth/register', {
           name: data.name,

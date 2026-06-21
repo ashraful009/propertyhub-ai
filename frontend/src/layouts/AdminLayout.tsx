@@ -1,20 +1,22 @@
 import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
-  LayoutDashboard, Users, Building, Wallet, FileEdit, 
-  Menu, Bell, ShieldCheck 
+  LayoutDashboard, Users, FileText, Settings, 
+  Menu, Bell, Shield, BookOpen 
 } from 'lucide-react';
+import { useAuthStore } from '../store/authStore';
 
 export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuthStore();
 
   const navItems = [
-    { name: 'Overview', path: '/admin/dashboard', icon: LayoutDashboard },
-    { name: 'Vendor Management', path: '/admin/vendors', icon: Users },
-    { name: 'Properties', path: '/admin/properties', icon: Building },
-    { name: 'Financials', path: '/admin/financials', icon: Wallet },
-    { name: 'Policy Manager', path: '/admin/policies', icon: FileEdit },
+    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Vendor Requests', path: '/admin/vendors', icon: Users },
+    { name: 'Policy Manager', path: '/admin/policies', icon: BookOpen },
+    { name: 'Reports', path: '/admin/reports', icon: FileText },
+    { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
 
   return (
@@ -33,8 +35,8 @@ export default function AdminLayout() {
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
         <div className="h-20 flex items-center px-6 border-b border-slate-800">
-          <Link to="/" className="flex items-center gap-2">
-            <ShieldCheck className="w-7 h-7 text-blue-500" />
+          <Link to="/" className="flex items-center gap-2 text-white hover:text-blue-400 transition-colors">
+            <Shield className="w-7 h-7 text-blue-500" />
             <span className="font-bold text-xl tracking-wide">AdminHub</span>
           </Link>
         </div>
@@ -50,11 +52,11 @@ export default function AdminLayout() {
                 onClick={() => setIsSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-colors ${
                   isActive 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                    ? 'bg-blue-600 text-white shadow-md' 
                     : 'text-slate-400 hover:bg-slate-800 hover:text-white'
                 }`}
               >
-                <Icon size={20} className={isActive ? 'text-white' : 'text-slate-400'} />
+                <Icon size={20} className={isActive ? 'text-white' : 'text-slate-500'} />
                 {item.name}
               </Link>
             );
@@ -69,11 +71,11 @@ export default function AdminLayout() {
           <div className="flex items-center gap-4">
             <button 
               onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden p-2 rounded-md text-gray-500 hover:bg-gray-100"
+              className="lg:hidden p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
             >
               <Menu size={24} />
             </button>
-            <h2 className="text-xl font-bold text-gray-800 hidden sm:block">Super Admin Portal</h2>
+            <h2 className="text-xl font-bold text-gray-800 hidden sm:block">Admin Control Panel</h2>
           </div>
 
           <div className="flex items-center gap-4">
@@ -82,12 +84,12 @@ export default function AdminLayout() {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             <div className="flex items-center gap-3 pl-4 border-l border-gray-200">
-              <div className="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center text-white font-bold">
-                A
+              <div className="w-9 h-9 rounded-full bg-slate-900 flex items-center justify-center text-white font-bold uppercase">
+                {user?.name?.charAt(0) || 'A'}
               </div>
               <div className="hidden md:block text-sm">
-                <p className="font-semibold text-gray-700">System Admin</p>
-                <p className="text-xs text-green-600 font-medium">Online</p>
+                <p className="font-semibold text-gray-700">{user?.name || 'Admin'}</p>
+                <p className="text-xs text-blue-600 font-medium">Super Admin</p>
               </div>
             </div>
           </div>

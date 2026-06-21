@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { Building2, CheckCircle2, ArrowRight, ArrowLeft, UploadCloud } from 'lucide-react';
-import toast from 'react-hot-toast';
+// import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import { useSubmitVendorApplication } from '../../hooks/api/useVendor';
 
 export default function VendorApplication() {
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { register, handleSubmit, formState: { errors }, trigger } = useForm();
+  const navigate = useNavigate();
+  const { mutateAsync: submitApplication, isPending: isSubmitting } = useSubmitVendorApplication();
 
   // 5MB Custom Validation Rule
   const validateFile = (fileList: FileList) => {
@@ -24,13 +27,25 @@ export default function VendorApplication() {
   };
 
   const onSubmit = async (data: FieldValues) => {
-    setIsSubmitting(true);
-    setTimeout(() => {
-      console.log('Vendor Data:', data);
-      setIsSubmitting(false);
-      toast.success('Application submitted successfully! Please wait for admin approval.');
-      // Optionally redirect to a success page or home
-    }, 2000);
+    try {
+      const formData = new FormData();
+      formData.append('company_name', data.companyName);
+      formData.append('location', 'Bangladesh'); // Default or extracted from address
+      formData.append('full_address', data.address);
+      formData.append('company_mail', data.email);
+      formData.append('phone', data.phone);
+
+      if (data.profileImage?.[0]) formData.append('profileImage', data.profileImage[0]);
+      if (data.nidScan?.[0]) formData.append('nidScan', data.nidScan[0]);
+      if (data.tradeLicenseFile?.[0]) formData.append('tradeLicenseFile', data.tradeLicenseFile[0]);
+      if (data.tinFile?.[0]) formData.append('tinFile', data.tinFile[0]);
+      if (data.binFile?.[0]) formData.append('binFile', data.binFile[0]);
+
+      await submitApplication(formData);
+      navigate('/');
+    } catch (error) {
+      console.error('Submission failed', error);
+    }
   };
 
   return (

@@ -29,6 +29,13 @@ export const RESPONSE_MESSAGES = {
     POLICY_FETCHED: 'Vendor policy fetched',
   },
 
+  POLICY: {
+    FETCHED: 'Policies fetched successfully',
+    CREATED: 'Policy created successfully',
+    UPDATED: 'Policy updated successfully',
+    DELETED: 'Policy deleted successfully',
+  },
+
   INSTALLMENT: {
     PREVIEW_GENERATED: 'Preview generated',
     SCHEDULE_GENERATED: 'Installment schedule generated successfully',
