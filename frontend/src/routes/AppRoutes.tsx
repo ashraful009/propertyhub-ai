@@ -6,8 +6,10 @@ import PropertyDetails from "../pages/shared/PropertyDetails";
 import Checkout from "../pages/customer/Checkout";
 import CustomerLayout from "../layouts/CustomerLayout";
 import CustomerDashboard from "../pages/customer/CustomerDashboard";
-import Installments from '../pages/customer/Installments';
-import VendorApplication from '../pages/shared/VendorApplication';
+import Installments from "../pages/customer/Installments";
+import VendorApplication from "../pages/shared/VendorApplication";
+import AdminLayout from "../layouts/AdminLayout";
+import AdminDashboard from "../pages/admin/AdminDashboard";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -20,6 +22,9 @@ export default function AppRoutes() {
       <Route path="/customer" element={<CustomerLayout />}>
         <Route path="dashboard" element={<CustomerDashboard />} />
         <Route path="installments" element={<Installments />} />
+      </Route>
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route path="dashboard" element={<AdminDashboard />} />
       </Route>
       <Route path="/login" element={<Auth />} />
       <Route path="/register" element={<Auth />} />
