@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, LayoutDashboard, LogOut } from 'lucide-react';
-import { useAuthStore } from '../../../../store/authStore';
-import { cn } from '../../../../utils/cn';
+import { useAuthStore } from '../../../store/authStore';
+import { cn } from '../../../utils/cn';
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
