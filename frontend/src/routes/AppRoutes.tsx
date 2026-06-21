@@ -10,6 +10,7 @@ import Installments from "../pages/customer/Installments";
 import VendorApplication from "../pages/shared/VendorApplication";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import VendorManagement from '../pages/admin/VendorManagement';
 export default function AppRoutes() {
   return (
     <Routes>
@@ -25,6 +26,7 @@ export default function AppRoutes() {
       </Route>
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="vendors" element={<VendorManagement />} />
       </Route>
       <Route path="/login" element={<Auth />} />
       <Route path="/register" element={<Auth />} />
