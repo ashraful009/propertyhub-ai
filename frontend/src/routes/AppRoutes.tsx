@@ -10,7 +10,10 @@ import Installments from "../pages/customer/Installments";
 import VendorApplication from "../pages/shared/VendorApplication";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
-import VendorManagement from '../pages/admin/VendorManagement';
+import VendorManagement from "../pages/admin/VendorManagement";
+import PolicyManager from "../pages/admin/PolicyManager";
+import VendorLayout from "../layouts/VendorLayout";
+import VendorDashboard from "../pages/vendor/VendorDashboard";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -27,6 +30,11 @@ export default function AppRoutes() {
       <Route path="/admin" element={<AdminLayout />}>
         <Route path="dashboard" element={<AdminDashboard />} />
         <Route path="vendors" element={<VendorManagement />} />
+        <Route path="policies" element={<PolicyManager />} />
+      </Route>
+      <Route path="/vendor" element={<VendorLayout />}>
+        <Route path="dashboard" element={<VendorDashboard />} />
+        {/* Future routes: vendor properties, customers, earnings */}
       </Route>
       <Route path="/login" element={<Auth />} />
       <Route path="/register" element={<Auth />} />
