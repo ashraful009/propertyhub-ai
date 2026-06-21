@@ -1,18 +1,54 @@
+import HeroSection from '../../components/home/HeroSection';
+import PropertyFilter from '../../components/home/PropertyFilter';
+import PropertyCard from '../../components/property/PropertyCard';
+
+// Dummy data for testing the grid
+const dummyProperties = Array(10).fill(null).map((_, i) => ({
+  id: `prop-${i}`,
+  title: `Luxury Apartment ${i + 1}`,
+  location: i % 2 === 0 ? "Gulshan, Dhaka" : "Banani, Dhaka",
+  image: `https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80`,
+  availableUnits: Math.floor(Math.random() * 10) + 1,
+}));
+
 export default function Home() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 md:p-20 text-center mt-10">
-        <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight">
-          Find Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Dream Property</span>
-        </h1>
-        <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">
-          This is a dummy homepage to test our new 3D Glassmorphism sticky Navbar. Try scrolling down to see the blur effect in action!
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#f8fafc]">
+      {/* 1. Hero Section */}
+      <HeroSection />
 
-      {/* স্ক্রল টেস্ট করার জন্য ফাঁকা জায়গা */}
-      <div className="h-[1000px] mt-10 rounded-3xl border-2 border-dashed border-gray-200 flex items-center justify-center bg-gray-50/50">
-        <p className="text-gray-400 font-medium">Scroll down to test sticky navbar...</p>
+      {/* Main Content Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
+          {/* 2. Left Side Filter (Sticky on Desktop) */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-28">
+              <PropertyFilter />
+            </div>
+          </div>
+
+          {/* 3. Right Side Property Grid */}
+          <div className="lg:col-span-3">
+            <div className="mb-6 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">Featured Properties</h2>
+              <span className="text-sm font-medium text-gray-500 bg-white px-3 py-1 rounded-full shadow-sm">
+                Showing {dummyProperties.length} results
+              </span>
+            </div>
+
+            {/* Grid Container: Max 6 roughly visible, then scrollable internally */}
+            <div className="h-[800px] overflow-y-auto pr-2 pb-10 custom-scrollbar">
+              {/* Mobile: 2 cols, Desktop: 3 cols */}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+                {dummyProperties.map((prop) => (
+                  <PropertyCard key={prop.id} property={prop} />
+                ))}
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   );

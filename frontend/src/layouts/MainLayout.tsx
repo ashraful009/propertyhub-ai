@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar/Navbar';
-// Footer তৈরি করলে পরে এখানে ইমপোর্ট করবো
+import Footer from '../components/layout/Footer';
 
 export default function MainLayout() {
   return (
@@ -8,11 +8,10 @@ export default function MainLayout() {
       <Navbar />
       
       <main className="flex-grow">
-        {/* এই Outlet-এর জায়গাতেই Home, Search, Details পেজগুলো লোড হবে */}
         <Outlet />
       </main>
       
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 }
