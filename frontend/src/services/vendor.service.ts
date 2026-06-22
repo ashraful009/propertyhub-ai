@@ -7,6 +7,16 @@ export const VendorService = {
     return data.data;
   },
 
+  getProperties: async (): Promise<IProperty[]> => {
+    const { data } = await apiClient.get<ApiSuccessResponse<IProperty[]>>('/vendor/properties');
+    return data.data;
+  },
+
+  getPropertyById: async (id: string): Promise<IProperty> => {
+    const { data } = await apiClient.get<ApiSuccessResponse<IProperty>>(`/vendor/properties/${id}`);
+    return data.data;
+  },
+
   createProperty: async (formData: FormData): Promise<IProperty> => {
     const { data } = await apiClient.post<ApiSuccessResponse<IProperty>>('/vendor/properties', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },

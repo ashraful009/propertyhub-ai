@@ -1,19 +1,54 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { 
   Building, MapPin, DollarSign, UploadCloud, 
-  List, Save, X, BedDouble, Bath, Square
+  List, Save, X, BedDouble, Bath, Square, ArrowLeft
 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import { useCreateProperty } from '../../hooks/api/useVendor';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { VendorService } from '../../services/vendor.service';
 import { LOCATIONS } from '../../utils/constants';
 
-export default function AddProperty() {
-  const { register, handleSubmit } = useForm();
+export default function EditProperty() {
+  const { id } = useParams<{ id: string }>();
+  const { register, handleSubmit, reset } = useForm();
   const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { mutateAsync: createProperty, isPending: isSubmitting } = useCreateProperty();
+
+  useEffect(() => {
+    const fetchProperty = async (propertyId: string) => {
+      try {
+        setLoading(true);
+        const property = await VendorService.getPropertyById(propertyId);
+        
+        // Pre-fill form
+        reset({
+          title: property.title,
+          type: property.property_type,
+          location: property.location,
+          description: property.description,
+          totalPrice: property.price,
+          area: property.area,
+          bedrooms: property.bedrooms,
+          bathrooms: property.bathrooms,
+          // Using some default mappings for missing details
+          bookingMoney: Math.floor(property.price * 0.1),
+          maxDuration: "5"
+        });
+        setExistingImages(property.images || []);
+      } catch {
+        toast.error('Failed to load property details');
+        navigate('/vendor/properties');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) fetchProperty(id);
+  }, [id, reset, navigate]);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -22,52 +57,62 @@ export default function AddProperty() {
     }
   };
 
-  const removeImage = (index: number) => {
+  const removeNewImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+
+
   const onSubmit = async (data: FieldValues) => {
-    if (images.length === 0) {
-      toast.error('Please upload at least one property image.');
-      return;
-    }
-    
     try {
+      setIsSubmitting(true);
       const formData = new FormData();
       formData.append('title', data.title);
-      formData.append('type', data.type);
+      formData.append('property_type', data.type);
       formData.append('location', data.location);
-      formData.append('address', data.location); // Mapping location to address for backend
+      formData.append('address', data.location);
       formData.append('description', data.description);
       formData.append('price', data.totalPrice);
-      formData.append('total_installments', String(Number(data.maxDuration) * 12));
+      formData.append('area', data.area);
+      formData.append('bedrooms', data.bedrooms);
+      formData.append('bathrooms', data.bathrooms);
       
-      // Features
-      const features = {
-        area: data.area,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-      };
-      formData.append('features', JSON.stringify(features));
+      // Send new images if any
+      if (images.length > 0) {
+        images.forEach((image) => {
+          formData.append('images', image);
+        });
+      } else {
+        // If no new images, we should theoretically send existing ones or backend should preserve them.
+        // For now, our backend preserves them if req.files is empty.
+      }
 
-      images.forEach((image) => {
-        formData.append('images', image);
-      });
-
-      await createProperty(formData);
+      await VendorService.updateProperty(id as string, formData);
       
-      toast.success('Property submitted successfully!');
-      navigate('/vendor/dashboard');
-    } catch (error) {
-      console.error('Failed to create property', error);
+      toast.success('Property updated successfully!');
+      navigate('/vendor/properties');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err.response?.data?.error || 'Failed to update property');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  if (loading) {
+    return <div className="p-8 text-center text-gray-500">Loading property details...</div>;
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Add New Property</h1>
-        <p className="text-gray-500">List your property with installment details for admin review.</p>
+      <div className="flex items-center gap-4">
+        <Link to="/vendor/properties" className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
+          <ArrowLeft className="text-gray-600" />
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Edit Property</h1>
+          <p className="text-gray-500">Update your property details.</p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -84,7 +129,6 @@ export default function AddProperty() {
               type="text" 
               {...register("title", { required: true })} 
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" 
-              placeholder="e.g. Luxury Oceanview Apartment" 
             />
           </div>
 
@@ -121,7 +165,6 @@ export default function AddProperty() {
               rows={4} 
               {...register("description", { required: true })} 
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50 custom-scrollbar" 
-              placeholder="Describe the property, neighborhood, and highlights..."
             ></textarea>
           </div>
         </div>
@@ -135,43 +178,29 @@ export default function AddProperty() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1"><Square size={16}/> Total Area (sqft)</label>
-              <input type="number" {...register("area", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" placeholder="e.g. 2450" />
+              <input type="number" {...register("area", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1"><BedDouble size={16}/> Bedrooms</label>
-              <input type="number" {...register("bedrooms", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" placeholder="4" />
+              <input type="number" {...register("bedrooms", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5 flex items-center gap-1"><Bath size={16}/> Bathrooms</label>
-              <input type="number" {...register("bathrooms", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" placeholder="3" />
+              <input type="number" {...register("bathrooms", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" />
             </div>
           </div>
         </div>
 
-        {/* Section 3: Pricing & Installment Plans */}
+        {/* Section 3: Pricing */}
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
-            <DollarSign className="text-indigo-600" size={20} /> Pricing & Installment Setup
+            <DollarSign className="text-indigo-600" size={20} /> Pricing
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Total Property Value (BDT)</label>
-              <input type="number" {...register("totalPrice", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" placeholder="e.g. 25000000" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Minimum Booking Money (BDT)</label>
-              <input type="number" {...register("bookingMoney", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" placeholder="e.g. 500000" />
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Maximum Installment Duration</label>
-              <select {...register("maxDuration", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50">
-                <option value="1">1 Year (12 Months)</option>
-                <option value="3">3 Years (36 Months)</option>
-                <option value="5">5 Years (60 Months)</option>
-                <option value="10">10 Years (120 Months)</option>
-              </select>
-              <p className="text-xs text-gray-500 mt-2">Customers can choose any plan up to this maximum duration.</p>
+              <input type="number" {...register("totalPrice", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-600 outline-none bg-gray-50" />
             </div>
           </div>
         </div>
@@ -191,31 +220,39 @@ export default function AddProperty() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
             />
             <UploadCloud className="mx-auto text-gray-400 mb-4" size={40} />
-            <p className="text-sm font-medium text-gray-700">Click or drag images here to upload</p>
-            <p className="text-xs text-gray-400 mt-1">High resolution images recommended (Max 5MB each)</p>
+            <p className="text-sm font-medium text-gray-700">Add new images</p>
+            <p className="text-xs text-gray-400 mt-1">Uploading new images will replace existing ones (backend logic constraint for now)</p>
           </div>
 
-          {images.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-              {images.map((file, index) => (
-                <div key={index} className="relative group rounded-xl overflow-hidden border border-gray-200 aspect-square">
-                  <img src={URL.createObjectURL(file)} alt={`Upload ${index}`} className="w-full h-full object-cover" />
-                  <button 
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
-                  >
-                    <X size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            {/* Existing Images */}
+            {existingImages.map((url, index) => (
+              <div key={`exist-${index}`} className="relative group rounded-xl overflow-hidden border border-gray-200 aspect-square">
+                <img src={url} alt={`Existing ${index}`} className="w-full h-full object-cover" />
+                <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-1 rounded">Existing</div>
+              </div>
+            ))}
+            
+            {/* New Images */}
+            {images.map((file, index) => (
+              <div key={`new-${index}`} className="relative group rounded-xl overflow-hidden border border-indigo-200 aspect-square">
+                <img src={URL.createObjectURL(file)} alt={`New ${index}`} className="w-full h-full object-cover" />
+                <div className="absolute top-2 left-2 bg-indigo-500 text-white text-xs px-2 py-1 rounded">New</div>
+                <button 
+                  type="button"
+                  onClick={() => removeNewImage(index)}
+                  className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Submit Actions */}
         <div className="flex gap-4 sticky bottom-6 z-20 bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
-          <button type="button" onClick={() => navigate('/vendor/dashboard')} className="px-6 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 font-bold text-gray-700">
+          <button type="button" onClick={() => navigate('/vendor/properties')} className="px-6 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 font-bold text-gray-700">
             Cancel
           </button>
           <button 
@@ -223,7 +260,7 @@ export default function AddProperty() {
             disabled={isSubmitting} 
             className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
           >
-            {isSubmitting ? 'Submitting to Admin...' : <><Save size={20} /> Submit Property for Approval</>}
+            {isSubmitting ? 'Updating...' : <><Save size={20} /> Update Property</>}
           </button>
         </div>
 

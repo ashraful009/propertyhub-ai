@@ -17,6 +17,8 @@ import VendorLayout from "../layouts/VendorLayout";
 import VendorDashboard from "../pages/vendor/VendorDashboard";
 import AddProperty from '../pages/vendor/AddProperty';
 import CustomersAndDues from '../pages/vendor/CustomersAndDues';
+import MyProperties from '../pages/vendor/MyProperties';
+import EditProperty from '../pages/vendor/EditProperty';
 import ProtectedRoute from "../components/auth/ProtectedRoute";
 
 export default function AppRoutes() {
@@ -54,6 +56,8 @@ export default function AppRoutes() {
         <Route element={<VendorLayout />}>
           <Route path="dashboard" element={<VendorDashboard />} />
           <Route path="add-property" element={<AddProperty />} />
+          <Route path="properties" element={<MyProperties />} />
+          <Route path="edit-property/:id" element={<EditProperty />} />
           <Route path="customers" element={<CustomersAndDues />} />
         </Route>
       </Route>

@@ -1,5 +1,25 @@
 import pool from '../../database/db';
 import { IProperty } from '../../models/shared/property.model';
+
+export const getPropertiesByVendor = async (vendorId: string): Promise<IProperty[]> => {
+  const query = `
+    SELECT * FROM properties 
+    WHERE vendor_id = $1 
+    ORDER BY created_at DESC;
+  `;
+  const result = await pool.query(query, [vendorId]);
+  return result.rows;
+};
+
+export const getPropertyByIdForVendor = async (propertyId: string, vendorId: string): Promise<IProperty | null> => {
+  const query = `
+    SELECT * FROM properties 
+    WHERE id = $1 AND vendor_id = $2;
+  `;
+  const result = await pool.query(query, [propertyId, vendorId]);
+  return result.rows[0] || null;
+};
+
 export const insertProperty = async (propertyData: IProperty): Promise<IProperty> => {
   const query = `
     INSERT INTO properties 

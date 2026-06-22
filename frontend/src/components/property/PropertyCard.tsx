@@ -1,14 +1,9 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Building } from 'lucide-react';
+import type { IProperty } from '../../types/shared.types';
 
 interface PropertyCardProps {
-  property: {
-    id: string;
-    title: string;
-    location: string;
-    image: string;
-    availableUnits: number;
-  };
+  property: IProperty;
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
@@ -19,7 +14,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     >
       {/* Background Image */}
       <img 
-        src={property.image} 
+        src={property.images && property.images.length > 0 ? property.images[0] : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80'} 
         alt={property.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
       />
@@ -41,7 +36,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           
           <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1.5 rounded-lg border border-white/10">
             <Building size={12} />
-            <span>{property.availableUnits} Units</span>
+            <span>{property.property_type ? property.property_type.toUpperCase() : 'PROPERTY'}</span>
           </div>
         </div>
       </div>
