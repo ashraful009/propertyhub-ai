@@ -12,8 +12,8 @@ export const AdminService = {
     return data.data;
   },
 
-  reviewApplication: async (id: string, status: 'APPROVED' | 'REJECTED'): Promise<IVendorApplication> => {
-    const { data } = await apiClient.put<ApiSuccessResponse<IVendorApplication>>(`/admin/vendor-applications/${id}/status`, { status });
+  reviewApplication: async (id: string, status: 'APPROVED' | 'REJECTED', user_id: string): Promise<IVendorApplication> => {
+    const { data } = await apiClient.put<ApiSuccessResponse<IVendorApplication>>(`/admin/vendor-applications/${id}/status`, { status, user_id });
     return data.data;
   },
 

@@ -10,8 +10,8 @@ CREATE TABLE properties (
     property_type VARCHAR(100),
     bedrooms INT,
     bathrooms INT,
-    area NUMERIC(10, 2), -- Square fit
-    images TEXT[], -- Cloudinary image URLs
+    area NUMERIC(10, 2), 
+    images TEXT[], 
     status property_status DEFAULT 'AVAILABLE',
     vendor_id UUID REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

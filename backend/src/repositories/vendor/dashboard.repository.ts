@@ -35,7 +35,7 @@ export const getVendorStats = async (vendorId: string) => {
       FROM installment_milestones im
       JOIN installment_plans ip ON im.plan_id = ip.id
       JOIN bookings b ON ip.booking_id = b.id
-      JOIN users u ON b.user_id = u.id
+      JOIN users u ON b.customer_id = u.id
       JOIN properties p ON b.property_id = p.id
       WHERE p.vendor_id = $1 AND im.status = 'UNPAID' 
       AND im.due_date BETWEEN CURRENT_DATE - INTERVAL '1 month' AND CURRENT_DATE - INTERVAL '1 day'
@@ -43,7 +43,7 @@ export const getVendorStats = async (vendorId: string) => {
     const recentBookingsRes = await client.query(`
       SELECT b.id, u.name as customer_name, p.title as property, b.created_at
       FROM bookings b
-      JOIN users u ON b.user_id = u.id
+      JOIN users u ON b.customer_id = u.id
       JOIN properties p ON b.property_id = p.id
       WHERE p.vendor_id = $1
       ORDER BY b.created_at DESC LIMIT 5

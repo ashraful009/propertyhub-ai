@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS invoices CASCADE;
+DROP TYPE IF EXISTS invoice_status;

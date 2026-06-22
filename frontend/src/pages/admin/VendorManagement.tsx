@@ -9,13 +9,13 @@ export default function VendorManagement() {
   
   const [selectedVendor, setSelectedVendor] = useState<IVendorApplication | null>(null);
 
-  const handleApprove = async (id: string) => {
-    await reviewApplication({ id, status: 'APPROVED' });
+  const handleApprove = async (id: string, user_id: string) => {
+    await reviewApplication({ id, status: 'APPROVED', user_id });
     setSelectedVendor(null);
   };
 
-  const handleReject = async (id: string) => {
-    await reviewApplication({ id, status: 'REJECTED' });
+  const handleReject = async (id: string, user_id: string) => {
+    await reviewApplication({ id, status: 'REJECTED', user_id });
     setSelectedVendor(null);
   };
 
@@ -174,14 +174,14 @@ export default function VendorManagement() {
             {selectedVendor.status === 'PENDING' && (
               <div className="p-6 border-t border-gray-100 bg-gray-50 rounded-b-3xl flex gap-4">
                 <button 
-                  onClick={() => handleReject(selectedVendor.id)}
+                  onClick={() => handleReject(selectedVendor.id, selectedVendor.user_id)}
                   disabled={isPending}
                   className="flex-1 py-3 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl flex justify-center items-center gap-2 transition-colors disabled:opacity-50"
                 >
                   <XCircle size={18} /> Reject
                 </button>
                 <button 
-                  onClick={() => handleApprove(selectedVendor.id)}
+                  onClick={() => handleApprove(selectedVendor.id, selectedVendor.user_id)}
                   disabled={isPending}
                   className="flex-1 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg shadow-green-600/20 flex justify-center items-center gap-2 transition-colors disabled:opacity-50"
                 >

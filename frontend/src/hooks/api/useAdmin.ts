@@ -13,8 +13,8 @@ export const useReviewApplication = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, status }: { id: string; status: 'APPROVED' | 'REJECTED' }) =>
-      AdminService.reviewApplication(id, status),
+    mutationFn: ({ id, status, user_id }: { id: string; status: 'APPROVED' | 'REJECTED'; user_id: string }) =>
+      AdminService.reviewApplication(id, status, user_id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendorApplications'] });
       toast.success('Application reviewed successfully');
