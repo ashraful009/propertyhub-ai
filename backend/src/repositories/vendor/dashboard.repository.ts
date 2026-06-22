@@ -15,7 +15,7 @@ export const getVendorStats = async (vendorId: string) => {
       SELECT COALESCE(SUM(p.price), 0) as total_sales
       FROM bookings b
       JOIN properties p ON b.property_id = p.id
-      WHERE p.vendor_id = $1 AND b.status IN ('CONFIRMED', 'COMPLETED')
+      WHERE p.vendor_id = $1 AND b.status = 'APPROVED'
     `, [vendorId]);
     const propertiesRes = await client.query(`
       SELECT status, COUNT(*) as count FROM properties 
@@ -31,7 +31,7 @@ export const getVendorStats = async (vendorId: string) => {
       AND im.due_date BETWEEN CURRENT_DATE AND CURRENT_DATE + INTERVAL '1 month'
     `, [vendorId]);
     const defaultersRes = await client.query(`
-      SELECT u.name as customer_name, u.email, u.phone, p.title as property, im.amount, im.due_date
+      SELECT u.name as customer_name, u.email, p.title as property, im.amount, im.due_date
       FROM installment_milestones im
       JOIN installment_plans ip ON im.plan_id = ip.id
       JOIN bookings b ON ip.booking_id = b.id

@@ -13,6 +13,7 @@ export interface IProperty {
   area: number;
   images: string[];
   status?: PropertyStatus;
+  is_approved?: boolean;
   vendor_id: string;
   created_at?: Date;
   updated_at?: Date;

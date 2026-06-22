@@ -49,7 +49,10 @@ export interface IProperty {
   area: number;
   images: string[];
   status: PropertyStatus;
+  is_approved?: boolean;
   vendor_id: string;
+  vendor_name?: string;
+  vendor_email?: string;
   created_at?: string;
   updated_at?: string;
 }

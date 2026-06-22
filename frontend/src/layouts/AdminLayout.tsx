@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, Users, FileText, Settings, 
-  Menu, Bell, Shield, BookOpen 
+  Menu, Bell, Shield, BookOpen, Home
 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -14,6 +14,7 @@ export default function AdminLayout() {
   const navItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { name: 'Vendor Requests', path: '/admin/vendors', icon: Users },
+    { name: 'Property Requests', path: '/admin/property-requests', icon: Home },
     { name: 'Policy Manager', path: '/admin/policies', icon: BookOpen },
     { name: 'Reports', path: '/admin/reports', icon: FileText },
     { name: 'Settings', path: '/admin/settings', icon: Settings },

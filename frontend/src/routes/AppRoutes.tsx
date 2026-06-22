@@ -12,6 +12,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import VendorManagement from "../pages/admin/VendorManagement";
 import PolicyManager from "../pages/admin/PolicyManager";
+import PropertyRequests from "../pages/admin/PropertyRequests";
 import VendorLayout from "../layouts/VendorLayout";
 import VendorDashboard from "../pages/vendor/VendorDashboard";
 import AddProperty from '../pages/vendor/AddProperty';
@@ -44,6 +45,7 @@ export default function AppRoutes() {
         <Route element={<AdminLayout />}>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="vendors" element={<VendorManagement />} />
+          <Route path="property-requests" element={<PropertyRequests />} />
           <Route path="policies" element={<PolicyManager />} />
         </Route>
       </Route>

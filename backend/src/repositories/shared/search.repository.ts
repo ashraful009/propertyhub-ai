@@ -2,7 +2,7 @@ import pool from '../../database/db';
 import { IProperty } from '../../models/shared/property.model'; 
 
 export const findPropertiesByFilter = async (filters: any): Promise<IProperty[]> => {
-  let query = `SELECT * FROM properties WHERE 1=1`;
+  let query = `SELECT * FROM properties WHERE is_approved = true`;
   const values: any[] = [];
   let paramIndex = 1;
 

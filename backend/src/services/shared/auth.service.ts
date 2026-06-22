@@ -36,7 +36,7 @@ export class AuthService {
     const accessToken = SecretUtil.generateToken(
       { id: user.id, role: user.role },
       process.env.JWT_ACCESS_SECRET as string,
-      '15m'
+      '7d'
     );
 
     const refreshToken = SecretUtil.generateToken(

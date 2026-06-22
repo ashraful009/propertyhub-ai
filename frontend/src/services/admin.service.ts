@@ -1,5 +1,5 @@
 import apiClient from '../config/axios';
-import type { AdminDashboardData, IVendorApplication, ApiSuccessResponse, IPolicy } from '../types/shared.types';
+import type { AdminDashboardData, IVendorApplication, ApiSuccessResponse, IPolicy, IProperty } from '../types/shared.types';
 
 export const AdminService = {
   getDashboard: async (): Promise<AdminDashboardData> => {
@@ -15,6 +15,15 @@ export const AdminService = {
   reviewApplication: async (id: string, status: 'APPROVED' | 'REJECTED', user_id: string): Promise<IVendorApplication> => {
     const { data } = await apiClient.put<ApiSuccessResponse<IVendorApplication>>(`/admin/vendor-applications/${id}/status`, { status, user_id });
     return data.data;
+  },
+
+  getPendingProperties: async (): Promise<IProperty[]> => {
+    const { data } = await apiClient.get<ApiSuccessResponse<IProperty[]>>('/admin/property-requests');
+    return data.data;
+  },
+
+  reviewPropertyRequest: async (id: string, status: 'APPROVED' | 'REJECTED'): Promise<void> => {
+    await apiClient.put<ApiSuccessResponse<void>>(`/admin/property-requests/${id}/review`, { status });
   },
 
   getPolicies: async (type?: string): Promise<IPolicy[]> => {
