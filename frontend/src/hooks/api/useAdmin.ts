@@ -49,7 +49,7 @@ export const useCreatePolicy = () => {
 export const useUpdatePolicy = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: Record<string, unknown> }) => AdminService.updatePolicy(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: { title: string; content: string } }) => AdminService.updatePolicy(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['policies'] });
       toast.success('Policy updated successfully');
