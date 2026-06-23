@@ -4,7 +4,7 @@ import Home from "../pages/shared/Home";
 import Auth from "../pages/shared/Auth";
 import PropertyDetails from "../pages/shared/PropertyDetails";
 import AboutUs from "../pages/shared/AboutUs";
-import Profile from "../pages/shared/Profile";
+import Profile from '../pages/shared/Profile';
 import Checkout from "../pages/customer/Checkout";
 import CustomerLayout from "../layouts/CustomerLayout";
 import CustomerDashboard from "../pages/customer/CustomerDashboard";

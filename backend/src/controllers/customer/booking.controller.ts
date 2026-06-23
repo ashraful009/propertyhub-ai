@@ -23,7 +23,6 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
 
     const newBooking = await insertBooking(property_id, customer_id, vendor_id, booking_amount, applicant_info, nominee_info);
     
-    // Generate Installment Plan
     const remainingBalance = Number(property.price) - Number(booking_amount);
     if (remainingBalance > 0 && installment_duration_months) {
       await InstallmentService.generateInstallmentPlan(newBooking.id!, remainingBalance, installment_duration_months);

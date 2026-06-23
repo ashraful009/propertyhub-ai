@@ -43,6 +43,9 @@ app.use('/api/v1/installments', installmentRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/refunds', refundRoutes);
 
+app.get('/ping', (req, res) => {
+  res.status(200).json({ status: 'Active', message: 'Server is awake!' });
+});
 app.get('/', (req, res) => {
   res.status(200).json({ message: RESPONSE_MESSAGES.GENERAL.API_WORKING });
 });
