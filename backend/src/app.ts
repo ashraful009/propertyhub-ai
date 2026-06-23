@@ -27,8 +27,11 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(helmet());
 app.use(cookieParser());
 
+import profileRoutes from './routes/shared/profile.routes';
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/profile', profileRoutes);
 app.use('/api/v1/properties', propertyRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/compare', compareRoutes);

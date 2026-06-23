@@ -4,8 +4,8 @@ services:
     env: node
     rootDir: backend
     buildCommand: npm install --include=dev && npm run build
-    startCommand: npm start
-    plan: free 
+    startCommand: npm run migrate:up && npm start
+    plan: free
     healthCheckPath: /ping
     envVars:
       - key: NODE_ENV
@@ -20,10 +20,9 @@ services:
         value: 5000
       - key: JWT_SECRET
         generateValue: true
-     
 
 databases:
   - name: propertyhub-db
     databaseName: propertyhub_db
     user: propertyhub_user
-    plan: free 
+    plan: free

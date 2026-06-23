@@ -22,3 +22,15 @@ const storage = new CloudinaryStorage({
 });
 
 export const upload = multer({ storage: storage });
+
+const profileStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: 'propertyhub_profiles',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    };
+  },
+});
+
+export const uploadProfile = multer({ storage: profileStorage });
