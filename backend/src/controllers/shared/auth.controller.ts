@@ -43,3 +43,27 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     ApiResponse.error(res, error.message || ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, statusCode);
   }
 };
+
+export const googleLogin = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return ApiResponse.error(res, 'Google credential token is required', 400);
+    }
+
+    const { user, accessToken, refreshToken } = await AuthService.googleLogin(credential);
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    ApiResponse.success(res, RESPONSE_MESSAGES.AUTH.LOGIN_SUCCESS, { accessToken, user });
+  } catch (error: any) {
+    const statusCode = error.statusCode || 500;
+    ApiResponse.error(res, error.message || ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, statusCode);
+  }
+};

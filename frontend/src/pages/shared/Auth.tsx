@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import apiClient from '../../config/axios'; // Updated to our axios instance
 import { useAuthStore } from '../../store/authStore';
 import axios from 'axios';
+import GoogleAuth from '../../components/auth/GoogleAuth';
 
 export default function Auth() {
   const location = useLocation();
@@ -167,11 +168,8 @@ export default function Auth() {
               </div>
             </div>
 
-            <div className="mt-6 space-y-3">
-              <button className="w-full flex items-center justify-center space-x-2 border border-slate-300 rounded-lg py-2.5 hover:bg-slate-50 transition-colors text-slate-700 font-medium">
-                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="w-5 h-5" />
-                <span>Continue with Google</span>
-              </button>
+            <div className="mt-6">
+              <GoogleAuth />
             </div>
           </div>
         </div>
