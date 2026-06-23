@@ -9,7 +9,7 @@ import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 const router = Router();
 
 // Public: Get vendor policy text (legacy endpoint)
-router.get('/policy', async (req, res) => {
+router.get('/policy', async (req: any, res: any) => {
   try {
     const policy = await getVendorPolicyFromDb();
     ApiResponse.success(res, RESPONSE_MESSAGES.VENDOR.POLICY_FETCHED, policy);

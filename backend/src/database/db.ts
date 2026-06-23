@@ -24,7 +24,7 @@ pool.on('connect', () => {
     
 })
 
-pool.on('error', (err) => {
+pool.on('error', (err: any) => {
 console.log('unexpected error', err);
 
 })
