@@ -8,7 +8,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return ApiResponse.error(res, ERROR_MESSAGES.AUTH.UNAUTHORIZED, 401);
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.UNAUTHORIZED, 401);
     }
 
     const query = `
@@ -21,7 +21,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
     const result = await pool.query(query, [userId]);
     
     if (result.rowCount === 0) {
-      return ApiResponse.error(res, ERROR_MESSAGES.USER.NOT_FOUND, 404);
+      return ApiResponse.error(res, 'User not found', 404);
     }
 
     return ApiResponse.success(res, 'Profile fetched successfully', result.rows[0]);
@@ -36,7 +36,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user?.id;
     if (!userId) {
-      return ApiResponse.error(res, ERROR_MESSAGES.AUTH.UNAUTHORIZED, 401);
+      return ApiResponse.error(res, ERROR_MESSAGES.COMMON.UNAUTHORIZED, 401);
     }
 
     const { name, phone, address, district, company_name, company_mail, location, full_address, vendor_phone } = req.body;
@@ -66,7 +66,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 
     if (userResult.rowCount === 0) {
       await client.query('ROLLBACK');
-      return ApiResponse.error(res, ERROR_MESSAGES.USER.NOT_FOUND, 404);
+      return ApiResponse.error(res, 'User not found', 404);
     }
 
     // Build dynamic query for Vendor Applications if user is a vendor
