@@ -9,15 +9,15 @@ export const insertRefund = async (client: any, bookingId: string, totalPaid: nu
   return result.rows[0];
 };
 
-export const getUnpaidBookingsOlderThanTwoMonths = async (client: any): Promise<any[]> => {
+export const getUnpaidBookingsOlderThanThreeMonths = async (client: any): Promise<any[]> => {
   const defaultBookingsQuery = `
     SELECT p.booking_id, b.property_id
     FROM installment_milestones m
     JOIN installment_plans p ON m.plan_id = p.id
     JOIN bookings b ON p.booking_id = b.id
-    WHERE m.status = 'UNPAID' AND m.due_date < CURRENT_DATE AND b.status = 'CONFIRMED'
+    WHERE m.status = 'UNPAID' AND m.due_date < CURRENT_DATE AND b.status = 'APPROVED'
     GROUP BY p.booking_id, b.property_id
-    HAVING COUNT(m.id) >= 2;
+    HAVING COUNT(m.id) >= 3;
   `;
   const result = await client.query(defaultBookingsQuery);
   return result.rows;

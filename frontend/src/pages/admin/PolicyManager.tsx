@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { FileEdit, Plus, Trash2, Save, ShieldAlert } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { FileEdit, Plus, Trash2, Save, ShieldAlert, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { usePolicies, useCreatePolicy, useUpdatePolicy, useDeletePolicy } from '../../hooks/api/useAdmin';
 
-// পলিসির টাইপ ডিফাইন
 interface PolicyRule {
   id: string;
   title: string;
@@ -13,72 +13,82 @@ interface PolicyRule {
 export default function PolicyManager() {
   const [activeTab, setActiveTab] = useState<'vendor' | 'customer'>('vendor');
   const [isSaving, setIsSaving] = useState(false);
+  const [currentPolicies, setCurrentPolicies] = useState<PolicyRule[]>([]);
 
-  // ডামি ভেন্ডর পলিসি (ভবিষ্যতে ডাটাবেস থেকে আসবে)
-  const [vendorPolicies, setVendorPolicies] = useState<PolicyRule[]>([
-    {
-      id: 'vp-1',
-      title: 'Platform Commission (Mandatory)',
-      description: 'PropertyHub will automatically deduct a strict 5% commission from every installment or booking payment made by the customer.',
-      isMandatory: true
-    },
-    {
-      id: 'vp-2',
-      title: 'Document Authenticity',
-      description: 'All submitted documents (TIN, BIN, Trade License) must be 100% authentic. Forged documents will result in permanent suspension.',
+  const policyType = activeTab === 'vendor' ? 'VENDOR' : 'CUSTOMER';
+  const { data: dbPolicies, isLoading } = usePolicies(policyType);
+  const { mutateAsync: createPolicy } = useCreatePolicy();
+  const { mutateAsync: updatePolicy } = useUpdatePolicy();
+  const { mutateAsync: deletePolicy } = useDeletePolicy();
+
+  useEffect(() => {
+    if (dbPolicies) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setCurrentPolicies(dbPolicies.map(p => ({
+        id: String(p.id),
+        title: p.title,
+        description: p.content,
+        isMandatory: p.is_mandatory
+      })));
     }
-  ]);
+  }, [dbPolicies, activeTab]);
 
-  // ডামি কাস্টমার পলিসি
-  const [customerPolicies, setCustomerPolicies] = useState<PolicyRule[]>([
-    {
-      id: 'cp-1',
-      title: 'Cancellation & Refunds',
-      description: 'You can cancel your booking and request a refund within exactly 1 month (30 days) of the booking date.',
-    },
-    {
-      id: 'cp-2',
-      title: 'Refund Deductions',
-      description: 'In the event of an approved cancellation, a 10% service and processing charge will be deducted from the total paid amount.',
-    }
-  ]);
-
-  // পলিসি অ্যাড, আপডেট এবং ডিলিট করার ফাংশন
   const handleAddPolicy = () => {
     const newPolicy = { id: `new-${Date.now()}`, title: '', description: '' };
-    if (activeTab === 'vendor') {
-      setVendorPolicies([...vendorPolicies, newPolicy]);
-    } else {
-      setCustomerPolicies([...customerPolicies, newPolicy]);
-    }
+    setCurrentPolicies([...currentPolicies, newPolicy]);
   };
 
   const handleUpdatePolicy = (id: string, field: 'title' | 'description', value: string) => {
-    if (activeTab === 'vendor') {
-      setVendorPolicies(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p));
-    } else {
-      setCustomerPolicies(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p));
-    }
+    setCurrentPolicies(prev => prev.map(p => p.id === id ? { ...p, [field]: value } : p));
   };
 
   const handleDeletePolicy = (id: string) => {
-    if (activeTab === 'vendor') {
-      setVendorPolicies(prev => prev.filter(p => p.id !== id));
-    } else {
-      setCustomerPolicies(prev => prev.filter(p => p.id !== id));
+    setCurrentPolicies(prev => prev.filter(p => p.id !== id));
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      for (const policy of currentPolicies) {
+        if (policy.id.startsWith('new-')) {
+          if (policy.title && policy.description) {
+            await createPolicy({
+              policy_type: policyType,
+              title: policy.title,
+              content: policy.description
+            });
+          }
+        } else {
+          // Find if changed
+          const original = dbPolicies?.find(p => String(p.id) === policy.id);
+          if (original && (original.title !== policy.title || original.content !== policy.description)) {
+            await updatePolicy({ id: policy.id, payload: { title: policy.title, content: policy.description } });
+          }
+        }
+      }
+
+      const deleted = dbPolicies?.filter(dbp => !currentPolicies.find(cp => cp.id === String(dbp.id))) || [];
+      for (const d of deleted) {
+        if (!d.is_mandatory) {
+          await deletePolicy(String(d.id));
+        }
+      }
+
+      toast.success(`${activeTab === 'vendor' ? 'Vendor' : 'Customer'} Policies saved successfully!`);
+    } catch (error) {
+      console.error('Failed to save policies', error);
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const handleSave = () => {
-    setIsSaving(true);
-    // API কল সিমুলেশন
-    setTimeout(() => {
-      setIsSaving(false);
-      toast.success(`${activeTab === 'vendor' ? 'Vendor' : 'Customer'} Policies saved successfully!`);
-    }, 1500);
-  };
-
-  const currentPolicies = activeTab === 'vendor' ? vendorPolicies : customerPolicies;
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-5xl">
@@ -87,7 +97,6 @@ export default function PolicyManager() {
         <p className="text-gray-500">Dynamically update terms, conditions, and rules for users.</p>
       </div>
 
-      {/* Custom Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <button
           onClick={() => setActiveTab('vendor')}
@@ -107,7 +116,6 @@ export default function PolicyManager() {
         </button>
       </div>
 
-      {/* Editor Section */}
       <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 md:p-8">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
@@ -179,7 +187,6 @@ export default function PolicyManager() {
           )}
         </div>
 
-        {/* Save Button */}
         <div className="flex justify-end pt-6 border-t border-gray-100">
           <button 
             onClick={handleSave}
@@ -194,4 +201,4 @@ export default function PolicyManager() {
       </div>
     </div>
   );
-} 
+}

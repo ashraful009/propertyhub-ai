@@ -10,6 +10,16 @@ export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
+
+  // Applicant Info State
+  const [applicantName, setApplicantName] = useState('');
+  const [applicantPhone, setApplicantPhone] = useState('');
+  const [applicantNid, setApplicantNid] = useState('');
+  const [applicantAddress, setApplicantAddress] = useState('');
+
+  // Nominee Info State
+  const [nomineeName, setNomineeName] = useState('');
+  const [nomineeRelation, setNomineeRelation] = useState('');
   
   const searchParams = new URLSearchParams(location.search);
   const propertyId = searchParams.get('property');
@@ -28,11 +38,21 @@ export default function Checkout() {
     if (!property) return toast.error('Property not found');
     
     try {
-      // 1. Create booking
+      // 1. Create booking with applicant & nominee info
       const booking = await createBooking({
         property_id: property.id,
         vendor_id: property.vendor_id,
         booking_amount: bookingMoney,
+        applicant_info: JSON.stringify({
+          name: applicantName,
+          phone: applicantPhone,
+          nid: applicantNid,
+          address: applicantAddress,
+        }),
+        nominee_info: JSON.stringify({
+          name: nomineeName,
+          relation: nomineeRelation,
+        }),
       });
 
       // 2. Redirect to payment
@@ -118,19 +138,19 @@ export default function Checkout() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Full Name (As per NID)</label>
-                  <input required type="text" className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="John Doe" />
+                  <input required type="text" value={applicantName} onChange={e => setApplicantName(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="John Doe" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                  <input required type="tel" className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="+880 1..." />
+                  <input required type="tel" value={applicantPhone} onChange={e => setApplicantPhone(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="+880 1..." />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">NID / Passport Number</label>
-                  <input required type="text" className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="1234567890" />
+                  <input required type="text" value={applicantNid} onChange={e => setApplicantNid(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="1234567890" />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Present Address</label>
-                  <textarea required rows={3} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Your full address..."></textarea>
+                  <textarea required rows={3} value={applicantAddress} onChange={e => setApplicantAddress(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Your full address..."></textarea>
                 </div>
               </div>
             </div>
@@ -143,11 +163,11 @@ export default function Checkout() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Nominee Name</label>
-                  <input required type="text" className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Jane Doe" />
+                  <input required type="text" value={nomineeName} onChange={e => setNomineeName(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Jane Doe" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Relation</label>
-                  <select required className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
+                  <select required value={nomineeRelation} onChange={e => setNomineeRelation(e.target.value)} className="w-full border border-gray-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white">
                     <option value="">Select Relation</option>
                     <option value="spouse">Spouse</option>
                     <option value="child">Child</option>

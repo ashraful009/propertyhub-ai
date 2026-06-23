@@ -10,21 +10,23 @@ export default function MyProperties() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
   const fetchProperties = async () => {
     try {
       setLoading(true);
       const data = await VendorService.getProperties();
       setProperties(data);
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to fetch properties');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err.response?.data?.error || 'Failed to fetch properties');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProperties();
+  }, []);
 
   const handleDelete = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this property? This action cannot be undone.')) return;
@@ -33,8 +35,9 @@ export default function MyProperties() {
       await VendorService.deleteProperty(id);
       toast.success('Property deleted successfully');
       setProperties(prev => prev.filter(p => p.id !== id));
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to delete property');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err.response?.data?.error || 'Failed to delete property');
     }
   };
 

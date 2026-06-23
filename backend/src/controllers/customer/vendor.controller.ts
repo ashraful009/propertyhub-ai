@@ -12,11 +12,19 @@ export const submitApplication = async (req: AuthRequest, res: Response): Promis
       return ApiResponse.error(res, ERROR_MESSAGES.VENDOR.CUSTOMER_ONLY_APPLY, 403);
     }
 
-    const { company_name, location, full_address, company_mail, phone } = req.body;
+    const { company_name, location, full_address, company_mail, phone, full_name, nid_number, trade_license, tin_number, bin_number } = req.body;
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const documents: any = {};
 
+    // Store identity & compliance text fields
+    if (full_name) documents.fullName = full_name;
+    if (nid_number) documents.nidNumber = nid_number;
+    if (trade_license) documents.tradeLicense = trade_license;
+    if (tin_number) documents.tinNumber = tin_number;
+    if (bin_number) documents.binNumber = bin_number;
+
+    // Store uploaded file paths
     if (files) {
       if (files.profileImage) documents.profileImage = files.profileImage[0].path;
       if (files.nidScan) documents.nidScan = files.nidScan[0].path;

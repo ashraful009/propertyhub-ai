@@ -18,7 +18,7 @@ export const useCreateBooking = () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['customerDashboard'] });
     },
-    onError: (error: any) => {
+    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       toast.error(error.response?.data?.error || 'Failed to create booking');
     },
   });
@@ -33,7 +33,7 @@ export const useUpdateBookingStatus = () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['vendorDashboard'] });
     },
-    onError: (error: any) => {
+    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       toast.error(error.response?.data?.error || 'Failed to update booking status');
     },
   });

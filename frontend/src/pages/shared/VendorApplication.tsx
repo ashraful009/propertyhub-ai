@@ -34,6 +34,11 @@ export default function VendorApplication() {
       formData.append('full_address', data.address);
       formData.append('company_mail', data.email);
       formData.append('phone', data.phone);
+      formData.append('full_name', data.fullName);
+      formData.append('nid_number', data.nidNumber);
+      formData.append('trade_license', data.tradeLicense);
+      formData.append('tin_number', data.tinNumber);
+      formData.append('bin_number', data.binNumber);
 
       if (data.profileImage?.[0]) formData.append('profileImage', data.profileImage[0]);
       if (data.nidScan?.[0]) formData.append('nidScan', data.nidScan[0]);

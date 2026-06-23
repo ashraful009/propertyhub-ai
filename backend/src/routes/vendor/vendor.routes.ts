@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getVendorDashboardData } from '../../controllers/vendor/dashboard.controller';
+import { getVendorDashboardData, sendReminder } from '../../controllers/vendor/dashboard.controller';
 import { createProperty, updateProperty, deleteProperty, getProperties, getPropertyById } from '../../controllers/vendor/property.controller';
 import { verifyToken, authorizeRoles } from '../../middlewares/auth.middleware';
 import { upload } from '../../config/cloudinary';
@@ -7,6 +7,7 @@ import { upload } from '../../config/cloudinary';
 const router = Router();
 
 router.get('/dashboard', verifyToken, authorizeRoles('VENDOR'), getVendorDashboardData);
+router.post('/customers/:id/remind', verifyToken, authorizeRoles('VENDOR'), sendReminder);
 
 router.get('/properties', verifyToken, authorizeRoles('VENDOR', 'ADMIN'), getProperties);
 router.get('/properties/:id', verifyToken, authorizeRoles('VENDOR', 'ADMIN'), getPropertyById);

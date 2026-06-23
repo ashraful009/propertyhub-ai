@@ -38,7 +38,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response): Pr
       cancel_url: `${process.env.FRONTEND_URL}/payment-cancel`,
     });
 
-    await createInvoice(booking_id, userId, amount, session.id);
+    await createInvoice(booking_id, userId, amount, session.id, milestone_id || null);
     ApiResponse.success(res, RESPONSE_MESSAGES.PAYMENT.CHECKOUT_CREATED, { checkout_url: session.url });
   } catch (error) {
     ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
@@ -66,5 +66,20 @@ export const verifyPayment = async (req: Request, res: Response): Promise<void> 
     ApiResponse.error(res, ERROR_MESSAGES.PAYMENT.PAYMENT_NOT_SUCCESSFUL, 400);
   } catch (error) {
     ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
+  }
+};
+
+export const generateReceipt = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { milestone_id } = req.params;
+    // Dummy receipt implementation
+    const receiptData = {
+      milestone_id,
+      receipt_url: `https://propertyhub-receipts.dummy.com/download/${milestone_id}.pdf`,
+      generated_at: new Date()
+    };
+    ApiResponse.success(res, 'Receipt generated successfully', receiptData);
+  } catch (error) {
+    ApiResponse.error(res, 'Failed to generate receipt', 500);
   }
 };

@@ -3,10 +3,13 @@ import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/shared/Home";
 import Auth from "../pages/shared/Auth";
 import PropertyDetails from "../pages/shared/PropertyDetails";
+import AboutUs from "../pages/shared/AboutUs";
 import Checkout from "../pages/customer/Checkout";
 import CustomerLayout from "../layouts/CustomerLayout";
 import CustomerDashboard from "../pages/customer/CustomerDashboard";
 import Installments from "../pages/customer/Installments";
+import PaymentSuccess from "../pages/customer/PaymentSuccess";
+import PaymentCancel from "../pages/customer/PaymentCancel";
 import VendorApplication from "../pages/shared/VendorApplication";
 import AdminLayout from "../layouts/AdminLayout";
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -27,11 +30,14 @@ export default function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/properties/:id" element={<PropertyDetails />} />
+        <Route path="/about" element={<AboutUs />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Auth />} />
         {/* Only Authenticated users can checkout or apply as vendor */}
         <Route element={<ProtectedRoute allowedRoles={['CUSTOMER', 'VENDOR', 'ADMIN']} />}>
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/vendor-application" element={<VendorApplication />} />
         </Route>
       </Route>

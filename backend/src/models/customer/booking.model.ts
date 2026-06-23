@@ -6,6 +6,8 @@ export interface IBooking {
     customer_id: string;
     vendor_id: string;
     booking_amount: number;
+    applicant_info?: string;
+    nominee_info?: string;
     status?: BookingStatus;
     created_at?: Date;
     updated_at?: Date;

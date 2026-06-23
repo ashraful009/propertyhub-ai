@@ -10,4 +10,9 @@ export const PaymentService = {
   verifyPayment: async (session_id: string): Promise<void> => {
     await apiClient.post<ApiSuccessResponse<void>>('/payment/verify', { session_id });
   },
+
+  getReceipt: async (milestone_id: string): Promise<{ receipt_url: string }> => {
+    const { data } = await apiClient.get<ApiSuccessResponse<{ receipt_url: string }>>(`/payment/receipt/${milestone_id}`);
+    return data.data;
+  },
 };

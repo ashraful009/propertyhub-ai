@@ -3,7 +3,7 @@ import { AppError } from '../../errors/AppError';
 import { ERROR_MESSAGES } from '../../errors/errorMessages';
 import { getBookingByIdAndUser, updateBookingStatus, updatePropertyStatus } from '../../repositories/customer/booking.repository';
 import { getTotalPaidForBooking } from '../../repositories/customer/payment.repository';
-import { insertRefund, getUnpaidBookingsOlderThanTwoMonths } from '../../repositories/customer/refund.repository';
+import { insertRefund, getUnpaidBookingsOlderThanThreeMonths } from '../../repositories/customer/refund.repository';
 
 export class RefundService {
   static async requestCancellation(bookingId: string, userId: string): Promise<any> {
@@ -12,7 +12,7 @@ export class RefundService {
       await client.query('BEGIN');
 
       const booking = await getBookingByIdAndUser(client, bookingId, userId);
-      if (!booking || booking.status !== 'CONFIRMED') {
+      if (!booking || booking.status !== 'APPROVED') {
         throw new AppError(ERROR_MESSAGES.BOOKING.NOT_FOUND_OR_CANCELED, 404);
       }
 
@@ -34,7 +34,7 @@ export class RefundService {
 
       const refundData = await insertRefund(client, bookingId, totalPaid, penaltyAmount, refundAmount);
 
-      await updateBookingStatus(client, bookingId, 'CANCELED');
+      await updateBookingStatus(client, bookingId, 'CANCELLED');
       await updatePropertyStatus(client, booking.property_id, 'AVAILABLE');
 
       await client.query('COMMIT');
@@ -53,10 +53,10 @@ export class RefundService {
     try {
       await client.query('BEGIN');
 
-      const defaultBookings = await getUnpaidBookingsOlderThanTwoMonths(client);
+      const defaultBookings = await getUnpaidBookingsOlderThanThreeMonths(client);
 
       for (const row of defaultBookings) {
-        await updateBookingStatus(client, row.booking_id, 'CANCELED');
+        await updateBookingStatus(client, row.booking_id, 'CANCELLED');
         await updatePropertyStatus(client, row.property_id, 'AVAILABLE');
         canceledCount++;
       }

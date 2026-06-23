@@ -8,7 +8,7 @@ export const useSubmitVendorApplication = () => {
     onSuccess: () => {
       toast.success('Vendor application submitted successfully');
     },
-    onError: (error: any) => {
+    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       toast.error(error.response?.data?.error || 'Failed to submit application');
     },
   });
@@ -22,7 +22,7 @@ export const useCreateProperty = () => {
       queryClient.invalidateQueries({ queryKey: ['properties'] });
       toast.success('Property created successfully');
     },
-    onError: (error: any) => {
+    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
       toast.error(error.response?.data?.error || 'Failed to create property');
     },
   });

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Search, Filter, BellRing, AlertCircle, Clock, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useVendorDashboard } from '../../hooks/api/useDashboard';
+import { useVendorDashboard, useSendReminder } from '../../hooks/api/useDashboard';
 
 export default function CustomersAndDues() {
   const { data: dashboardData, isLoading, isError } = useVendorDashboard();
@@ -10,12 +10,18 @@ export default function CustomersAndDues() {
   const formatBDT = (amount: number) => 
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(amount);
 
-  const handleSendReminder = (name: string) => {
-    setSendingId(name);
-    setTimeout(() => {
-      setSendingId(null);
+  const { mutateAsync: sendReminder } = useSendReminder();
+
+  const handleSendReminder = async (name: string, customerId: string) => {
+    setSendingId(customerId);
+    try {
+      await sendReminder(customerId);
       toast.success(`Payment reminder sent to ${name} via SMS & Email!`);
-    }, 1500);
+    } catch {
+      toast.error('Failed to send reminder');
+    } finally {
+      setSendingId(null);
+    }
   };
 
   if (isLoading) {
@@ -104,11 +110,11 @@ export default function CustomersAndDues() {
                     </td>
                     <td className="py-4 px-6 text-right">
                       <button 
-                        onClick={() => handleSendReminder(customer.customer_name)}
-                        disabled={sendingId === customer.customer_name}
+                        onClick={() => handleSendReminder(customer.customer_name, customer.customer_id || 'dummy_id')}
+                        disabled={sendingId === customer.customer_id}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg font-bold transition-colors disabled:opacity-50"
                       >
-                        <BellRing size={16} /> {sendingId === customer.customer_name ? 'Sending...' : 'Remind'}
+                        <BellRing size={16} /> {sendingId === customer.customer_id ? 'Sending...' : 'Remind'}
                       </button>
                     </td>
                   </tr>

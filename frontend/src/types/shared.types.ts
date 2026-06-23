@@ -183,6 +183,7 @@ export interface VendorDashboardData {
   propertyInsights: { status: string; count: string }[];
   upcomingDuesNextMonth: string;
   defaultersLastMonth: {
+    customer_id?: string;
     customer_name: string;
     email: string;
     phone: string;

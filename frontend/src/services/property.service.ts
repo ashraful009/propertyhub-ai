@@ -7,8 +7,14 @@ export const PropertyService = {
     return data.data;
   },
 
-  searchProperties: async (filters: any): Promise<IProperty[]> => {
-    const params = new URLSearchParams(filters).toString();
+  getPropertyById: async (id: string): Promise<IProperty> => {
+    const { data } = await apiClient.get<ApiSuccessResponse<IProperty>>(`/properties/${id}`);
+    return data.data;
+  },
+
+  searchProperties: async (filters: any /* eslint-disable-line @typescript-eslint/no-explicit-any */): Promise<IProperty[]> => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params = new URLSearchParams(filters as any).toString();
     const { data } = await apiClient.get<ApiSuccessResponse<IProperty[]>>(`/search/properties?${params}`);
     return data.data;
   },

@@ -2,19 +2,20 @@ import { useState } from 'react';
 import { Calculator, CalendarCheck } from 'lucide-react';
 import InstallmentCalculatorModal from './InstallmentCalculatorModal';
 import BookingPolicyModal from '../policy/BokingPolicyModal';
+import type { IProperty } from '../../types/shared.types';
 
-export default function BookingCard() {
+export default function BookingCard({ property }: { property: IProperty }) {
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
-  const [isPolicyOpen, setIsPolicyOpen] = useState(false); // নতুন স্টেট
+  const [isPolicyOpen, setIsPolicyOpen] = useState(false);
   
-  const propertyPrice = 25000000; // 2.5 Crore BDT
+  const propertyPrice = Number(property.price);
 
   return (
     <>
       <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 relative z-10">
         <div className="mb-6">
           <p className="text-gray-500 text-sm font-medium mb-1">Total Price</p>
-          <h2 className="text-3xl font-extrabold text-gray-900">৳ 2,50,00,000</h2>
+          <h2 className="text-3xl font-extrabold text-gray-900">৳ {propertyPrice.toLocaleString('en-IN')}</h2>
           <p className="text-green-600 text-sm font-medium mt-2 flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-green-500"></span> 5 Units Available
           </p>
@@ -59,7 +60,7 @@ export default function BookingCard() {
       <BookingPolicyModal 
         isOpen={isPolicyOpen}
         onClose={() => setIsPolicyOpen(false)}
-        propertyId="prop-123" // Test ID
+        propertyId={property.id!} 
       />
     </>
   );

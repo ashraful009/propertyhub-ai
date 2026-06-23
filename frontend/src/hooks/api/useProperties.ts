@@ -8,7 +8,15 @@ export const useProperties = () => {
   });
 };
 
-export const useSearchProperties = (filters: any) => {
+export const usePropertyDetails = (id: string) => {
+  return useQuery({
+    queryKey: ['properties', id],
+    queryFn: () => PropertyService.getPropertyById(id),
+    enabled: !!id,
+  });
+};
+
+export const useSearchProperties = (filters: Record<string, string>) => {
   return useQuery({
     queryKey: ['properties', 'search', filters],
     queryFn: () => PropertyService.searchProperties(filters),

@@ -1,7 +1,7 @@
 import { CreditCard, CheckCircle2, Clock, AlertCircle, Download, ChevronRight, Loader2 } from 'lucide-react';
 import { useBookings } from '../../hooks/api/useBookings';
 import { useInstallmentSchedule } from '../../hooks/api/useInstallments';
-import { useCreateCheckoutSession } from '../../hooks/api/usePayment';
+import { useCreateCheckoutSession, useGetReceipt } from '../../hooks/api/usePayment';
 
 export default function Installments() {
   const { data: bookings, isLoading: isLoadingBookings } = useBookings();
@@ -9,6 +9,7 @@ export default function Installments() {
 
   const { data: scheduleData, isLoading: isLoadingSchedule } = useInstallmentSchedule(activeBooking?.id || null);
   const { mutate: createCheckoutSession, isPending: isProcessing } = useCreateCheckoutSession();
+  const { mutate: getReceipt, isPending: isDownloadingReceipt } = useGetReceipt();
 
   const formatBDT = (amount: number) => 
     new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(amount);
@@ -128,7 +129,11 @@ export default function Installments() {
                     </td>
                     <td className="py-4 px-6 text-right">
                       {item.status === 'PAID' && (
-                        <button className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-end gap-1.5 w-full">
+                        <button 
+                          onClick={() => getReceipt(item.id)}
+                          disabled={isDownloadingReceipt}
+                          className="text-blue-600 hover:text-blue-800 font-medium flex items-center justify-end gap-1.5 w-full disabled:opacity-50"
+                        >
                           <Download size={16} /> Receipt
                         </button>
                       )}

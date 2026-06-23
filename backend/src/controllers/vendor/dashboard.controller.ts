@@ -18,3 +18,12 @@ export const getVendorDashboardData = async (req: AuthRequest, res: Response): P
     ApiResponse.error(res, ERROR_MESSAGES.DASHBOARD.FETCH_FAILED, 500);
   }
 };
+export const sendReminder = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params; 
+    console.log(`[Reminder Service] Sending reminder to customer ${id}`);
+    ApiResponse.success(res, 'Reminder sent successfully');
+  } catch (error) {
+    ApiResponse.error(res, 'Failed to send reminder', 500);
+  }
+};

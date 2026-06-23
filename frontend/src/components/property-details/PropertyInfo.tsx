@@ -1,15 +1,16 @@
 import { MapPin, BedDouble, Bath, Square, Wifi, Car, Waves, ShieldCheck } from 'lucide-react';
+import type { IProperty } from '../../types/shared.types';
 
-export default function PropertyInfo() {
+export default function PropertyInfo({ property }: { property: IProperty }) {
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
-          Luxury Oceanview Apartment
+          {property.title}
         </h1>
         <p className="text-gray-500 flex items-center gap-2 text-lg">
           <MapPin className="text-blue-600" size={20} />
-          Gulshan 2, Dhaka, Bangladesh
+          {property.address}
         </p>
       </div>
 
@@ -40,7 +41,7 @@ export default function PropertyInfo() {
       <div>
         <h3 className="text-xl font-bold text-gray-900 mb-4">Description</h3>
         <p className="text-gray-600 leading-relaxed">
-          Experience the pinnacle of luxury living in this stunning apartment located in the heart of the city. Featuring floor-to-ceiling windows, smart home automation, and a master suite that defines comfort. Perfect for families looking for a blend of modern architecture and peaceful surroundings.
+          {property.description}
         </p>
       </div>
 

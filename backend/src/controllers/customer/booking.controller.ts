@@ -8,13 +8,13 @@ import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 export const createBooking = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const customer_id = req.user?.id;
-    const { property_id, vendor_id, booking_amount } = req.body;
+    const { property_id, vendor_id, booking_amount, applicant_info, nominee_info } = req.body;
 
     if (!customer_id || req.user?.role !== 'CUSTOMER') {
       return ApiResponse.error(res, ERROR_MESSAGES.BOOKING.CUSTOMER_ONLY, 403);
     }
 
-    const newBooking = await insertBooking(property_id, customer_id, vendor_id, booking_amount);
+    const newBooking = await insertBooking(property_id, customer_id, vendor_id, booking_amount, applicant_info, nominee_info);
     ApiResponse.success(res, RESPONSE_MESSAGES.BOOKING.CREATED, newBooking, 201);
   } catch (error) {
     ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);

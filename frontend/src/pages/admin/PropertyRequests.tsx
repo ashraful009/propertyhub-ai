@@ -9,21 +9,23 @@ export default function PropertyRequests() {
   const [loading, setLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
   const fetchProperties = async () => {
     try {
       setLoading(true);
       const data = await AdminService.getPendingProperties();
       setProperties(data);
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to fetch properties');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err.response?.data?.error || 'Failed to fetch properties');
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchProperties();
+  }, []);
 
   const handleReview = async (id: string, status: 'APPROVED' | 'REJECTED') => {
     if (!window.confirm(`Are you sure you want to ${status.toLowerCase()} this property?`)) return;
@@ -33,8 +35,9 @@ export default function PropertyRequests() {
       await AdminService.reviewPropertyRequest(id, status);
       toast.success(`Property ${status.toLowerCase()} successfully`);
       setProperties(prev => prev.filter(p => p.id !== id));
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || `Failed to ${status.toLowerCase()} property`);
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      toast.error(err.response?.data?.error || `Failed to ${status.toLowerCase()} property`);
     } finally {
       setProcessingId(null);
     }

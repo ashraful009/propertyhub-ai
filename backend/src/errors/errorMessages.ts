@@ -27,6 +27,7 @@ export const ERROR_MESSAGES = {
   },
 
   PROPERTY: {
+    NOT_FOUND: 'Property not found',
     NOT_FOUND_OR_NO_UPDATE_PERMISSION: 'Property not found or you do not have permission to update it',
     NOT_FOUND_OR_NO_DELETE_PERMISSION: 'Property not found or you do not have permission to delete it',
   },
