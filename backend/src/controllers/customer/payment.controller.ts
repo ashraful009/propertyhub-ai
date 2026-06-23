@@ -24,7 +24,7 @@ export const createCheckoutSession = async (req: AuthRequest, res: Response): Pr
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'bdt',
             product_data: {
               name: description || 'Property Payment',
             },

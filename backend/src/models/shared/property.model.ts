@@ -15,6 +15,8 @@ export interface IProperty {
   status?: PropertyStatus;
   is_approved?: boolean;
   vendor_id: string;
+  booking_money?: number;
+  total_installments?: number;
   created_at?: Date;
   updated_at?: Date;
 }

@@ -19,7 +19,16 @@ export const updatePaymentSuccess = async (sessionId: string): Promise<boolean> 
     // 1. Mark the invoice as PAID
     const invoiceQuery = `UPDATE invoices SET status = 'PAID', paid_at = CURRENT_TIMESTAMP WHERE stripe_session_id = $1 AND status = 'PENDING' RETURNING *`;
     const invoiceRes = await client.query(invoiceQuery, [sessionId]);
-    if (invoiceRes.rowCount === 0) throw new Error("Invoice not found or already paid.");
+    if (invoiceRes.rowCount === 0) {
+      // Check if it's already paid
+      const checkQuery = `SELECT id FROM invoices WHERE stripe_session_id = $1 AND status = 'PAID'`;
+      const checkRes = await client.query(checkQuery, [sessionId]);
+      if (checkRes.rowCount && checkRes.rowCount > 0) {
+        await client.query("ROLLBACK");
+        return true; // Already paid, consider it a success
+      }
+      throw new Error("Invoice not found.");
+    }
     const invoice = invoiceRes.rows[0];
 
     // 2. Mark the correct milestone as PAID

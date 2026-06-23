@@ -26,7 +26,7 @@ export const createBooking = async (req: AuthRequest, res: Response): Promise<vo
     // Generate Installment Plan
     const remainingBalance = Number(property.price) - Number(booking_amount);
     if (remainingBalance > 0 && installment_duration_months) {
-      await InstallmentService.generateInstallmentPlan(newBooking.id, remainingBalance, installment_duration_months);
+      await InstallmentService.generateInstallmentPlan(newBooking.id!, remainingBalance, installment_duration_months);
     }
 
     ApiResponse.success(res, RESPONSE_MESSAGES.BOOKING.CREATED, newBooking, 201);
