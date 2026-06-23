@@ -15,7 +15,7 @@ export default function Home() {
     const fetchProperties = async () => {
       try {
         setLoading(true);
-        const data = await PropertyService.searchProperties(filters);
+        const data = await PropertyService.searchProperties(filters as unknown as Record<string, string>);
         setProperties(data);
       } catch (error) {
         console.error('Failed to fetch properties', error);

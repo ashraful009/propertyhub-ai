@@ -28,8 +28,10 @@ export const VendorService = {
     return data.data;
   },
 
-  updateProperty: async (id: string, propertyData: Record<string, unknown>): Promise<IProperty> => {
-    const { data } = await apiClient.put<ApiSuccessResponse<IProperty>>(`/vendor/properties/${id}`, propertyData);
+  updateProperty: async (id: string, propertyData: FormData | Record<string, unknown>): Promise<IProperty> => {
+    const { data } = await apiClient.put<ApiSuccessResponse<IProperty>>(`/vendor/properties/${id}`, propertyData, {
+      headers: propertyData instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    });
     return data.data;
   },
 
@@ -37,8 +39,10 @@ export const VendorService = {
     await apiClient.delete<ApiSuccessResponse<void>>(`/vendor/properties/${id}`);
   },
 
-  submitApplication: async (payload: Record<string, unknown>): Promise<unknown> => {
-    const { data } = await apiClient.post<ApiSuccessResponse<unknown>>('/customer/vendor-apply', payload);
+  submitApplication: async (payload: FormData | Record<string, unknown>): Promise<unknown> => {
+    const { data } = await apiClient.post<ApiSuccessResponse<unknown>>('/customer/vendor-apply', payload, {
+      headers: payload instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : undefined,
+    });
     return data.data;
   },
 

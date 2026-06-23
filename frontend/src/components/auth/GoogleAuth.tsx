@@ -1,4 +1,4 @@
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, type CredentialResponse } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import apiClient from '../../config/axios';
@@ -12,7 +12,7 @@ export default function GoogleAuth({ onSuccessCallback }: GoogleAuthProps) {
   const navigate = useNavigate();
   const loginAuth = useAuthStore((state) => state.login);
 
-  const handleSuccess = async (credentialResponse: Record<string, unknown>) => {
+  const handleSuccess = async (credentialResponse: CredentialResponse) => {
     try {
       if (!credentialResponse.credential) {
         toast.error('Google login failed: No credential received');
