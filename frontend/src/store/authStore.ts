@@ -5,6 +5,10 @@ interface User {
   name: string;
   email: string;
   role: 'CUSTOMER' | 'VENDOR' | 'ADMIN';
+  profile_photo?: string;
+  phone?: string;
+  address?: string;
+  district?: string;
 }
 
 interface AuthState {

@@ -4,6 +4,7 @@ import Home from "../pages/shared/Home";
 import Auth from "../pages/shared/Auth";
 import PropertyDetails from "../pages/shared/PropertyDetails";
 import AboutUs from "../pages/shared/AboutUs";
+import Profile from "../pages/shared/Profile";
 import Checkout from "../pages/customer/Checkout";
 import CustomerLayout from "../layouts/CustomerLayout";
 import CustomerDashboard from "../pages/customer/CustomerDashboard";
@@ -39,6 +40,7 @@ export default function AppRoutes() {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancel" element={<PaymentCancel />} />
           <Route path="/vendor-application" element={<VendorApplication />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
 

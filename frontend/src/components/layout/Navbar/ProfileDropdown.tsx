@@ -49,7 +49,7 @@ export default function ProfileDropdown() {
   }
 
   const dashboardLink = `/${user.role.toLowerCase()}/dashboard`;
-  const avatarUrl = `https://ui-avatars.com/api/?name=${user.name}&background=eff6ff&color=2563eb&bold=true`;
+  const avatarUrl = user.profile_photo || `https://ui-avatars.com/api/?name=${user.name}&background=eff6ff&color=2563eb&bold=true`;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -71,9 +71,11 @@ export default function ProfileDropdown() {
         </div>
         
         <div className="py-2">
-          <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-white hover:text-blue-600 transition-colors">
-            <User className="w-4 h-4 mr-3" /> My Profile
-          </Link>
+          {user.role !== 'ADMIN' && (
+            <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-white hover:text-blue-600 transition-colors">
+              <User className="w-4 h-4 mr-3" /> My Profile
+            </Link>
+          )}
           <Link to={dashboardLink} onClick={() => setIsOpen(false)} className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-white hover:text-blue-600 transition-colors">
             <LayoutDashboard className="w-4 h-4 mr-3" /> Dashboard
           </Link>
