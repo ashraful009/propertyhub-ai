@@ -4,13 +4,17 @@ import path from 'path';
 import dotenv from 'dotenv';
 
 dotenv.config();
-const pool = new Pool({
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT || '5432'),
-  database: process.env.DB_NAME,
-});
+const poolConfig: any = process.env.DATABASE_URL 
+  ? { connectionString: process.env.DATABASE_URL, ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined }
+  : {
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT || '5432'),
+      database: process.env.DB_NAME,
+    };
+
+const pool = new Pool(poolConfig);
 
 const MIGRATIONS_DIR = path.join(__dirname, 'migrations');
 async function ensureMigrationsTable(): Promise<void> {
