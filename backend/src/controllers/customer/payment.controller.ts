@@ -6,7 +6,7 @@ import { ApiResponse } from '../../responses/ApiResponse';
 import { ERROR_MESSAGES } from '../../errors/errorMessages';
 import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'dummy_key_to_prevent_startup_crash', {
   apiVersion: '2026-05-27.dahlia',
 });
 
