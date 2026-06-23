@@ -1,6 +1,6 @@
-// ============================================
-// API Response Wrapper
-// ============================================
+
+
+
 export interface ApiSuccessResponse<T> {
   success: true;
   message: string;
@@ -12,9 +12,9 @@ export interface ApiErrorResponse {
   error: string;
 }
 
-// ============================================
-// User & Auth
-// ============================================
+
+
+
 export type UserRole = 'ADMIN' | 'VENDOR' | 'CUSTOMER';
 
 export interface IUser {
@@ -31,9 +31,9 @@ export interface LoginResponse {
   user: IUser;
 }
 
-// ============================================
-// Property
-// ============================================
+
+
+
 export type PropertyStatus = 'AVAILABLE' | 'BOOKED' | 'SOLD';
 
 export interface IProperty {
@@ -49,6 +49,8 @@ export interface IProperty {
   area: number;
   images: string[];
   status: PropertyStatus;
+  booking_money?: number;
+  total_installments?: number;
   is_approved?: boolean;
   vendor_id: string;
   vendor_name?: string;
@@ -57,9 +59,9 @@ export interface IProperty {
   updated_at?: string;
 }
 
-// ============================================
-// Booking
-// ============================================
+
+
+
 export type BookingStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
 
 export interface IBooking {
@@ -73,9 +75,9 @@ export interface IBooking {
   updated_at?: string;
 }
 
-// ============================================
-// Installment
-// ============================================
+
+
+
 export interface IInstallmentPlan {
   id: string;
   booking_id: string;
@@ -113,9 +115,9 @@ export interface InstallmentSchedule {
   milestones: IInstallmentMilestone[];
 }
 
-// ============================================
-// Invoice
-// ============================================
+
+
+
 export interface IInvoice {
   id: string;
   user_id: string;
@@ -128,9 +130,9 @@ export interface IInvoice {
   paid_at?: string;
 }
 
-// ============================================
-// Vendor Application
-// ============================================
+
+
+
 export type ApplicationStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export interface IVendorApplication {
@@ -149,9 +151,9 @@ export interface IVendorApplication {
   updated_at?: string;
 }
 
-// ============================================
-// Policy
-// ============================================
+
+
+
 export interface IPolicy {
   id: string;
   policy_type: 'VENDOR_POLICY' | 'CUSTOMER_POLICY';
@@ -162,9 +164,9 @@ export interface IPolicy {
   updated_at?: string;
 }
 
-// ============================================
-// Dashboard Data Types
-// ============================================
+
+
+
 export interface AdminDashboardData {
   totalRevenue: string;
   revenueByCompany: { company_name: string; revenue: string }[];

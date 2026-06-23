@@ -12,19 +12,19 @@ export default function GoogleAuth({ onSuccessCallback }: GoogleAuthProps) {
   const navigate = useNavigate();
   const loginAuth = useAuthStore((state) => state.login);
 
-  const handleSuccess = async (credentialResponse: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+  const handleSuccess = async (credentialResponse: Record<string, unknown>) => {
     try {
       if (!credentialResponse.credential) {
         toast.error('Google login failed: No credential received');
         return;
       }
 
-      // Send the token to the backend
+
       const response = await apiClient.post('/auth/google', {
         credential: credentialResponse.credential,
       });
 
-      // Update auth store with user info and token
+
       const user = response.data.data.user;
       loginAuth(user, response.data.data.accessToken);
       
@@ -34,7 +34,7 @@ export default function GoogleAuth({ onSuccessCallback }: GoogleAuthProps) {
         onSuccessCallback();
       }
 
-      // Redirect based on role
+
       if (user.role === 'ADMIN') navigate('/admin/dashboard');
       else if (user.role === 'VENDOR') navigate('/vendor/dashboard');
       else navigate('/customer/dashboard');

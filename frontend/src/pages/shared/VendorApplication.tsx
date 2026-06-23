@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { Building2, CheckCircle2, ArrowRight, ArrowLeft, UploadCloud } from 'lucide-react';
-// import toast from 'react-hot-toast';
+
 import { useNavigate } from 'react-router-dom';
 import { useSubmitVendorApplication } from '../../hooks/api/useVendor';
 
@@ -11,17 +11,17 @@ export default function VendorApplication() {
   const navigate = useNavigate();
   const { mutateAsync: submitApplication, isPending: isSubmitting } = useSubmitVendorApplication();
 
-  // 5MB Custom Validation Rule
+
   const validateFile = (fileList: FileList) => {
     if (!fileList || fileList.length === 0) return "File is required";
     const file = fileList[0];
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) return "File size cannot exceed 5MB";
     return true;
   };
 
   const handleNextStep = async () => {
-    // Validate Step 1 fields before moving to Step 2
+
     const isValid = await trigger(["fullName", "phone", "email", "nidNumber", "profileImage", "nidScan"]);
     if (isValid) setStep(2);
   };
@@ -30,7 +30,7 @@ export default function VendorApplication() {
     try {
       const formData = new FormData();
       formData.append('company_name', data.companyName);
-      formData.append('location', 'Bangladesh'); // Default or extracted from address
+      formData.append('location', 'Bangladesh');
       formData.append('full_address', data.address);
       formData.append('company_mail', data.email);
       formData.append('phone', data.phone);
@@ -58,7 +58,7 @@ export default function VendorApplication() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-start">
           
-          {/* Left Column: Benefits (Takes 5 columns) */}
+          
           <div className="lg:col-span-5 space-y-8 lg:sticky lg:top-28">
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-semibold mb-4">
@@ -86,10 +86,10 @@ export default function VendorApplication() {
             </div>
           </div>
 
-          {/* Right Column: Multi-step Form (Takes 7 columns) */}
+          
           <div className="lg:col-span-7 bg-white p-8 md:p-10 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100">
             
-            {/* Progress Bar */}
+            
             <div className="mb-8 flex items-center justify-between relative">
               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-gray-100 -z-10 rounded-full"></div>
               <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-blue-600 -z-10 rounded-full transition-all duration-300" style={{ width: step === 1 ? '0%' : '100%' }}></div>
@@ -105,7 +105,7 @@ export default function VendorApplication() {
             
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               
-              {/* STEP 1 FIELDS */}
+              
               <div className={step === 1 ? 'space-y-6' : 'hidden'}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -129,7 +129,7 @@ export default function VendorApplication() {
                   </div>
                 </div>
 
-                {/* File Uploads Step 1 */}
+                
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5">Profile Image</label>
@@ -150,7 +150,7 @@ export default function VendorApplication() {
                 </button>
               </div>
 
-              {/* STEP 2 FIELDS */}
+              
               <div className={step === 2 ? 'space-y-6' : 'hidden'}>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Company / Agency Name</label>
@@ -177,7 +177,7 @@ export default function VendorApplication() {
                   <textarea rows={2} {...register("address", { required: true })} className="w-full px-4 py-3 border border-gray-200 rounded-xl outline-none bg-gray-50 custom-scrollbar"></textarea>
                 </div>
 
-                {/* File Uploads Step 2 */}
+                
                 <div className="space-y-4 border border-gray-200 p-4 rounded-xl bg-gray-50">
                   <h4 className="text-sm font-bold text-gray-800 mb-2 flex items-center gap-2"><UploadCloud size={16}/> Business Documents</h4>
                   

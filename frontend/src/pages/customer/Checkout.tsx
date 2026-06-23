@@ -5,19 +5,20 @@ import toast from 'react-hot-toast';
 import { useProperties } from '../../hooks/api/useProperties';
 import { useCreateBooking } from '../../hooks/api/useBookings';
 import { useCreateCheckoutSession } from '../../hooks/api/usePayment';
+import { useBookingStore } from '../../store/bookingStore';
 
 export default function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'mobile'>('card');
 
-  // Applicant Info State
+
   const [applicantName, setApplicantName] = useState('');
   const [applicantPhone, setApplicantPhone] = useState('');
   const [applicantNid, setApplicantNid] = useState('');
   const [applicantAddress, setApplicantAddress] = useState('');
 
-  // Nominee Info State
+
   const [nomineeName, setNomineeName] = useState('');
   const [nomineeRelation, setNomineeRelation] = useState('');
   
@@ -28,9 +29,23 @@ export default function Checkout() {
   const { mutateAsync: createBooking, isPending: isBooking } = useCreateBooking();
   const { mutateAsync: createCheckoutSession, isPending: isCheckingOut } = useCreateCheckoutSession();
 
+  const { propertyId: storePropertyId, selectedBookingMoney, selectedDurationMonths } = useBookingStore();
   const property = properties?.find(p => p.id === propertyId);
   
-  const bookingMoney = 500000;
+  const minBookingMoney = property ? Number(property.booking_money) || 500000 : 500000;
+  const maxInstallments = property ? property.total_installments || 60 : 60;
+
+  const bookingMoney = storePropertyId === propertyId && selectedBookingMoney !== null 
+    ? selectedBookingMoney 
+    : minBookingMoney;
+
+  const durationMonths = storePropertyId === propertyId && selectedDurationMonths !== null
+    ? selectedDurationMonths
+    : maxInstallments;
+
+  const remainingBalance = property ? Number(property.price) - bookingMoney : 0;
+  const monthlyInstallment = remainingBalance > 0 ? remainingBalance / durationMonths : 0;
+
   const isProcessing = isBooking || isCheckingOut;
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -38,24 +53,25 @@ export default function Checkout() {
     if (!property) return toast.error('Property not found');
     
     try {
-      // 1. Create booking with applicant & nominee info
-      const booking = await createBooking({
-        property_id: property.id,
-        vendor_id: property.vendor_id,
-        booking_amount: bookingMoney,
-        applicant_info: JSON.stringify({
-          name: applicantName,
-          phone: applicantPhone,
-          nid: applicantNid,
-          address: applicantAddress,
-        }),
+
+        const booking = await createBooking({
+          property_id: property.id,
+          vendor_id: property.vendor_id,
+          booking_amount: bookingMoney,
+          installment_duration_months: durationMonths,
+          applicant_info: JSON.stringify({
+            name: applicantName,
+            phone: applicantPhone,
+            nid: applicantNid,
+            address: applicantAddress,
+          }),
         nominee_info: JSON.stringify({
           name: nomineeName,
           relation: nomineeRelation,
         }),
       });
 
-      // 2. Redirect to payment
+
       if (paymentMethod === 'card') {
         await createCheckoutSession({
           booking_id: booking.id,
@@ -94,7 +110,7 @@ export default function Checkout() {
     <div className="min-h-screen bg-slate-50 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Breadcrumb / Header */}
+        
         <div className="mb-8 flex items-center gap-2 text-sm text-gray-500 font-medium">
           <span>Property Details</span>
           <ChevronRight size={16} />
@@ -107,10 +123,10 @@ export default function Checkout() {
 
         <form onSubmit={handlePayment} className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           
-          {/* Left Column: Forms & Details */}
+          
           <div className="lg:col-span-2 space-y-8">
             
-            {/* Property Summary */}
+            
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-6 items-center">
               <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
                 <img 
@@ -125,12 +141,12 @@ export default function Checkout() {
                   <Building2 size={16} className="text-blue-500"/> {property.address}
                 </p>
                 <div className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-3 py-1 rounded-lg text-sm font-semibold">
-                  <CheckCircle2 size={16} /> Selected Plan: 5 Years Installment
+                  <CheckCircle2 size={16} /> Selected Plan: {durationMonths / 12} Years Installment
                 </div>
               </div>
             </div>
 
-            {/* Applicant Information */}
+            
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
               <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <User className="text-blue-600" /> Applicant Information
@@ -155,7 +171,7 @@ export default function Checkout() {
               </div>
             </div>
 
-            {/* Nominee Information */}
+            
             <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
               <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
                 <FileText className="text-blue-600" /> Nominee Information
@@ -180,7 +196,7 @@ export default function Checkout() {
 
           </div>
 
-          {/* Right Column: Payment & Summary (Sticky) */}
+          
           <div className="lg:col-span-1">
             <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 sticky top-28">
               <h3 className="text-lg font-bold text-gray-900 mb-6">Payment Summary</h3>
@@ -192,11 +208,11 @@ export default function Checkout() {
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Installment Duration</span>
-                  <span className="font-medium">5 Years</span>
+                  <span className="font-medium">{durationMonths / 12} Years</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Monthly Installment</span>
-                  <span className="font-medium">{formatBDT(408333)}</span>
+                  <span className="font-medium">{formatBDT(monthlyInstallment)}</span>
                 </div>
                 <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
                   <span className="text-gray-900 font-bold">Total to Pay Now<br/><span className="text-xs text-gray-500 font-normal">(Booking Money)</span></span>

@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 interface PolicyModalProps {
   isOpen: boolean;
   onClose: () => void;
-  propertyId?: string; // ভবিষ্যতে নির্দিষ্ট প্রপার্টির পলিসি ফেচ করার জন্য
+  propertyId?: string;
 }
 
 export default function BookingPolicyModal({ isOpen, onClose, propertyId }: PolicyModalProps) {
   const [isAgreed, setIsAgreed] = useState(false);
   const navigate = useNavigate();
 
-  // Prevent background scrolling
+
   useEffect(() => {
     if (isOpen) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = 'unset';
@@ -23,21 +23,21 @@ export default function BookingPolicyModal({ isOpen, onClose, propertyId }: Poli
 
   const handleProceed = () => {
     onClose();
-    // পলিসি এগ্রি করার পর সরাসরি চেকআউট পেজে পাঠিয়ে দেবে
+
     navigate(`/checkout?property=${propertyId || 'demo-id'}`);
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8">
-      {/* Blurred Backdrop */}
+      
       <div 
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       ></div>
 
-      {/* Modal Content */}
+      
       <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-full flex flex-col transform transition-all">
-        {/* Header */}
+        
         <div className="flex items-center gap-3 p-6 border-b border-gray-100">
           <div className="p-3 bg-red-50 text-red-600 rounded-full">
             <ShieldAlert size={24} />
@@ -54,7 +54,7 @@ export default function BookingPolicyModal({ isOpen, onClose, propertyId }: Poli
           </button>
         </div>
 
-        {/* Scrollable Policy Body */}
+        
         <div className="p-6 overflow-y-auto flex-1 custom-scrollbar space-y-6 text-gray-600">
           <div className="space-y-4">
             <h4 className="font-semibold text-gray-900 flex items-center gap-2">
@@ -99,7 +99,7 @@ export default function BookingPolicyModal({ isOpen, onClose, propertyId }: Poli
           </div>
         </div>
 
-        {/* Footer with Checkbox and Action */}
+        
         <div className="p-6 border-t border-gray-100 bg-gray-50 rounded-b-3xl">
           <label className="flex items-start gap-3 cursor-pointer group mb-4">
             <div className="relative flex items-center pt-0.5">

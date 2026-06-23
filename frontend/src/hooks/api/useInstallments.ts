@@ -20,7 +20,7 @@ export const useGenerateInstallments = () => {
       queryClient.invalidateQueries({ queryKey: ['installments', variables.booking_id] });
       toast.success('Installment schedule generated successfully');
     },
-    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+    onError: (error: Error & { response?: { data?: { error?: string } } }) => {
       toast.error(error.response?.data?.error || 'Failed to generate installments');
     },
   });

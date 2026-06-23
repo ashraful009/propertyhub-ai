@@ -8,17 +8,17 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20 gap-4">
           
-          {/* Left: Logo */}
+          
           <div className="flex-shrink-0">
             <Logo />
           </div>
 
-          {/* Middle: Search Bar (Flex-1 allows it to take up available space safely) */}
+          
           <div className="flex-1 flex justify-center">
             <SearchBar />
           </div>
 
-          {/* Right: Menu & Profile */}
+          
           <div className="flex-shrink-0">
             <NavActions />
           </div>

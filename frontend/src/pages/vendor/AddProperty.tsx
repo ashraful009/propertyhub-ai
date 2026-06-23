@@ -37,12 +37,13 @@ export default function AddProperty() {
       formData.append('title', data.title);
       formData.append('type', data.type);
       formData.append('location', data.location);
-      formData.append('address', data.location); // Mapping location to address for backend
+      formData.append('address', data.location);
       formData.append('description', data.description);
       formData.append('price', data.totalPrice);
+      formData.append('booking_money', data.bookingMoney);
       formData.append('total_installments', String(Number(data.maxDuration) * 12));
       
-      // Features
+
       const features = {
         area: data.area,
         bedrooms: data.bedrooms,
@@ -72,7 +73,7 @@ export default function AddProperty() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         
-        {/* Section 1: Basic Information */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <Building className="text-indigo-600" size={20} /> Basic Information
@@ -126,7 +127,7 @@ export default function AddProperty() {
           </div>
         </div>
 
-        {/* Section 2: Property Specifications */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <List className="text-indigo-600" size={20} /> Specifications
@@ -148,7 +149,7 @@ export default function AddProperty() {
           </div>
         </div>
 
-        {/* Section 3: Pricing & Installment Plans */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <DollarSign className="text-indigo-600" size={20} /> Pricing & Installment Setup
@@ -176,7 +177,7 @@ export default function AddProperty() {
           </div>
         </div>
 
-        {/* Section 4: Media Upload */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <UploadCloud className="text-indigo-600" size={20} /> Property Images
@@ -213,7 +214,7 @@ export default function AddProperty() {
           )}
         </div>
 
-        {/* Submit Actions */}
+        
         <div className="flex gap-4 sticky bottom-6 z-20 bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
           <button type="button" onClick={() => navigate('/vendor/dashboard')} className="px-6 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 font-bold text-gray-700">
             Cancel

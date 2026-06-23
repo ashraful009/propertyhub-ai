@@ -23,8 +23,8 @@ export const getPropertyByIdForVendor = async (propertyId: string, vendorId: str
 export const insertProperty = async (propertyData: IProperty): Promise<IProperty> => {
   const query = `
     INSERT INTO properties 
-    (title, description, price, location, address, property_type, bedrooms, bathrooms, area, images, vendor_id)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    (title, description, price, location, address, property_type, bedrooms, bathrooms, area, images, vendor_id, booking_money, total_installments)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
     RETURNING *;
   `;
   
@@ -40,6 +40,8 @@ export const insertProperty = async (propertyData: IProperty): Promise<IProperty
     propertyData.area,
     propertyData.images,
     propertyData.vendor_id,
+    propertyData.booking_money || 0,
+    propertyData.total_installments || 60,
   ];
 
   const result = await pool.query(query, values);

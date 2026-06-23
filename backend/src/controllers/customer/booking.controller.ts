@@ -4,17 +4,31 @@ import { insertBooking, findBookingByUser, updateBookingStatusInDb } from '../..
 import { ApiResponse } from '../../responses/ApiResponse';
 import { ERROR_MESSAGES } from '../../errors/errorMessages';
 import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
+import { InstallmentService } from '../../services/customer/installment.service';
+import { findPropertyById } from '../../repositories/shared/property.repository';
 
 export const createBooking = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const customer_id = req.user?.id;
-    const { property_id, vendor_id, booking_amount, applicant_info, nominee_info } = req.body;
+    const { property_id, vendor_id, booking_amount, installment_duration_months, applicant_info, nominee_info } = req.body;
 
     if (!customer_id || req.user?.role !== 'CUSTOMER') {
       return ApiResponse.error(res, ERROR_MESSAGES.BOOKING.CUSTOMER_ONLY, 403);
     }
 
+    const property = await findPropertyById(property_id);
+    if (!property) {
+      return ApiResponse.error(res, 'Property not found', 404);
+    }
+
     const newBooking = await insertBooking(property_id, customer_id, vendor_id, booking_amount, applicant_info, nominee_info);
+    
+    // Generate Installment Plan
+    const remainingBalance = Number(property.price) - Number(booking_amount);
+    if (remainingBalance > 0 && installment_duration_months) {
+      await InstallmentService.generateInstallmentPlan(newBooking.id, remainingBalance, installment_duration_months);
+    }
+
     ApiResponse.success(res, RESPONSE_MESSAGES.BOOKING.CREATED, newBooking, 201);
   } catch (error) {
     ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);

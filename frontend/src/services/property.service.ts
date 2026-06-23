@@ -12,9 +12,8 @@ export const PropertyService = {
     return data.data;
   },
 
-  searchProperties: async (filters: any /* eslint-disable-line @typescript-eslint/no-explicit-any */): Promise<IProperty[]> => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const params = new URLSearchParams(filters as any).toString();
+  searchProperties: async (filters: Record<string, string>): Promise<IProperty[]> => {
+    const params = new URLSearchParams(filters).toString();
     const { data } = await apiClient.get<ApiSuccessResponse<IProperty[]>>(`/search/properties?${params}`);
     return data.data;
   },

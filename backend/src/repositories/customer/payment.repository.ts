@@ -28,9 +28,8 @@ export const updatePaymentSuccess = async (sessionId: string): Promise<boolean> 
       const milestoneQuery = `UPDATE installment_milestones SET status = 'PAID' WHERE id = $1 AND status = 'UNPAID'`;
       await client.query(milestoneQuery, [invoice.milestone_id]);
     } else {
-      // Fallback for booking-money invoices without a milestone: mark the earliest unpaid
-      const milestoneQuery = `UPDATE installment_milestones SET status = 'PAID' WHERE id = (SELECT id FROM installment_milestones WHERE plan_id = (SELECT id FROM installment_plans WHERE booking_id = $1) AND status = 'UNPAID' ORDER BY due_date ASC LIMIT 1)`;
-      await client.query(milestoneQuery, [invoice.booking_id]);
+      // It's a booking money payment, no milestone is associated.
+      // We don't mark any installment milestone as PAID here.
     }
 
     // 3. Record 5% platform commission

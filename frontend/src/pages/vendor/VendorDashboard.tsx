@@ -27,7 +27,7 @@ export default function VendorDashboard() {
   }
 
   const totalSales = Number(dashboardData.totalSales || 0);
-  const netEarnings = totalSales * 0.95; // 5% fee assumption
+  const netEarnings = totalSales * 0.95;
   const activeProperties = dashboardData.propertyInsights.reduce((sum, item) => sum + Number(item.count), 0);
   const totalUpcomingDues = Number(dashboardData.upcomingDuesNextMonth || 0);
 
@@ -38,7 +38,7 @@ export default function VendorDashboard() {
         <p className="text-gray-500">Here is what's happening with your properties today.</p>
       </div>
 
-      {/* Stats Cards */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
@@ -76,10 +76,10 @@ export default function VendorDashboard() {
         </div>
       </div>
 
-      {/* Recent Bookings & Pending Installments */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         
-        {/* Recent Bookings */}
+        
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col h-full">
           <div className="p-6 border-b border-gray-100 flex justify-between items-center">
             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -109,7 +109,7 @@ export default function VendorDashboard() {
           </div>
         </div>
 
-        {/* Upcoming Installments Notification */}
+        
         <div className="bg-slate-900 rounded-2xl shadow-sm overflow-hidden text-white flex flex-col justify-center p-8 relative">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-10 -mt-10 blur-2xl"></div>
           <div className="relative z-10">

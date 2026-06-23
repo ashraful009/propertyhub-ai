@@ -14,7 +14,7 @@ interface PropertyFilterProps {
 export default function PropertyFilter({ onFilter }: PropertyFilterProps) {
   const [location, setLocation] = useState('');
   const [propertyType, setPropertyType] = useState('');
-  const [maxPrice, setMaxPrice] = useState('100000000'); // 10 Crore BDT default
+  const [maxPrice, setMaxPrice] = useState('100000000');
 
   const handleApply = () => {
     const filters: IPropertyFilters = {};
@@ -29,7 +29,7 @@ export default function PropertyFilter({ onFilter }: PropertyFilterProps) {
       <h3 className="font-bold text-gray-800 text-lg mb-6">Filter Properties</h3>
       
       <div className="space-y-5">
-        {/* Location Filter */}
+        
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-2">Location</label>
           <select 
@@ -44,7 +44,7 @@ export default function PropertyFilter({ onFilter }: PropertyFilterProps) {
           </select>
         </div>
 
-        {/* Property Type */}
+        
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-2">Property Type</label>
           <select 
@@ -60,7 +60,7 @@ export default function PropertyFilter({ onFilter }: PropertyFilterProps) {
           </select>
         </div>
 
-        {/* Price Range */}
+        
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-2">Price Range</label>
           <input 

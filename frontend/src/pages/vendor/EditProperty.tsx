@@ -24,7 +24,7 @@ export default function EditProperty() {
         setLoading(true);
         const property = await VendorService.getPropertyById(propertyId);
         
-        // Pre-fill form
+
         reset({
           title: property.title,
           type: property.property_type,
@@ -34,7 +34,7 @@ export default function EditProperty() {
           area: property.area,
           bedrooms: property.bedrooms,
           bathrooms: property.bathrooms,
-          // Using some default mappings for missing details
+
           bookingMoney: Math.floor(property.price * 0.1),
           maxDuration: "5"
         });
@@ -77,14 +77,14 @@ export default function EditProperty() {
       formData.append('bedrooms', data.bedrooms);
       formData.append('bathrooms', data.bathrooms);
       
-      // Send new images if any
+
       if (images.length > 0) {
         images.forEach((image) => {
           formData.append('images', image);
         });
       } else {
-        // If no new images, we should theoretically send existing ones or backend should preserve them.
-        // For now, our backend preserves them if req.files is empty.
+
+
       }
 
       await VendorService.updateProperty(id as string, formData);
@@ -117,7 +117,7 @@ export default function EditProperty() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         
-        {/* Section 1: Basic Information */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <Building className="text-indigo-600" size={20} /> Basic Information
@@ -169,7 +169,7 @@ export default function EditProperty() {
           </div>
         </div>
 
-        {/* Section 2: Property Specifications */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <List className="text-indigo-600" size={20} /> Specifications
@@ -191,7 +191,7 @@ export default function EditProperty() {
           </div>
         </div>
 
-        {/* Section 3: Pricing */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <DollarSign className="text-indigo-600" size={20} /> Pricing
@@ -205,7 +205,7 @@ export default function EditProperty() {
           </div>
         </div>
 
-        {/* Section 4: Media Upload */}
+        
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
             <UploadCloud className="text-indigo-600" size={20} /> Property Images
@@ -225,7 +225,7 @@ export default function EditProperty() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            {/* Existing Images */}
+            
             {existingImages.map((url, index) => (
               <div key={`exist-${index}`} className="relative group rounded-xl overflow-hidden border border-gray-200 aspect-square">
                 <img src={url} alt={`Existing ${index}`} className="w-full h-full object-cover" />
@@ -233,7 +233,7 @@ export default function EditProperty() {
               </div>
             ))}
             
-            {/* New Images */}
+            
             {images.map((file, index) => (
               <div key={`new-${index}`} className="relative group rounded-xl overflow-hidden border border-indigo-200 aspect-square">
                 <img src={URL.createObjectURL(file)} alt={`New ${index}`} className="w-full h-full object-cover" />
@@ -250,7 +250,7 @@ export default function EditProperty() {
           </div>
         </div>
 
-        {/* Submit Actions */}
+        
         <div className="flex gap-4 sticky bottom-6 z-20 bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
           <button type="button" onClick={() => navigate('/vendor/properties')} className="px-6 py-4 border border-gray-200 rounded-xl hover:bg-gray-50 font-bold text-gray-700">
             Cancel

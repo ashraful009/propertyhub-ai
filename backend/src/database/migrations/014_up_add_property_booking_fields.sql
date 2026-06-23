@@ -1,0 +1,2 @@
+ALTER TABLE properties ADD COLUMN IF NOT EXISTS booking_money NUMERIC(15, 2) DEFAULT 0;
+ALTER TABLE properties ADD COLUMN IF NOT EXISTS total_installments INT DEFAULT 60;

@@ -19,7 +19,7 @@ export const useReviewApplication = () => {
       queryClient.invalidateQueries({ queryKey: ['vendorApplications'] });
       toast.success('Application reviewed successfully');
     },
-    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+    onError: (error: Error & { response?: { data?: { error?: string } } }) => {
       toast.error(error.response?.data?.error || 'Failed to review application');
     },
   });
@@ -40,7 +40,7 @@ export const useCreatePolicy = () => {
       queryClient.invalidateQueries({ queryKey: ['policies'] });
       toast.success('Policy created successfully');
     },
-    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+    onError: (error: Error & { response?: { data?: { error?: string } } }) => {
       toast.error(error.response?.data?.error || 'Failed to create policy');
     },
   });
@@ -49,12 +49,12 @@ export const useCreatePolicy = () => {
 export const useUpdatePolicy = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: any /* eslint-disable-line @typescript-eslint/no-explicit-any */ }) => AdminService.updatePolicy(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: Record<string, unknown> }) => AdminService.updatePolicy(id, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['policies'] });
       toast.success('Policy updated successfully');
     },
-    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+    onError: (error: Error & { response?: { data?: { error?: string } } }) => {
       toast.error(error.response?.data?.error || 'Failed to update policy');
     },
   });
@@ -68,7 +68,7 @@ export const useDeletePolicy = () => {
       queryClient.invalidateQueries({ queryKey: ['policies'] });
       toast.success('Policy deleted successfully');
     },
-    onError: (error: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+    onError: (error: Error & { response?: { data?: { error?: string } } }) => {
       toast.error(error.response?.data?.error || 'Failed to delete policy');
     },
   });

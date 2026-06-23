@@ -14,7 +14,7 @@ export default function NavActions() {
         Properties
       </Link>
       
-      {/* Become a Vendor Button */}
+      
       {user?.role !== 'ADMIN' && user?.role !== 'VENDOR' && (
         <button 
           onClick={() => setIsVendorPolicyOpen(true)}
@@ -26,7 +26,7 @@ export default function NavActions() {
 
       <ProfileDropdown />
 
-      {/* Vendor Policy Modal */}
+      
       <VendorPolicyModal 
         isOpen={isVendorPolicyOpen} 
         onClose={() => setIsVendorPolicyOpen(false)} 

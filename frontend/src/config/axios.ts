@@ -9,7 +9,7 @@ const apiClient = axios.create({
   },
 });
 
-// Request Interceptor: Auto-attach Token
+
 apiClient.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
@@ -21,13 +21,13 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Handle Global Errors (e.g., Token Expiry)
+
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       useAuthStore.getState().logout();
-      window.location.href = '/login'; // Redirect to auth page
+      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

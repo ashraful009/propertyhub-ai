@@ -3,7 +3,7 @@ import { Search } from 'lucide-react';
 export default function HeroSection() {
   return (
     <div className="relative w-full h-[60vh] min-h-[400px] flex flex-col items-center justify-center overflow-hidden">
-      {/* Background Image & Overlay */}
+      
       <div className="absolute inset-0 z-0">
         <img 
           src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" 
@@ -13,7 +13,7 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px]"></div>
       </div>
 
-      {/* Hero Content */}
+      
       <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 drop-shadow-lg tracking-tight">
           Discover Your <span className="text-blue-400">Perfect Place</span>
@@ -22,7 +22,7 @@ export default function HeroSection() {
           Explore premium properties with flexible installment plans tailored just for you.
         </p>
 
-        {/* Global Search Bar (Center) */}
+        
         <div className="flex items-center bg-white/20 backdrop-blur-md border border-white/30 rounded-full p-2 w-full max-w-2xl mx-auto shadow-2xl">
           <input 
             type="text" 

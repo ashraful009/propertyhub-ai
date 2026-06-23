@@ -2,7 +2,7 @@ import apiClient from '../config/axios';
 import type { IBooking, ApiSuccessResponse } from '../types/shared.types';
 
 export const BookingService = {
-  createBooking: async (payload: { property_id: string; vendor_id: string; booking_amount: number; applicant_info?: string; nominee_info?: string }): Promise<IBooking> => {
+  createBooking: async (payload: { property_id: string; vendor_id: string; booking_amount: number; installment_duration_months?: number; applicant_info?: string; nominee_info?: string }): Promise<IBooking> => {
     const { data } = await apiClient.post<ApiSuccessResponse<IBooking>>('/bookings', payload);
     return data.data;
   },

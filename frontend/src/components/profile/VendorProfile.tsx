@@ -16,17 +16,17 @@ export default function VendorProfile() {
     defaultValues: {
       name: '',
       email: '',
-      phone: '', // Users table phone
-      address: '', // Users table address
+      phone: '',
+      address: '',
       company_name: '',
       location: '',
       full_address: '',
       company_mail: '',
-      vendor_phone: '' // Vendor table phone
+      vendor_phone: ''
     }
   });
 
-  // Fetch initial profile data
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -73,7 +73,7 @@ export default function VendorProfile() {
     }
   };
 
-  const onSubmit = async (data: any /* eslint-disable-line @typescript-eslint/no-explicit-any */) => {
+  const onSubmit = async (data: Record<string, string | Blob>) => {
     try {
       setIsLoading(true);
       const formData = new FormData();
@@ -120,7 +120,7 @@ export default function VendorProfile() {
       <div className="p-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           
-          {/* Profile Photo Section */}
+          
           <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6 pb-6 border-b border-gray-100">
             <div className="relative group cursor-pointer" onClick={handlePhotoClick}>
               <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100">
@@ -149,7 +149,7 @@ export default function VendorProfile() {
             </div>
           </div>
 
-          {/* Personal Info */}
+          
           <div>
             <h4 className="text-md font-bold text-gray-800 mb-4 border-b pb-2">Personal Information</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -189,7 +189,7 @@ export default function VendorProfile() {
             </div>
           </div>
 
-          {/* Business Info */}
+          
           <div>
             <h4 className="text-md font-bold text-gray-800 mb-4 border-b pb-2">Business Information</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

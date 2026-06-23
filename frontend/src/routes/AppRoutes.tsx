@@ -34,7 +34,7 @@ export default function AppRoutes() {
         <Route path="/about" element={<AboutUs />} />
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Auth />} />
-        {/* Only Authenticated users can checkout or apply as vendor */}
+        
         <Route element={<ProtectedRoute allowedRoles={['CUSTOMER', 'VENDOR', 'ADMIN']} />}>
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />

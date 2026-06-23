@@ -51,7 +51,7 @@ export default function VendorManagement() {
           <p className="text-gray-500">Review, approve, or reject vendor applications.</p>
         </div>
         
-        {/* Search Bar */}
+        
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
           <input 
@@ -62,7 +62,7 @@ export default function VendorManagement() {
         </div>
       </div>
 
-      {/* Applications Table */}
+      
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -115,7 +115,7 @@ export default function VendorManagement() {
         </div>
       </div>
 
-      {/* Review Modal */}
+      
       {selectedVendor && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 py-8">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setSelectedVendor(null)}></div>
@@ -132,9 +132,9 @@ export default function VendorManagement() {
             </div>
 
             <div className="p-6 overflow-y-auto custom-scrollbar space-y-8">
-              {/* Info Grid */}
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Personal Info */}
+                
                 <div className="space-y-4">
                   <h4 className="font-bold text-gray-900 flex items-center gap-2 border-b pb-2"><User size={18}/> Applicant Info</h4>
                   <div className="space-y-2 text-sm">
@@ -144,7 +144,7 @@ export default function VendorManagement() {
                   </div>
                 </div>
 
-                {/* Business Info */}
+                
                 <div className="space-y-4">
                   <h4 className="font-bold text-gray-900 flex items-center gap-2 border-b pb-2"><Building2 size={18}/> Business Info</h4>
                   <div className="space-y-2 text-sm">
@@ -155,7 +155,7 @@ export default function VendorManagement() {
                 </div>
               </div>
 
-              {/* Uploaded Documents Preview */}
+              
               <div>
                 <h4 className="font-bold text-gray-900 flex items-center gap-2 border-b pb-2 mb-4"><FileText size={18}/> Submitted Documents</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -170,7 +170,7 @@ export default function VendorManagement() {
               </div>
             </div>
 
-            {/* Actions */}
+            
             {selectedVendor.status === 'PENDING' && (
               <div className="p-6 border-t border-gray-100 bg-gray-50 rounded-b-3xl flex gap-4">
                 <button 

@@ -3,7 +3,7 @@ import { useForm, type FieldValues } from 'react-hook-form';
 import { Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import apiClient from '../../config/axios'; // Updated to our axios instance
+import apiClient from '../../config/axios';
 import { useAuthStore } from '../../store/authStore';
 import axios from 'axios';
 import GoogleAuth from '../../components/auth/GoogleAuth';
@@ -15,7 +15,7 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-  // Connected with our zustand store
+
   const loginAuth = useAuthStore((state) => state.login);
 
   const { register, handleSubmit, reset } = useForm();
@@ -30,7 +30,7 @@ export default function Auth() {
           password: data.password,
         });
         
-        // Pass user data and token to Zustand
+
         const userRole = response.data.data.user.role;
         loginAuth(response.data.data.user, response.data.data.accessToken);
         toast.success('Successfully logged in!');
@@ -157,7 +157,7 @@ export default function Auth() {
             </button>
           </form>
 
-          {/* Social Login Separator... */}
+          
           <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
@@ -174,7 +174,7 @@ export default function Auth() {
           </div>
         </div>
 
-        {/* Right Side Info Panel */}
+        
         <div className="w-1/2 bg-blue-600 text-white p-12 flex flex-col justify-center items-center text-center relative z-20">
           {isLogin ? (
             <>

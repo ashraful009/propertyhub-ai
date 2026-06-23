@@ -7,8 +7,8 @@ export const CustomerService = {
     return data.data;
   },
 
-  requestCancellation: async (booking_id: string): Promise<any /* eslint-disable-line @typescript-eslint/no-explicit-any */> => {
-    const { data } = await apiClient.post<ApiSuccessResponse<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>>('/refunds/cancel', { booking_id });
+  requestCancellation: async (booking_id: string): Promise<unknown> => {
+    const { data } = await apiClient.post<ApiSuccessResponse<unknown>>('/refunds/cancel', { booking_id });
     return data.data;
   },
 };

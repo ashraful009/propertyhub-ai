@@ -28,7 +28,7 @@ export const VendorService = {
     return data.data;
   },
 
-  updateProperty: async (id: string, propertyData: any /* eslint-disable-line @typescript-eslint/no-explicit-any */): Promise<IProperty> => {
+  updateProperty: async (id: string, propertyData: Record<string, unknown>): Promise<IProperty> => {
     const { data } = await apiClient.put<ApiSuccessResponse<IProperty>>(`/vendor/properties/${id}`, propertyData);
     return data.data;
   },
@@ -37,8 +37,8 @@ export const VendorService = {
     await apiClient.delete<ApiSuccessResponse<void>>(`/vendor/properties/${id}`);
   },
 
-  submitApplication: async (payload: any): Promise<any /* eslint-disable-line @typescript-eslint/no-explicit-any */> => {
-    const { data } = await apiClient.post<ApiSuccessResponse<any /* eslint-disable-line @typescript-eslint/no-explicit-any */>>('/customer/vendor-apply', payload);
+  submitApplication: async (payload: Record<string, unknown>): Promise<unknown> => {
+    const { data } = await apiClient.post<ApiSuccessResponse<unknown>>('/customer/vendor-apply', payload);
     return data.data;
   },
 

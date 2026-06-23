@@ -24,7 +24,7 @@ export default function AdminDashboard() {
   }
 
   const totalCommission = Number(dashboardData.totalRevenue || 0);
-  const totalSales = totalCommission / 0.05; // Assumed 5% commission
+  const totalSales = totalCommission / 0.05;
   const activeProperties = dashboardData.propertyStatus.reduce((sum, item) => sum + Number(item.count), 0);
   const activeVendors = Number(dashboardData.userStatistics.find(u => u.role === 'VENDOR')?.count || 0);
 
@@ -35,7 +35,7 @@ export default function AdminDashboard() {
         <p className="text-gray-500">Real-time statistics and revenue tracking.</p>
       </div>
 
-      {/* Stats Cards */}
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
           <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4">
@@ -73,7 +73,7 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Revenue by Vendor Table */}
+      
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-gray-100 flex justify-between items-center">
           <div>

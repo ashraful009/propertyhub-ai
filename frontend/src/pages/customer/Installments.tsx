@@ -58,7 +58,7 @@ export default function Installments() {
         <p className="text-gray-500">Manage your payments for your active booking.</p>
       </div>
 
-      {/* Next Payment Highlight Card */}
+      
       {nextPayment && (
         <div className="bg-slate-900 rounded-3xl p-6 md:p-8 text-white flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl shadow-slate-900/20">
           <div className="flex items-center gap-5 w-full md:w-auto">
@@ -85,7 +85,7 @@ export default function Installments() {
         </div>
       )}
 
-      {/* Payment History & Schedule Table */}
+      
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
         <div className="p-6 border-b border-gray-100">
           <h3 className="text-lg font-bold text-gray-900">Payment Timeline</h3>

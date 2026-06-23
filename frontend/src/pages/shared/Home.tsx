@@ -32,21 +32,21 @@ export default function Home() {
   };
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      {/* 1. Hero Section */}
+      
       <HeroSection />
 
-      {/* Main Content Area */}
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
-          {/* 2. Left Side Filter (Sticky on Desktop) */}
+          
           <div className="lg:col-span-1">
             <div className="sticky top-28">
               <PropertyFilter onFilter={handleFilter} />
             </div>
           </div>
 
-          {/* 3. Right Side Property Grid */}
+          
           <div className="lg:col-span-3">
             <div className="mb-6 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900">Featured Properties</h2>
@@ -55,7 +55,7 @@ export default function Home() {
               </span>
             </div>
 
-            {/* Grid Container: Max 6 roughly visible, then scrollable internally */}
+            
             <div className="h-[800px] overflow-y-auto pr-2 pb-10 custom-scrollbar">
               {loading ? (
                 <div className="text-center py-10 text-gray-500">Loading properties...</div>

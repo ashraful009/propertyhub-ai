@@ -4,11 +4,28 @@ import InstallmentCalculatorModal from './InstallmentCalculatorModal';
 import BookingPolicyModal from '../policy/BokingPolicyModal';
 import type { IProperty } from '../../types/shared.types';
 
+import { useBookingStore } from '../../store/bookingStore';
+
 export default function BookingCard({ property }: { property: IProperty }) {
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
   
+  const { propertyId, selectedBookingMoney, setBookingPlan } = useBookingStore();
+  
   const propertyPrice = Number(property.price);
+  const minBookingMoney = Number(property.booking_money) || 500000;
+  const maxInstallments = property.total_installments || 60;
+  
+  const displayBookingMoney = propertyId === property.id && selectedBookingMoney !== null 
+    ? selectedBookingMoney 
+    : minBookingMoney;
+
+  const handleBookNow = () => {
+    if (propertyId !== property.id || selectedBookingMoney === null) {
+      setBookingPlan(property.id, minBookingMoney, maxInstallments);
+    }
+    setIsPolicyOpen(true);
+  };
 
   return (
     <>
@@ -30,9 +47,9 @@ export default function BookingCard({ property }: { property: IProperty }) {
             Calculate Installment
           </button>
 
-          {/* Book Now Button triggers Policy Modal */}
+          
           <button 
-            onClick={() => setIsPolicyOpen(true)}
+            onClick={handleBookNow}
             className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
           >
             <CalendarCheck size={20} />
@@ -42,7 +59,7 @@ export default function BookingCard({ property }: { property: IProperty }) {
 
         <div className="mt-6 pt-6 border-t border-gray-100 text-center">
           <p className="text-sm text-gray-500">
-            Booking amount: <span className="font-bold text-gray-900">৳ 5,00,000</span>
+            Booking amount: <span className="font-bold text-gray-900">৳ {displayBookingMoney.toLocaleString('en-IN')}</span>
           </p>
           <p className="text-xs text-gray-400 mt-2">
             Secure your unit instantly via SSLCommerz or Stripe.
@@ -50,11 +67,14 @@ export default function BookingCard({ property }: { property: IProperty }) {
         </div>
       </div>
 
-      {/* Modals */}
+      
       <InstallmentCalculatorModal 
         isOpen={isCalculatorOpen} 
         onClose={() => setIsCalculatorOpen(false)} 
+        propertyId={property.id}
         totalPrice={propertyPrice}
+        minBookingMoney={minBookingMoney}
+        maxInstallments={maxInstallments}
       />
       
       <BookingPolicyModal 

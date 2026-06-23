@@ -88,7 +88,7 @@ export default function MyProperties() {
                   </div>
                 )}
                 
-                {/* Status Badges */}
+                
                 <div className="absolute top-4 left-4 flex flex-col gap-2">
                   <div className={`text-xs font-bold px-3 py-1 rounded-full shadow-sm ${
                     property.status === 'AVAILABLE' ? 'bg-green-100 text-green-800' :
@@ -104,7 +104,7 @@ export default function MyProperties() {
                   </div>
                 </div>
 
-                {/* Overlay Actions */}
+                
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
                   <button 
                     onClick={() => navigate(`/vendor/edit-property/${property.id}`)}

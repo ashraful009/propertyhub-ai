@@ -59,7 +59,7 @@ export default function PolicyManager() {
             });
           }
         } else {
-          // Find if changed
+
           const original = dbPolicies?.find(p => String(p.id) === policy.id);
           if (original && (original.title !== policy.title || original.content !== policy.description)) {
             await updatePolicy({ id: policy.id, payload: { title: policy.title, content: policy.description } });
