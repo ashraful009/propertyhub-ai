@@ -5,7 +5,7 @@ services:
     rootDir: backend
     buildCommand: npm install && npm run build
     startCommand: npm start
-    plan: free # or standard
+    plan: free 
     healthCheckPath: /ping
     envVars:
       - key: NODE_ENV
@@ -20,15 +20,10 @@ services:
         value: 5000
       - key: JWT_SECRET
         generateValue: true
-      # You need to manually add these in the Render Dashboard after deployment:
-      # - STRIPE_SECRET_KEY
-      # - FRONTEND_URL
-      # - CLOUDINARY_CLOUD_NAME
-      # - CLOUDINARY_API_KEY
-      # - CLOUDINARY_API_SECRET
+     
 
 databases:
   - name: propertyhub-db
     databaseName: propertyhub_db
     user: propertyhub_user
-    plan: free # or standard
+    plan: free 
