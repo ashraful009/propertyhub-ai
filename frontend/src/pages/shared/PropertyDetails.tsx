@@ -1,14 +1,18 @@
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import ImageGallery from '../../components/property-details/ImageGallery';
 import PropertyInfo from '../../components/property-details/PropertyInfo';
 import MapSection from '../../components/property-details/MapSection';
 import BookingCard from '../../components/property-details/BookingCard';
+import ChatButton from '../../components/property-details/ChatButton';
+import AIChatPanel from '../../components/property-details/AIChatPanel';
 import { usePropertyDetails } from '../../hooks/api/useProperties';
 
 export default function PropertyDetails() {
   const { id } = useParams<{ id: string }>();
   const { data: property, isLoading, isError } = usePropertyDetails(id || '');
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -46,6 +50,10 @@ export default function PropertyDetails() {
           </div>
         </div>
       </div>
+
+      {/* AI Chat */}
+      <ChatButton isOpen={isChatOpen} onClick={() => setIsChatOpen(!isChatOpen)} />
+      <AIChatPanel isOpen={isChatOpen} property={property} />
     </div>
   );
 }

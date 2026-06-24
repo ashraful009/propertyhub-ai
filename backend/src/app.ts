@@ -10,6 +10,7 @@ import propertyRoutes from './routes/shared/property.routes';
 import searchRoutes from './routes/shared/search.routes';
 import compareRoutes from './routes/shared/compare.routes';
 import sharedVendorRoutes from './routes/shared/vendor.routes';
+import chatRoutes from './routes/shared/chat.routes';
 
 import adminRoutes from './routes/admin/admin.routes';
 import vendorRoutes from './routes/vendor/vendor.routes';
@@ -36,6 +37,7 @@ app.use('/api/v1/properties', propertyRoutes);
 app.use('/api/v1/search', searchRoutes);
 app.use('/api/v1/compare', compareRoutes);
 app.use('/api/v1/vendor-policy', sharedVendorRoutes);
+app.use('/api/v1/chat', chatRoutes);
 
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/vendor', vendorRoutes);

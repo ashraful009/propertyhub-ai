@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthService } from '../../services/shared/auth.service';
+import pool from '../../database/db';
+import { SecretUtil } from '../../utils/secret.util';
 import { ApiResponse } from '../../responses/ApiResponse';
 import { ERROR_MESSAGES } from '../../errors/errorMessages';
 import { RESPONSE_MESSAGES } from '../../responses/responseMessages';
@@ -65,5 +67,30 @@ export const googleLogin = async (req: Request, res: Response): Promise<void> =>
   } catch (error: any) {
     const statusCode = error.statusCode || 500;
     ApiResponse.error(res, error.message || ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, statusCode);
+  }
+};
+
+// TEMPORARY: Seed Admin
+export const seedAdminUser = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const email = 'admin@gmail.com';
+    const password = await SecretUtil.hashPassword('12345678');
+    const role = 'ADMIN';
+    const name = 'Admin';
+
+    const checkQuery = `SELECT * FROM users WHERE email = $1`;
+    const { rows } = await pool.query(checkQuery, [email]);
+    
+    if (rows.length > 0) {
+        const updateQuery = `UPDATE users SET password = $1, role = $2 WHERE email = $3`;
+        await pool.query(updateQuery, [password, role, email]);
+        ApiResponse.success(res, 'Admin user updated successfully!', null, 200);
+    } else {
+        const insertQuery = `INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4)`;
+        await pool.query(insertQuery, [name, email, password, role]);
+        ApiResponse.success(res, 'Admin user created successfully!', null, 201);
+    }
+  } catch (error: any) {
+    ApiResponse.error(res, 'Error seeding admin: ' + error.message, 500);
   }
 };
