@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, Sparkles, Trash2 } from 'lucide-react';
+import { Send, Bot, Sparkles, Trash2, X } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import { streamChatMessage } from '../../services/chat.service';
 import type { IProperty } from '../../types/shared.types';
@@ -14,9 +14,10 @@ interface Message {
 interface AIChatPanelProps {
   isOpen: boolean;
   property: IProperty;
+  onClose: () => void;
 }
 
-export default function AIChatPanel({ isOpen, property }: AIChatPanelProps) {
+export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -143,15 +144,24 @@ export default function AIChatPanel({ isOpen, property }: AIChatPanelProps) {
                 </p>
               </div>
             </div>
-            {messages.length > 0 && (
+            <div className="flex items-center gap-1">
+              {messages.length > 0 && (
+                <button
+                  onClick={clearChat}
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-red-400"
+                  title="Clear chat"
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
               <button
-                onClick={clearChat}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-red-400"
-                title="Clear chat"
+                onClick={onClose}
+                className="p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
+                title="Close chat"
               >
-                <Trash2 size={16} />
+                <X size={20} />
               </button>
-            )}
+            </div>
           </div>
         </div>
 

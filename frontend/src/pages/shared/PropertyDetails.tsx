@@ -53,7 +53,7 @@ export default function PropertyDetails() {
 
       {/* AI Chat */}
       <ChatButton isOpen={isChatOpen} onClick={() => setIsChatOpen(!isChatOpen)} />
-      <AIChatPanel isOpen={isChatOpen} property={property} />
+      <AIChatPanel isOpen={isChatOpen} property={property} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

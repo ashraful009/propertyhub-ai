@@ -51,7 +51,7 @@ export const streamChatResponse = async (
     const systemPrompt = buildSystemPrompt(property);
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-1.5-flash',
       systemInstruction: {
         role: 'user',
         parts: [{ text: systemPrompt }],
