@@ -90,6 +90,9 @@ export default function PropertyRequests() {
                     <MapPin size={14} />
                     <span className="truncate">{property.location}</span>
                   </div>
+                  <p className="text-gray-600 text-sm mt-2 line-clamp-2">
+                    {property.description || 'No description provided.'}
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded-xl border border-gray-100 text-sm">

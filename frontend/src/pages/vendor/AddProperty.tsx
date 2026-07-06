@@ -35,7 +35,7 @@ export default function AddProperty() {
     try {
       const formData = new FormData();
       formData.append('title', data.title);
-      formData.append('type', data.type);
+      formData.append('property_type', data.type);
       formData.append('location', data.location);
       formData.append('address', data.location);
       formData.append('description', data.description);
@@ -44,12 +44,9 @@ export default function AddProperty() {
       formData.append('total_installments', String(Number(data.maxDuration) * 12));
       
 
-      const features = {
-        area: data.area,
-        bedrooms: data.bedrooms,
-        bathrooms: data.bathrooms,
-      };
-      formData.append('features', JSON.stringify(features));
+      formData.append('area', data.area);
+      formData.append('bedrooms', data.bedrooms);
+      formData.append('bathrooms', data.bathrooms);
 
       images.forEach((image) => {
         formData.append('images', image);
