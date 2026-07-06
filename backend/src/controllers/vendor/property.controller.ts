@@ -49,6 +49,8 @@ export const createProperty = async (req: AuthRequest, res: Response): Promise<v
     const files = req.files as Express.Multer.File[];
     const images = files ? files.map(file => file.path) : [];
 
+    console.log("CREATE PROPERTY - REQ.BODY:", req.body);
+
     const propertyData = {
       ...req.body,
       images,
@@ -58,6 +60,7 @@ export const createProperty = async (req: AuthRequest, res: Response): Promise<v
     const newProperty = await insertProperty(propertyData);
     ApiResponse.success(res, RESPONSE_MESSAGES.PROPERTY.CREATED, newProperty, 201);
   } catch (error) {
+    console.error("Create property error:", error);
     ApiResponse.error(res, ERROR_MESSAGES.COMMON.INTERNAL_SERVER_ERROR, 500);
   }
 };
@@ -77,6 +80,8 @@ export const updateProperty = async (req: AuthRequest, res: Response): Promise<v
     if (files && files.length > 0) {
       propertyData.images = files.map(file => file.path);
     }
+    
+    console.log("UPDATE PROPERTY - REQ.BODY:", req.body);
 
     const updatedProperty = await updatePropertyById(id as string, userId, userRole, propertyData);
 

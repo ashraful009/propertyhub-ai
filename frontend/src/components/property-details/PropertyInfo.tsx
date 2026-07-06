@@ -18,21 +18,21 @@ export default function PropertyInfo({ property }: { property: IProperty }) {
         <div className="flex items-center gap-3">
           <div className="p-3 bg-[var(--indigo-50)] text-[var(--indigo-500)] rounded-xl"><BedDouble size={24} /></div>
           <div>
-            <p className="font-semibold text-[var(--indigo-900)]">{property.bedrooms} Bedrooms</p>
+            <p className="font-semibold text-[var(--indigo-900)]">{property.bedrooms ? property.bedrooms : 'N/A'} Bedrooms</p>
             <p className="text-sm text-[var(--text-muted)]">Spacious</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="p-3 bg-[var(--indigo-50)] text-[var(--indigo-500)] rounded-xl"><Bath size={24} /></div>
           <div>
-            <p className="font-semibold text-[var(--indigo-900)]">{property.bathrooms} Bathrooms</p>
+            <p className="font-semibold text-[var(--indigo-900)]">{property.bathrooms ? property.bathrooms : 'N/A'} Bathrooms</p>
             <p className="text-sm text-[var(--text-muted)]">Modern fittings</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="p-3 bg-[var(--indigo-50)] text-[var(--indigo-500)] rounded-xl"><Square size={24} /></div>
           <div>
-            <p className="font-semibold text-[var(--indigo-900)]">{Number(property.area).toLocaleString()} sqft</p>
+            <p className="font-semibold text-[var(--indigo-900)]">{property.area ? Number(property.area).toLocaleString() : 'N/A'} sqft</p>
             <p className="text-sm text-[var(--text-muted)]">Floor area</p>
           </div>
         </div>
