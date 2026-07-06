@@ -126,20 +126,20 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <div className="h-full flex flex-col bg-gradient-to-b from-[#110f29] via-[#1c1946] to-[#110f29] shadow-2xl shadow-black/50 border-l border-white/10">
+      <div className="h-full flex flex-col bg-white/95 backdrop-blur-3xl shadow-[0_0_50px_rgba(38,33,92,0.15)] border-l border-[var(--border-color)]">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-white/10 bg-white/5 backdrop-blur-xl">
+        <div className="px-5 py-4 border-b border-[var(--border-color)] bg-[var(--bg-base)]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--indigo-500)] to-[var(--indigo-700)] flex items-center justify-center shadow-lg shadow-[var(--indigo-500)]/30">
                 <Bot size={20} className="text-white" />
               </div>
               <div>
-                <h3 className="text-white font-semibold text-sm flex items-center gap-1.5">
+                <h3 className="text-[var(--indigo-900)] font-bold text-base flex items-center gap-1.5">
                   PropertyHub AI
-                  <Sparkles size={14} className="text-[var(--amber-200)]" />
+                  <Sparkles size={16} className="text-[var(--amber-600)]" />
                 </h3>
-                <p className="text-gray-400 text-xs truncate max-w-[200px]">
+                <p className="text-[var(--text-secondary)] text-xs font-medium truncate max-w-[200px]">
                   {property.title}
                 </p>
               </div>
@@ -148,18 +148,18 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
               {messages.length > 0 && (
                 <button
                   onClick={clearChat}
-                  className="p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-red-400"
+                  className="p-2.5 rounded-full hover:bg-[var(--bg-base)] transition-colors text-[var(--text-muted)] hover:text-red-500 shadow-sm border border-transparent hover:border-[var(--border-color)]"
                   title="Clear chat"
                 >
-                  <Trash2 size={16} />
+                  <Trash2 size={18} />
                 </button>
               )}
               <button
                 onClick={onClose}
-                className="p-2 rounded-lg hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
-                title="Close chat"
+                className="p-2.5 rounded-full bg-[var(--indigo-50)] hover:bg-[var(--indigo-100)] transition-colors text-[var(--indigo-900)] shadow-sm border border-[var(--indigo-200)] ml-1 flex items-center justify-center"
+                title="Turn off Assistant"
               >
-                <X size={20} />
+                <X size={20} strokeWidth={2.5} />
               </button>
             </div>
           </div>
@@ -170,18 +170,18 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
           {messages.length === 0 ? (
             /* Welcome Screen */
             <div className="flex flex-col items-center justify-center h-full text-center px-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--indigo-500)]/20 to-[var(--indigo-700)]/20 flex items-center justify-center mb-4 border border-[var(--indigo-500)]/20">
-                <Bot size={32} className="text-[var(--indigo-400)]" />
+              <div className="w-20 h-20 rounded-3xl bg-[var(--indigo-50)] flex items-center justify-center mb-6 shadow-sm border border-[var(--indigo-100)]">
+                <Bot size={40} className="text-[var(--indigo-500)]" />
               </div>
-              <h4 className="text-white font-semibold text-lg mb-2">
+              <h4 className="text-[var(--indigo-900)] font-extrabold text-xl mb-3">
                 Hi! I'm your AI Assistant 👋
               </h4>
-              <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-                Ask me anything about <span className="text-[var(--indigo-400)] font-medium">"{property.title}"</span> — pricing, features, booking, installments, and more!
+              <p className="text-[var(--text-secondary)] text-sm mb-8 leading-relaxed max-w-[260px]">
+                Ask me anything about <span className="text-[var(--indigo-700)] font-bold">"{property.title}"</span> — pricing, features, booking, installments, and more!
               </p>
               {/* Suggested Questions */}
-              <div className="w-full space-y-2">
-                <p className="text-gray-500 text-xs uppercase tracking-wider font-medium mb-3">
+              <div className="w-full space-y-3">
+                <p className="text-[var(--text-muted)] text-[10px] uppercase tracking-widest font-bold mb-4">
                   Try asking
                 </p>
                 {suggestedQuestions.map((q, i) => (
@@ -191,7 +191,7 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
                       setInput(q);
                       setTimeout(() => inputRef.current?.focus(), 50);
                     }}
-                    className="w-full text-left px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-sm transition-all duration-200 border border-white/5 hover:border-[var(--indigo-500)]/30"
+                    className="w-full text-left px-5 py-3.5 rounded-xl bg-[var(--bg-base)] hover:bg-[var(--indigo-50)] text-[var(--indigo-900)] text-sm font-medium transition-all duration-200 border border-[var(--border-color)] hover:border-[var(--indigo-200)] shadow-sm"
                   >
                     {q}
                   </button>
@@ -213,8 +213,8 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
         </div>
 
         {/* Input Area */}
-        <div className="px-4 py-4 border-t border-white/10 bg-white/5 backdrop-blur-xl">
-          <div className="flex items-center gap-2">
+        <div className="px-5 py-5 border-t border-[var(--border-color)] bg-white">
+          <div className="flex items-center gap-3">
             <input
               ref={inputRef}
               type="text"
@@ -223,26 +223,26 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
               onKeyDown={handleKeyDown}
               placeholder={isLoading ? 'AI is thinking...' : 'Ask about this property...'}
               disabled={isLoading}
-              className="flex-1 bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none border border-white/10 focus:border-[var(--indigo-500)]/50 transition-colors disabled:opacity-50"
+              className="flex-1 bg-[var(--bg-base)] text-[var(--text-primary)] placeholder-[var(--text-muted)] rounded-2xl px-5 py-4 text-sm outline-none border border-[var(--border-color)] focus:border-[var(--indigo-500)] focus:ring-4 focus:ring-[var(--indigo-50)] transition-all disabled:opacity-50"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--indigo-500)] to-[var(--indigo-700)] text-white flex items-center justify-center transition-all duration-200 hover:shadow-lg hover:shadow-[var(--indigo-500)]/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              className="w-14 h-14 rounded-2xl bg-[var(--indigo-900)] text-white flex items-center justify-center transition-all duration-200 hover:shadow-lg hover:shadow-[var(--indigo-900)]/20 disabled:opacity-40 disabled:cursor-not-allowed hover:-translate-y-0.5"
             >
               {isLoading ? (
-                <div className="flex gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:0ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:150ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-bounce [animation-delay:300ms]" />
+                <div className="flex gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:0ms]" />
+                  <span className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:150ms]" />
+                  <span className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:300ms]" />
                 </div>
               ) : (
-                <Send size={18} />
+                <Send size={20} className="ml-1" />
               )}
             </button>
           </div>
-          <p className="text-gray-600 text-[10px] text-center mt-2">
-            Powered by AI · Property-specific answers only
+          <p className="text-[var(--text-muted)] text-[11px] text-center mt-4 font-medium flex items-center justify-center gap-1">
+            <Sparkles size={12}/> Powered by PropertyHub AI
           </p>
         </div>
       </div>
