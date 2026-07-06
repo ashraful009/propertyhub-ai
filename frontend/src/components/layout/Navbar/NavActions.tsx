@@ -10,7 +10,7 @@ export default function NavActions() {
 
   return (
     <div className="flex items-center gap-6">
-      <Link to="/properties" className="hidden sm:block text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors">
+      <Link to="/properties" className="hidden sm:block text-sm font-semibold text-[var(--text-secondary)] hover:text-[var(--indigo-400)] transition-colors">
         Properties
       </Link>
       
@@ -18,7 +18,7 @@ export default function NavActions() {
       {user?.role !== 'ADMIN' && user?.role !== 'VENDOR' && (
         <button 
           onClick={() => setIsVendorPolicyOpen(true)}
-          className="hidden md:block px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-colors"
+          className="hidden md:block px-4 py-2 bg-[var(--indigo-900)] text-white rounded-lg text-sm font-medium hover:bg-[var(--indigo-700)] transition-colors"
         >
           Become a Vendor
         </button>

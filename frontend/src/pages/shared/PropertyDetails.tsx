@@ -16,38 +16,35 @@ export default function PropertyDetails() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-base)]">
+        <Loader2 className="w-8 h-8 text-[var(--indigo-500)] animate-spin" />
       </div>
     );
   }
 
   if (isError || !property) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fafc]">
-        <p className="text-xl text-gray-600 font-medium">Property not found</p>
+      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-base)]">
+        <p className="text-xl text-[var(--text-secondary)] font-medium">Property not found</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ImageGallery images={property.images} />
+    <div className="min-h-screen bg-[var(--bg-base)]">
+      {/* 80% width container */}
+      <div className="w-full lg:w-[80%] mx-auto flex flex-col lg:flex-row py-8 lg:py-12 gap-8 lg:gap-0">
+        
+        {/* Left Side: 40% width, sticky with offset and reduced height */}
+        <div className="lg:w-[40%] lg:sticky lg:top-28 lg:h-[calc(100vh-9rem)]">
+          <ImageGallery images={property.images} />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100">
-              <PropertyInfo property={property} />
-              <MapSection property={property} />
-            </div>
-          </div>
-
-          <div className="lg:col-span-1">
-            <div className="sticky top-28">
-              <BookingCard property={property} />
-            </div>
-          </div>
+        {/* Right Side: 60% width, scrollable content */}
+        <div className="lg:w-[60%] flex flex-col gap-6 px-4 lg:px-12 pb-12">
+          <PropertyInfo property={property} />
+          <BookingCard property={property} />
+          <MapSection property={property} />
         </div>
       </div>
 

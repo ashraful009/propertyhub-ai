@@ -29,15 +29,15 @@ export default function BookingCard({ property }: { property: IProperty }) {
 
   return (
     <>
-      <div className="bg-white rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 relative z-10">
+      <div className="glass-card p-6 relative z-10">
         <div className="mb-6">
-          <p className="text-gray-500 text-sm font-medium mb-1">Total Price</p>
-          <h2 className="text-3xl font-extrabold text-gray-900">৳ {propertyPrice.toLocaleString('en-IN')}</h2>
+          <p className="text-[var(--text-secondary)] text-sm font-medium mb-1">Total Price</p>
+          <h2 className="text-3xl font-extrabold text-[var(--indigo-900)]">৳ {propertyPrice.toLocaleString('en-IN')}</h2>
           <p className={`text-sm font-medium mt-2 flex items-center gap-1 ${
-            property.status === 'AVAILABLE' ? 'text-green-600' : property.status === 'BOOKED' ? 'text-blue-600' : 'text-gray-600'
+            property.status === 'AVAILABLE' ? 'text-[var(--teal-800)]' : property.status === 'BOOKED' ? 'text-[var(--indigo-500)]' : 'text-[var(--text-muted)]'
           }`}>
             <span className={`w-2 h-2 rounded-full ${
-              property.status === 'AVAILABLE' ? 'bg-green-500' : property.status === 'BOOKED' ? 'bg-blue-500' : 'bg-gray-500'
+              property.status === 'AVAILABLE' ? 'bg-[var(--teal-800)]' : property.status === 'BOOKED' ? 'bg-[var(--indigo-500)]' : 'bg-[var(--text-muted)]'
             }`}></span> {property.status === 'AVAILABLE' ? 'Available' : property.status === 'BOOKED' ? 'Booked' : 'Sold'}
           </p>
         </div>
@@ -45,27 +45,26 @@ export default function BookingCard({ property }: { property: IProperty }) {
         <div className="space-y-4">
           <button 
             onClick={() => setIsCalculatorOpen(true)}
-            className="w-full flex items-center justify-center gap-2 bg-blue-50 text-blue-700 font-semibold py-3.5 rounded-xl hover:bg-blue-100 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-[var(--indigo-50)] text-[var(--indigo-700)] font-semibold py-3.5 rounded-xl hover:bg-[var(--indigo-100)] transition-colors"
           >
             <Calculator size={20} />
             Calculate Installment
           </button>
 
-          
           <button 
             onClick={handleBookNow}
-            className="w-full flex items-center justify-center gap-2 bg-slate-900 text-white font-semibold py-3.5 rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
+            className="w-full flex items-center justify-center gap-2 bg-[var(--indigo-900)] text-white font-semibold py-3.5 rounded-xl hover:bg-[var(--indigo-700)] transition-colors shadow-lg shadow-[var(--indigo-900)]/20"
           >
             <CalendarCheck size={20} />
             Book Now
           </button>
         </div>
 
-        <div className="mt-6 pt-6 border-t border-gray-100 text-center">
-          <p className="text-sm text-gray-500">
-            Booking amount: <span className="font-bold text-gray-900">৳ {displayBookingMoney.toLocaleString('en-IN')}</span>
+        <div className="mt-6 pt-6 border-t border-[var(--border-color)] text-center">
+          <p className="text-sm text-[var(--text-secondary)]">
+            Booking amount: <span className="font-bold text-[var(--amber-800)]">৳ {displayBookingMoney.toLocaleString('en-IN')}</span>
           </p>
-          <p className="text-xs text-gray-400 mt-2">
+          <p className="text-xs text-[var(--text-muted)] mt-2">
             Secure your unit instantly via Stripe.
           </p>
         </div>

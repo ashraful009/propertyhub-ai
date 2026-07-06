@@ -126,18 +126,18 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
-      <div className="h-full flex flex-col bg-gradient-to-b from-[#0f0f23] via-[#1a1a3e] to-[#0f0f23] shadow-2xl shadow-black/50 border-l border-white/10">
+      <div className="h-full flex flex-col bg-gradient-to-b from-[#110f29] via-[#1c1946] to-[#110f29] shadow-2xl shadow-black/50 border-l border-white/10">
         {/* Header */}
         <div className="px-5 py-4 border-b border-white/10 bg-white/5 backdrop-blur-xl">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/30">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--indigo-500)] to-[var(--indigo-700)] flex items-center justify-center shadow-lg shadow-[var(--indigo-500)]/30">
                 <Bot size={20} className="text-white" />
               </div>
               <div>
                 <h3 className="text-white font-semibold text-sm flex items-center gap-1.5">
                   PropertyHub AI
-                  <Sparkles size={14} className="text-yellow-400" />
+                  <Sparkles size={14} className="text-[var(--amber-200)]" />
                 </h3>
                 <p className="text-gray-400 text-xs truncate max-w-[200px]">
                   {property.title}
@@ -170,14 +170,14 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
           {messages.length === 0 ? (
             /* Welcome Screen */
             <div className="flex flex-col items-center justify-center h-full text-center px-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-600/20 flex items-center justify-center mb-4 border border-violet-500/20">
-                <Bot size={32} className="text-violet-400" />
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--indigo-500)]/20 to-[var(--indigo-700)]/20 flex items-center justify-center mb-4 border border-[var(--indigo-500)]/20">
+                <Bot size={32} className="text-[var(--indigo-400)]" />
               </div>
               <h4 className="text-white font-semibold text-lg mb-2">
                 Hi! I'm your AI Assistant 👋
               </h4>
               <p className="text-gray-400 text-sm mb-6 leading-relaxed">
-                Ask me anything about <span className="text-violet-400 font-medium">"{property.title}"</span> — pricing, features, booking, installments, and more!
+                Ask me anything about <span className="text-[var(--indigo-400)] font-medium">"{property.title}"</span> — pricing, features, booking, installments, and more!
               </p>
               {/* Suggested Questions */}
               <div className="w-full space-y-2">
@@ -191,7 +191,7 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
                       setInput(q);
                       setTimeout(() => inputRef.current?.focus(), 50);
                     }}
-                    className="w-full text-left px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-sm transition-all duration-200 border border-white/5 hover:border-violet-500/30"
+                    className="w-full text-left px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 text-sm transition-all duration-200 border border-white/5 hover:border-[var(--indigo-500)]/30"
                   >
                     {q}
                   </button>
@@ -223,12 +223,12 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
               onKeyDown={handleKeyDown}
               placeholder={isLoading ? 'AI is thinking...' : 'Ask about this property...'}
               disabled={isLoading}
-              className="flex-1 bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none border border-white/10 focus:border-violet-500/50 transition-colors disabled:opacity-50"
+              className="flex-1 bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none border border-white/10 focus:border-[var(--indigo-500)]/50 transition-colors disabled:opacity-50"
             />
             <button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="w-11 h-11 rounded-xl bg-gradient-to-br from-violet-600 to-purple-700 text-white flex items-center justify-center transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none"
+              className="w-11 h-11 rounded-xl bg-gradient-to-br from-[var(--indigo-500)] to-[var(--indigo-700)] text-white flex items-center justify-center transition-all duration-200 hover:shadow-lg hover:shadow-[var(--indigo-500)]/30 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:shadow-none"
             >
               {isLoading ? (
                 <div className="flex gap-1">

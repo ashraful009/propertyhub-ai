@@ -20,3 +20,21 @@ export const findPropertyById = async (propertyId: string): Promise<IProperty | 
   const result = await pool.query(query, [propertyId]);
   return result.rows[0] || null;
 };
+
+export const getPublicStats = async () => {
+  const propertiesQuery = `SELECT COUNT(*) FROM properties WHERE is_approved = true;`;
+  const customersQuery = `SELECT COUNT(*) FROM users WHERE role = 'CUSTOMER';`;
+  const vendorsQuery = `SELECT COUNT(*) FROM users WHERE role = 'VENDOR';`;
+  
+  const [propertiesResult, customersResult, vendorsResult] = await Promise.all([
+    pool.query(propertiesQuery),
+    pool.query(customersQuery),
+    pool.query(vendorsQuery)
+  ]);
+
+  return {
+    totalProperties: parseInt(propertiesResult.rows[0].count),
+    happyClients: parseInt(customersResult.rows[0].count),
+    verifiedVendors: parseInt(vendorsResult.rows[0].count)
+  };
+};

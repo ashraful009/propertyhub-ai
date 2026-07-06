@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Building } from 'lucide-react';
+import { MapPin, Building, ShieldCheck, Sparkles } from 'lucide-react';
 import type { IProperty } from '../../types/shared.types';
 
 interface PropertyCardProps {
@@ -7,10 +7,18 @@ interface PropertyCardProps {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
+  // Determine badges based on real data
+  const isVerified = property.is_approved === true;
+  
+  // Consider it "New" if created within the last 30 days
+  const isNew = property.created_at 
+    ? (new Date().getTime() - new Date(property.created_at).getTime()) < (30 * 24 * 60 * 60 * 1000) 
+    : false;
+
   return (
     <Link 
       to={`/properties/${property.id}`} 
-      className="group relative w-full h-[320px] rounded-2xl overflow-hidden block transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)]"
+      className="group relative w-full h-[480px] block glass-card overflow-hidden transition-all duration-300"
     >
       
       {property.images && property.images.length > 0 ? (
@@ -20,13 +28,28 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
         />
       ) : (
-        <div className="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center">
-          <span className="text-gray-400 font-medium">No Image</span>
+        <div className="absolute inset-0 w-full h-full bg-[var(--indigo-100)] flex items-center justify-center">
+          <span className="text-[var(--indigo-400)] font-medium">No Image</span>
         </div>
       )}
       
-      
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent transition-colors duration-300 group-hover:from-slate-900"></div>
+      {/* Badges Container */}
+      <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+        {isVerified && (
+          <div className="flex items-center gap-1 bg-[var(--teal-50)] text-[var(--teal-800)] text-xs font-bold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md">
+            <ShieldCheck size={14} />
+            <span>Verified</span>
+          </div>
+        )}
+        {isNew && (
+          <div className="flex items-center gap-1 bg-[var(--amber-50)] text-[var(--amber-800)] text-xs font-bold px-2.5 py-1 rounded-full shadow-sm backdrop-blur-md">
+            <Sparkles size={14} />
+            <span>New</span>
+          </div>
+        )}
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-[var(--indigo-900)] via-[var(--indigo-900)]/40 to-transparent transition-colors duration-300 opacity-90 group-hover:opacity-100"></div>
 
       
       <div className="absolute bottom-0 left-0 w-full p-5 flex flex-col justify-end z-10">
@@ -34,15 +57,20 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           {property.title}
         </h3>
         
-        <div className="flex items-center justify-between mt-2">
-          <p className="text-gray-300 text-xs sm:text-sm flex items-center gap-1.5">
-            <MapPin size={14} className="text-blue-400" /> 
-            <span className="truncate max-w-[120px] sm:max-w-[150px]">{property.location}</span>
+        <div className="flex flex-col gap-2 mt-1">
+          <p className="text-[var(--indigo-200)] text-xs sm:text-sm flex items-center gap-1.5">
+            <MapPin size={14} className="text-[var(--amber-200)]" /> 
+            <span className="truncate max-w-[120px] sm:max-w-[200px]">{property.location}</span>
           </p>
           
-          <div className="flex items-center gap-1 bg-white/20 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1.5 rounded-lg border border-white/10">
-            <Building size={12} />
-            <span>{property.property_type ? property.property_type.toUpperCase() : 'PROPERTY'}</span>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-[var(--amber-200)] font-extrabold">
+              {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'BDT', maximumFractionDigits: 0 }).format(property.price)}
+            </p>
+            <div className="flex items-center gap-1 bg-[var(--indigo-50)] text-[var(--indigo-700)] text-xs font-bold px-2 py-1 rounded-md border border-[var(--border-color)]">
+              <Building size={12} />
+              <span>{property.property_type ? property.property_type.toUpperCase() : 'PROPERTY'}</span>
+            </div>
           </div>
         </div>
       </div>
