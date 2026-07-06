@@ -17,7 +17,7 @@ export const getCustomerStats = async (customerId: string) => {
     const totalPayable = parseFloat(dueRes.rows[0].total_payable);
     const totalDue = totalPayable > 0 ? (totalPayable - totalPaid) : 0;
     const nextPaymentRes = await client.query(`
-      SELECT im.amount, im.due_date, p.title as property_title
+      SELECT im.amount, im.due_date, p.title as property_title, p.images[1] as property_image
       FROM installment_milestones im
       JOIN installment_plans ip ON im.plan_id = ip.id
       JOIN bookings b ON ip.booking_id = b.id

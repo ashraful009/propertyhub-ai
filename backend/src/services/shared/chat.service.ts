@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+// import { GoogleGenerativeAI } from '@google/generative-ai';
 import { IProperty } from '../../models/shared/property.model';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 interface ChatMessage {
   role: 'user' | 'model';
@@ -50,30 +50,61 @@ export const streamChatResponse = async (
   try {
     const systemPrompt = buildSystemPrompt(property);
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: {
-        role: 'user',
-        parts: [{ text: systemPrompt }],
+    // Build conversation history for Groq
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      ...chatHistory.map((msg) => ({
+        role: msg.role === 'model' ? 'assistant' : 'user',
+        content: msg.content,
+      })),
+      { role: 'user', content: userMessage },
+    ];
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
       },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        messages: messages,
+        stream: true,
+      }),
     });
 
-    // Build conversation history for Gemini
-    const history = chatHistory.map((msg) => ({
-      role: msg.role === 'user' ? 'user' as const : 'model' as const,
-      parts: [{ text: msg.content }],
-    }));
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Groq API error: ${response.status} ${errorText}`);
+    }
 
-    const chat = model.startChat({
-      history,
-    });
+    if (!response.body) throw new Error('ReadableStream not supported');
 
-    const result = await chat.sendMessageStream(userMessage);
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
 
-    for await (const chunk of result.stream) {
-      const text = chunk.text();
-      if (text) {
-        onChunk(text);
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || '';
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith('data: ') && trimmed !== 'data: [DONE]') {
+          try {
+            const parsed = JSON.parse(trimmed.slice(6));
+            const text = parsed.choices?.[0]?.delta?.content;
+            if (text) {
+              onChunk(text);
+            }
+          } catch (e) {
+            // Ignore parse errors on incomplete chunks
+          }
+        }
       }
     }
 

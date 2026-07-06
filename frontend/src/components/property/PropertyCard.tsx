@@ -13,11 +13,17 @@ export default function PropertyCard({ property }: PropertyCardProps) {
       className="group relative w-full h-[320px] rounded-2xl overflow-hidden block transform transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)]"
     >
       
-      <img 
-        src={property.images && property.images.length > 0 ? property.images[0] : 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80'} 
-        alt={property.title}
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-      />
+      {property.images && property.images.length > 0 ? (
+        <img 
+          src={property.images[0]} 
+          alt={property.title}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+        />
+      ) : (
+        <div className="absolute inset-0 w-full h-full bg-gray-200 flex items-center justify-center">
+          <span className="text-gray-400 font-medium">No Image</span>
+        </div>
+      )}
       
       
       <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent transition-colors duration-300 group-hover:from-slate-900"></div>

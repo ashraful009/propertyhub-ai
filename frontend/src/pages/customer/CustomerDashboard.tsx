@@ -79,11 +79,17 @@ export default function CustomerDashboard() {
           </div>
           
           <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-center">
-            <img 
-              src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=300&q=80" 
-              alt="Property" 
-              className="w-full md:w-48 h-32 object-cover rounded-2xl shadow-sm"
-            />
+            {dashboardData.upcomingPayment.property_image ? (
+              <img 
+                src={dashboardData.upcomingPayment.property_image} 
+                alt="Property" 
+                className="w-full md:w-48 h-32 object-cover rounded-2xl shadow-sm"
+              />
+            ) : (
+              <div className="w-full md:w-48 h-32 bg-gray-200 rounded-2xl shadow-sm flex items-center justify-center">
+                <span className="text-gray-400 text-xs font-medium">No Image</span>
+              </div>
+            )}
             <div className="flex-1 w-full">
               <div className="flex justify-between items-start mb-2">
                 <div>

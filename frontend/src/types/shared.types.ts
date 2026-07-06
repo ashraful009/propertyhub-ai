@@ -197,6 +197,7 @@ export interface VendorDashboardData {
     id: string;
     customer_name: string;
     property: string;
+    property_image?: string | null;
     created_at: string;
   }[];
 }
@@ -211,6 +212,7 @@ export interface CustomerDashboardData {
     amount: number;
     due_date: string;
     property_title: string;
+    property_image?: string | null;
   } | null;
   paymentHistory: {
     amount: number;

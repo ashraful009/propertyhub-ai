@@ -41,7 +41,7 @@ export const getVendorStats = async (vendorId: string) => {
       AND im.due_date BETWEEN CURRENT_DATE - INTERVAL '1 month' AND CURRENT_DATE - INTERVAL '1 day'
     `, [vendorId]);
     const recentBookingsRes = await client.query(`
-      SELECT b.id, u.name as customer_name, p.title as property, b.created_at
+      SELECT b.id, u.name as customer_name, p.title as property, p.images[1] as property_image, b.created_at
       FROM bookings b
       JOIN users u ON b.customer_id = u.id
       JOIN properties p ON b.property_id = p.id

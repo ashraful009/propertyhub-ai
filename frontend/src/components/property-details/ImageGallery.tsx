@@ -1,6 +1,12 @@
 export default function ImageGallery({ images }: { images: string[] }) {
   if (!images || images.length === 0) {
-    images = ["https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80"];
+    return (
+      <div className="grid grid-cols-1 h-[300px] md:h-[500px] rounded-2xl overflow-hidden mb-8">
+        <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+          <p className="text-gray-400 text-lg font-medium">No Images Available</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -17,4 +23,4 @@ export default function ImageGallery({ images }: { images: string[] }) {
       ))}
     </div>
   );
-}
+}

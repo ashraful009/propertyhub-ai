@@ -1,4 +1,4 @@
-import { MapPin, BedDouble, Bath, Square, Wifi, Car, Waves, ShieldCheck } from 'lucide-react';
+import { MapPin, BedDouble, Bath, Square } from 'lucide-react';
 import type { IProperty } from '../../types/shared.types';
 
 export default function PropertyInfo({ property }: { property: IProperty }) {
@@ -18,21 +18,21 @@ export default function PropertyInfo({ property }: { property: IProperty }) {
         <div className="flex items-center gap-3">
           <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><BedDouble size={24} /></div>
           <div>
-            <p className="font-semibold text-gray-900">4 Bedrooms</p>
+            <p className="font-semibold text-gray-900">{property.bedrooms} Bedrooms</p>
             <p className="text-sm text-gray-500">Spacious</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><Bath size={24} /></div>
           <div>
-            <p className="font-semibold text-gray-900">3 Bathrooms</p>
+            <p className="font-semibold text-gray-900">{property.bathrooms} Bathrooms</p>
             <p className="text-sm text-gray-500">Modern fittings</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <div className="p-3 bg-blue-50 text-blue-600 rounded-xl"><Square size={24} /></div>
           <div>
-            <p className="font-semibold text-gray-900">2,450 sqft</p>
+            <p className="font-semibold text-gray-900">{Number(property.area).toLocaleString()} sqft</p>
             <p className="text-sm text-gray-500">Floor area</p>
           </div>
         </div>
@@ -45,15 +45,7 @@ export default function PropertyInfo({ property }: { property: IProperty }) {
         </p>
       </div>
 
-      <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Amenities</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="flex items-center gap-3 text-gray-700 font-medium"><Wifi className="text-gray-400"/> High-Speed Wi-Fi</div>
-          <div className="flex items-center gap-3 text-gray-700 font-medium"><Car className="text-gray-400"/> 2 Parking Spots</div>
-          <div className="flex items-center gap-3 text-gray-700 font-medium"><Waves className="text-gray-400"/> Swimming Pool</div>
-          <div className="flex items-center gap-3 text-gray-700 font-medium"><ShieldCheck className="text-gray-400"/> 24/7 Security</div>
-        </div>
-      </div>
+
     </div>
   );
 }

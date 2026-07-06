@@ -33,8 +33,12 @@ export default function BookingCard({ property }: { property: IProperty }) {
         <div className="mb-6">
           <p className="text-gray-500 text-sm font-medium mb-1">Total Price</p>
           <h2 className="text-3xl font-extrabold text-gray-900">৳ {propertyPrice.toLocaleString('en-IN')}</h2>
-          <p className="text-green-600 text-sm font-medium mt-2 flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-green-500"></span> 5 Units Available
+          <p className={`text-sm font-medium mt-2 flex items-center gap-1 ${
+            property.status === 'AVAILABLE' ? 'text-green-600' : property.status === 'BOOKED' ? 'text-blue-600' : 'text-gray-600'
+          }`}>
+            <span className={`w-2 h-2 rounded-full ${
+              property.status === 'AVAILABLE' ? 'bg-green-500' : property.status === 'BOOKED' ? 'bg-blue-500' : 'bg-gray-500'
+            }`}></span> {property.status === 'AVAILABLE' ? 'Available' : property.status === 'BOOKED' ? 'Booked' : 'Sold'}
           </p>
         </div>
 
@@ -62,7 +66,7 @@ export default function BookingCard({ property }: { property: IProperty }) {
             Booking amount: <span className="font-bold text-gray-900">৳ {displayBookingMoney.toLocaleString('en-IN')}</span>
           </p>
           <p className="text-xs text-gray-400 mt-2">
-            Secure your unit instantly via SSLCommerz or Stripe.
+            Secure your unit instantly via Stripe.
           </p>
         </div>
       </div>

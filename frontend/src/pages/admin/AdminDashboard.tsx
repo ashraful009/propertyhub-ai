@@ -43,9 +43,6 @@ export default function AdminDashboard() {
           </div>
           <p className="text-sm font-medium text-gray-500 mb-1">Total Platform Revenue (5%)</p>
           <h3 className="text-2xl font-extrabold text-gray-900">{formatBDT(totalCommission)}</h3>
-          <p className="text-xs text-green-600 font-medium mt-2 flex items-center gap-1">
-            <ArrowUpRight size={14} /> +12% from last month
-          </p>
         </div>
 
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">

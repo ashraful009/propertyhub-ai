@@ -128,12 +128,16 @@ export default function Checkout() {
             
             
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-6 items-center">
-              <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
-                <img 
-                  src={property.images?.[0] || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=300&q=80"}
-                  alt="Property" 
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-gray-200 flex items-center justify-center">
+                {property.images && property.images.length > 0 ? (
+                  <img 
+                    src={property.images[0]}
+                    alt="Property" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-gray-400 text-xs font-medium">No Image</span>
+                )}
               </div>
               <div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">{property.title}</h3>

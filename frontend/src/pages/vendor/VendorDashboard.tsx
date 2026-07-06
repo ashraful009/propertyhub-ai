@@ -94,7 +94,13 @@ export default function VendorDashboard() {
               dashboardData.recentBookings.map((booking) => (
                 <div key={booking.id} className="flex items-center gap-4 p-4 border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
                   <div className="w-12 h-12 rounded-xl bg-gray-100 flex-shrink-0 overflow-hidden">
-                    <img src={`https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=100&q=80`} alt="prop" className="w-full h-full object-cover" />
+                  {booking.property_image ? (
+                    <img src={booking.property_image} alt="prop" className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-400 text-[10px] font-medium">No Image</span>
+                    </div>
+                  )}
                   </div>
                   <div className="flex-1">
                     <h4 className="text-sm font-bold text-gray-900">{booking.property}</h4>

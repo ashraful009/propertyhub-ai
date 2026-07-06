@@ -39,7 +39,7 @@ export default function PropertyDetails() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-gray-100">
               <PropertyInfo property={property} />
-              <MapSection />
+              <MapSection property={property} />
             </div>
           </div>
 

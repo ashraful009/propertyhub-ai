@@ -242,7 +242,7 @@ export default function AIChatPanel({ isOpen, property, onClose }: AIChatPanelPr
             </button>
           </div>
           <p className="text-gray-600 text-[10px] text-center mt-2">
-            Powered by Gemini AI · Property-specific answers only
+            Powered by AI · Property-specific answers only
           </p>
         </div>
       </div>

@@ -17,20 +17,6 @@ export default function AboutUs() {
             for your dream home, an office space, or an investment opportunity, PropertyHub connects you with the best 
             vendors and ensures a secure transaction process.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 pt-12 border-t border-gray-100">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">10k+</h3>
-              <p className="text-gray-500">Happy Customers</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">500+</h3>
-              <p className="text-gray-500">Verified Vendors</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">15k+</h3>
-              <p className="text-gray-500">Properties Listed</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>
