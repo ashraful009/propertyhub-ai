@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AdminService } from '../../services/admin.service';
 import type { IProperty } from '../../types/shared.types';
-import { Check, X, MapPin, DollarSign, Home, Maximize } from 'lucide-react';
+import { Check, X, MapPin, Banknote, Home, Maximize } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function PropertyRequests() {
@@ -98,9 +98,9 @@ export default function PropertyRequests() {
                 <div className="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded-xl border border-gray-100 text-sm">
                   <div className="space-y-1">
                     <p className="text-gray-500 text-xs">Price</p>
-                    <p className="font-semibold text-gray-900 flex items-center">
-                      <DollarSign size={14} className="text-indigo-600" />
-                      {property.price.toLocaleString()}
+                    <p className="font-semibold text-gray-900 flex items-center gap-1">
+                      <Banknote size={14} className="text-indigo-600" />
+                      ৳{property.price.toLocaleString('en-IN')}
                     </p>
                   </div>
                   <div className="space-y-1">

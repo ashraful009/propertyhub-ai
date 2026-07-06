@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { VendorService } from '../../services/vendor.service';
 import type { IProperty } from '../../types/shared.types';
-import { Edit, Trash2, MapPin, DollarSign, Maximize, Plus } from 'lucide-react';
+import { Edit, Trash2, MapPin, Banknote, Maximize, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -135,9 +135,9 @@ export default function MyProperties() {
                 <div className="grid grid-cols-2 gap-4 bg-gray-50 p-3 rounded-xl border border-gray-100 text-sm">
                   <div className="space-y-1">
                     <p className="text-gray-500 text-xs">Price</p>
-                    <p className="font-semibold text-gray-900 flex items-center">
-                      <DollarSign size={14} className="text-indigo-600" />
-                      {property.price.toLocaleString()}
+                    <p className="font-semibold text-gray-900 flex items-center gap-1">
+                      <Banknote size={14} className="text-indigo-600" />
+                      ৳{property.price.toLocaleString('en-IN')}
                     </p>
                   </div>
                   <div className="space-y-1">

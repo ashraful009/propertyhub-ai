@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm, type FieldValues } from 'react-hook-form';
 import { 
-  Building, MapPin, DollarSign, UploadCloud, 
+  Building, MapPin, Banknote, UploadCloud, 
   List, Save, X, BedDouble, Bath, Square
 } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -149,7 +149,7 @@ export default function AddProperty() {
         
         <div className="bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
           <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 border-b border-gray-100 pb-4">
-            <DollarSign className="text-indigo-600" size={20} /> Pricing & Installment Setup
+            <Banknote className="text-indigo-600" size={20} /> Pricing & Installment Setup
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
