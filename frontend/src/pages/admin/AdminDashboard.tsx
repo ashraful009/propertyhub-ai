@@ -1,4 +1,4 @@
-import { Wallet, Building, Users, TrendingUp, ArrowUpRight, ShieldCheck, Loader2 } from 'lucide-react';
+import { Wallet, Building, Users, TrendingUp, ShieldCheck, Loader2 } from 'lucide-react';
 import { useAdminDashboard } from '../../hooks/api/useDashboard';
 
 export default function AdminDashboard() {
