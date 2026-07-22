@@ -10,6 +10,8 @@ require('express-async-errors');
 
 const errorHandler = require('./middleware/error.middleware');
 
+const app = express();
+
 // ─── Trust Proxy (Required for Render & Reverse Proxies) ────────────────────
 app.set('trust proxy', 1);
 
