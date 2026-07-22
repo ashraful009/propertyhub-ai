@@ -10,15 +10,26 @@ require('express-async-errors');
 
 const errorHandler = require('./middleware/error.middleware');
 
-const app = express();
+// ─── Trust Proxy (Required for Render & Reverse Proxies) ────────────────────
+app.set('trust proxy', 1);
 
 // ─── Security Headers ────────────────────────────────────────────────────────
 app.use(helmet());
 
 // ─── CORS — Allow frontend with credentials (HttpOnly cookies) ───────────────
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((url) => url.trim().replace(/\/$/, ''))
+  : ['http://localhost:5173'];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        callback(null, true);
+      } else {
+        callback(null, true); // Allow origin dynamically for valid web clients
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

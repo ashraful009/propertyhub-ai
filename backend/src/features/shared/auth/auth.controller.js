@@ -14,10 +14,12 @@ const sendTokenCookie = (res, user) => {
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 
+  const isProd = process.env.NODE_ENV === 'production';
+
   res.cookie('token', token, {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: isProd ? 'none' : 'lax',
+    secure: isProd,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
@@ -83,10 +85,11 @@ const getMe = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
   try {
+    const isProd = process.env.NODE_ENV === 'production';
     res.clearCookie('token', {
       httpOnly: true,
-      sameSite: 'strict',
-      secure: process.env.NODE_ENV === 'production',
+      sameSite: isProd ? 'none' : 'lax',
+      secure: isProd,
     });
     return successResponse(res, null, 'Logged out successfully', 200);
   } catch (error) {
