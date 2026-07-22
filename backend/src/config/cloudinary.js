@@ -1,0 +1,115 @@
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const multer = require('multer');
+
+// ─── Configure Cloudinary SDK ─────────────────────────────────────────────────
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key:    process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+  timeout: 120000, // Extend timeout to 120 seconds for large uploads
+});
+
+// ─── Multer Storage: Property Images ─────────────────────────────────────────
+// resource_type: 'image' — handles jpg, jpeg, png, webp
+const imageStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => ({
+    folder:          'flatsell/images',
+    resource_type:   'image',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation:  [{ width: 1200, crop: 'limit', quality: 'auto' }],
+  }),
+});
+
+// ─── Multer Storage: Documents (Trade License - PDF / Image) ─────────────
+// resource_type: 'auto' so Cloudinary auto-detects PDF vs image
+const documentStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    const isPdf = file.mimetype === 'application/pdf';
+    return {
+      folder:          'flatsell/documents',
+      resource_type:   isPdf ? 'raw' : 'image',
+      allowed_formats: ['pdf', 'jpg', 'jpeg', 'png'],
+      public_id:       `trade_license_${Date.now()}`,
+    };
+  },
+});
+
+// ─── Multer Storage: Booking KYC Documents (customer photo, NID, TIN, etc.) ──
+// Each file gets a unique public_id (fieldname + timestamp + random) so multiple
+// documents uploaded in one request never collide.
+const bookingDocStorage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    const isPdf = file.mimetype === 'application/pdf';
+    return {
+      folder:        'flatsell/booking-documents',
+      resource_type: isPdf ? 'raw' : 'image',
+      public_id:     `${file.fieldname}_${Date.now()}_${Math.round(Math.random() * 1e9)}`,
+    };
+  },
+});
+
+// ─── Multer Upload Instances ──────────────────────────────────────────────────
+const uploadImage = multer({
+  storage: imageStorage,
+  limits:  { fileSize: 10 * 1024 * 1024 }, // 10MB per image
+});
+
+const uploadBookingDocs = multer({
+  storage: bookingDocStorage,
+  limits:  { fileSize: 10 * 1024 * 1024 }, // 10MB per document
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = [
+      'application/pdf',
+      'image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif',
+    ];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF and image files are allowed for booking documents'), false);
+    }
+  },
+});
+
+const uploadDocument = multer({
+  storage: documentStorage,
+  limits:  { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    const allowedMimes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+    if (allowedMimes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PDF and image files (JPG, PNG) are allowed for documents'), false);
+    }
+  },
+});
+
+// ─── Direct Upload Helper (for programmatic uploads) ─────────────────────────
+/**
+ * Upload a file to Cloudinary directly (when not using multer-storage-cloudinary)
+ * @param {string} filePath  - Local file path or remote URL
+ * @param {string} folder    - Cloudinary subfolder under 'flatsell/'
+ * @param {string} resource_type - 'image' | 'raw' | 'auto' (use 'auto' for PDFs)
+ */
+const uploadToCloudinary = async (filePath, folder, resource_type = 'auto') => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath, {
+      folder:        `flatsell/${folder}`,
+      resource_type, // 'auto' handles both images and PDFs seamlessly
+    });
+    return result;
+  } catch (error) {
+    throw new Error(`Cloudinary upload failed: ${error.message}`);
+  }
+};
+
+module.exports = {
+  cloudinary,
+  uploadImage,
+  uploadDocument,
+  uploadBookingDocs,
+  uploadToCloudinary,
+};

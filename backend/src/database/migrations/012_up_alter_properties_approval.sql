@@ -1,2 +1,0 @@
-ALTER TABLE properties 
-ADD COLUMN IF NOT EXISTS is_approved BOOLEAN DEFAULT false;

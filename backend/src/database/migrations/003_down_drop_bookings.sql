@@ -1,2 +1,0 @@
-DROP TABLE IF EXISTS bookings CASCADE;
-DROP TYPE IF EXISTS booking_status;

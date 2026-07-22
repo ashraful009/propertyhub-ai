@@ -1,0 +1,140 @@
+import { useState } from 'react';
+import useAuth from '../../hooks/useAuth';
+import AddPropertyWizard from '../../components/companyAdmin/AddPropertyWizard';
+import ManageProperties from '../../components/companyAdmin/ManageProperties';
+import PropertyRequests from '../../components/companyAdmin/PropertyRequests';
+import CompanyApproval from '../../components/superAdmin/CompanyApproval';
+import MarginTracking from '../../components/superAdmin/MarginTracking';
+import SalesReport from '../../components/shared/SalesReport';
+import PolicyCenter from '../../components/superAdmin/PolicyCenter';
+
+const TABS = [
+  { id: 'pending',   label: '⏳ Pending Properties'  },
+  { id: 'manage',    label: '📦 Manage All'           },
+  { id: 'add',       label: '➕ Add Property'         },
+  { id: 'companies', label: '🏢 Company' },
+  { id: 'margin',    label: '💰 Margin'     },
+  { id: 'sales',     label: '📈 Sales Report'         },
+  { id: 'policies',  label: '🛡️ Policies'             },
+];
+
+const SuperAdminDashboard = () => {
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('pending');
+
+  return (
+    <div className="container-main py-10 min-h-screen">
+
+      {}
+      <div className="glass-card p-6 sm:p-8 mb-8 flex items-center justify-between
+                      border-l-4 border-l-primary-500">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Super Admin Console</h1>
+          <p className="text-gray-500 text-sm">Welcome back, {user?.name}</p>
+        </div>
+        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-600 to-primary-800
+                        flex items-center justify-center text-white text-xl font-bold
+                        border-2 border-blue-100 shadow-glow">
+          {user?.name?.charAt(0).toUpperCase()}
+        </div>
+      </div>
+
+      {}
+      <div className="flex gap-1 mb-8 bg-slate-50 p-1.5 rounded-xl overflow-x-auto">
+        {TABS.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex-1 min-w-[155px] py-2.5 px-4 rounded-lg text-sm font-medium
+              transition-all duration-200 whitespace-nowrap
+              ${activeTab === tab.id
+                ? 'bg-primary-500/20 text-primary-600 border border-primary-500/30'
+                : 'text-gray-500 hover:text-gray-900 hover:bg-slate-50 border border-transparent'
+              }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {}
+      <div className="animate-fadeIn">
+
+        {}
+        {activeTab === 'pending' && (
+          <div>
+            <div className="flex justify-between items-end mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Property Approval Queue</h2>
+                <p className="text-gray-500 text-sm mt-1">
+                  Review and approve / reject vendor-submitted properties
+                </p>
+              </div>
+            </div>
+            <PropertyRequests mode="admin" />
+          </div>
+        )}
+
+        {}
+        {activeTab === 'manage' && (
+          <div>
+            <div className="flex justify-between items-end mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Manage All Properties</h2>
+                <p className="text-gray-500 text-sm mt-1">
+                  Edit, activate/deactivate, or delete any property
+                </p>
+              </div>
+              <button onClick={() => setActiveTab('add')} className="btn-primary text-xs py-2 px-4">
+                ➕ Add Property
+              </button>
+            </div>
+            <ManageProperties mode="admin" />
+          </div>
+        )}
+
+        {}
+        {activeTab === 'add' && (
+          <div className="max-w-4xl mx-auto">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900">Add New Property</h2>
+              <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-green-500/10 border
+                              border-green-500/25 rounded-xl w-fit">
+                <span className="text-green-600 text-sm">⚡</span>
+                <p className="text-green-600 text-sm font-medium">
+                  Super Admin properties are auto-published immediately.
+                </p>
+              </div>
+            </div>
+            <AddPropertyWizard onSuccess={() => setActiveTab('manage')} />
+          </div>
+        )}
+
+        {}
+        {activeTab === 'companies' && (
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Vendor Applications</h2>
+            <CompanyApproval />
+          </div>
+        )}
+
+        {}
+        {activeTab === 'margin' && (
+          <MarginTracking />
+        )}
+
+        {}
+        {activeTab === 'sales' && (
+          <SalesReport mode="admin" />
+        )}
+
+        {}
+        {activeTab === 'policies' && (
+          <PolicyCenter />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SuperAdminDashboard;

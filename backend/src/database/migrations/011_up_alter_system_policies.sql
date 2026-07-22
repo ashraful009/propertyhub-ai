@@ -1,3 +1,0 @@
-ALTER TABLE system_policies 
-ADD COLUMN IF NOT EXISTS title VARCHAR(255) DEFAULT 'Untitled Policy',
-ADD COLUMN IF NOT EXISTS is_mandatory BOOLEAN DEFAULT false;

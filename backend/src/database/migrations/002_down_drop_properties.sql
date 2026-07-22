@@ -1,2 +1,0 @@
-DROP TABLE IF EXISTS properties CASCADE;
-DROP TYPE IF EXISTS property_status;
