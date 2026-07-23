@@ -129,7 +129,7 @@ const PropertyCard = ({ property }) => {
               )}
               {category === 'land' && property.landDetails?.totalSize > 0 && (
                 <span className="flex items-center gap-0.5">
-                  📐 {property.landDetails.totalSize} Katha
+                  {property.landDetails.totalSize} Katha
                 </span>
               )}
               {companyId?.name && (

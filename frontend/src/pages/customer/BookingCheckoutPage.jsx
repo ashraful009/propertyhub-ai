@@ -227,7 +227,7 @@ const BookingCheckoutPage = () => {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-4">
         <div className="glass-card p-8 text-center max-w-md">
-          <span className="text-5xl block mb-4">{isTotal ? '🚦' : '⛔'}</span>
+          <span className="text-5xl block mb-4">{isTotal ? '' : ''}</span>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Booking Limit Reached</h2>
           <p className="text-gray-500 text-sm mb-6">{limitBlock.reason}</p>
           <div className="flex flex-col gap-3">
@@ -236,7 +236,7 @@ const BookingCheckoutPage = () => {
                 href="mailto:icsteamservice@gmail.com?subject=Booking%20Limit%20Override%20Request"
                 className="btn-primary w-full"
               >
-                📨 Contact Super Admin
+                Contact Super Admin
               </a>
             )}
             <button onClick={() => navigate(-1)} className="btn-secondary w-full">

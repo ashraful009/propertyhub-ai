@@ -31,7 +31,7 @@ const STATUS_COLORS = {
   fully_paid:   'bg-emerald-500/20 text-emerald-600 border-emerald-500/30',
 };
 
-const CAT_ICONS = { apartment: '🏢', villa: '🏡', land: '🌿' };
+const CAT_ICONS = { apartment: '', villa: '', land: '' };
 
 // ─────────────────────────────────────────────────────────────────────────────
 const SalesReport = ({ mode = 'company' }) => {
@@ -108,7 +108,7 @@ const SalesReport = ({ mode = 'company' }) => {
       <div className="flex flex-wrap justify-between items-start gap-4">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            {mode === 'admin' ? '📈 Platform Sales Report' : '📈 My Sales Report'}
+            {mode === 'admin' ? 'Platform Sales Report' : 'My Sales Report'}
           </h2>
           <p className="text-gray-500 text-sm mt-1">
             {mode === 'admin'
@@ -126,8 +126,8 @@ const SalesReport = ({ mode = 'company' }) => {
                      disabled:opacity-50 disabled:cursor-not-allowed shadow-glow"
         >
           {downloading
-            ? (<><span className="animate-spin">⏳</span> Generating...</>)
-            : (<>📥 Download Report</>)}
+            ? (<> Generating...</>)
+            : (<>Download Report</>)}
         </button>
       </div>
 
@@ -187,9 +187,9 @@ const SalesReport = ({ mode = 'company' }) => {
       {}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
         {[
-          { label: 'Total Bookings',         value: bookings.length,      icon: '📋', color: 'blue'    },
-          { label: 'Revenue Collected',       value: fmt(totalRevenue),    icon: '💰', color: 'emerald' },
-          { label: 'Total Property Volume',   value: fmt(totalVolume),     icon: '📊', color: 'primary' },
+          { label: 'Total Bookings',         value: bookings.length,      icon: '', color: 'blue'    },
+          { label: 'Revenue Collected',       value: fmt(totalRevenue),    icon: '', color: 'emerald' },
+          { label: 'Total Property Volume',   value: fmt(totalVolume),     icon: '', color: 'primary' },
         ].map(({ label, value, icon, color }) => (
           <div key={label} className={`glass-card p-5 border border-${color}-500/20`}>
             <div className="flex items-center gap-3">
@@ -214,7 +214,7 @@ const SalesReport = ({ mode = 'company' }) => {
           </div>
         ) : bookings.length === 0 ? (
           <div className="py-20 text-center">
-            <span className="text-5xl block mb-4">📭</span>
+            
             <h3 className="text-lg font-bold text-gray-900 mb-2">No Sales Found</h3>
             <p className="text-gray-500 text-sm">No confirmed bookings for the selected period.</p>
           </div>
@@ -240,7 +240,7 @@ const SalesReport = ({ mode = 'company' }) => {
                     <td className="px-5 py-3.5 text-gray-500 text-xs">{i + 1}</td>
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <span className="text-base">{CAT_ICONS[b.propertyId?.category] || '🏠'}</span>
+                        <span className="text-base">{CAT_ICONS[b.propertyId?.category] || ''}</span>
                         <span className="text-gray-900 font-medium truncate max-w-[160px]" title={b.propertyId?.title}>
                           {b.propertyId?.title || '—'}
                         </span>

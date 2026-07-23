@@ -78,7 +78,7 @@ const PolicySettings = () => {
       ))}
 
       <button onClick={handleSave} disabled={saving} className="btn-primary disabled:opacity-60">
-        {saving ? 'Saving…' : '💾 Save Settings'}
+        {saving ? 'Saving…' : 'Save Settings'}
       </button>
     </div>
   );

@@ -73,7 +73,7 @@ const CheckoutForm = ({
                               : 'border-blue-200 hover:border-primary-500/40 hover:bg-slate-50'
                           }`}
                         >
-                          <span className="text-lg">{fileData[key] ? '✅' : '📎'}</span>
+                          <span className="text-lg">{fileData[key] ? '' : ''}</span>
                           <div className="min-w-0 flex-1">
                             <p className={`text-sm truncate ${fileData[key] ? 'text-emerald-300' : 'text-gray-500'}`}>
                               {fileData[key]?.name || `Upload ${label}`}
@@ -107,7 +107,7 @@ const CheckoutForm = ({
 
       <div className="glass-card p-5 border border-amber-500/20">
         <div className="flex items-center gap-2 mb-3">
-          <span className="text-xl">↩️</span>
+          
           <h3 className="text-gray-900 font-semibold text-sm">Refund Policy</h3>
         </div>
         <p className="text-gray-600 text-sm leading-relaxed mb-4">
@@ -146,7 +146,7 @@ const CheckoutForm = ({
             Processing...
           </>
         ) : (
-          <>💳 Proceed to Payment — ৳{bookingMoney.toLocaleString()}</>
+          <>Proceed to Payment — ৳{bookingMoney.toLocaleString()}</>
         )}
       </button>
     </form>

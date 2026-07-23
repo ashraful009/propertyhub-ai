@@ -7,9 +7,9 @@ import { toast } from 'react-hot-toast';
 // cancelled bookings (auto inactivity / manual / refund-driven).
 // ─────────────────────────────────────────────────────────────────────────────
 const FILTERS = [
-  { id: 'inactivity',       label: '🚫 Auto (Inactivity)' },
-  { id: 'refund_requested', label: '↩️ Refund-Cancelled'  },
-  { id: 'manual',           label: '✋ Manual'            },
+  { id: 'inactivity',       label: 'Auto (Inactivity)' },
+  { id: 'refund_requested', label: 'Refund-Cancelled'  },
+  { id: 'manual',           label: 'Manual'            },
 ];
 
 const fmt = (n) => (n ? `৳${Number(n).toLocaleString()}` : '—');
@@ -54,7 +54,7 @@ const AutoCancelledBookings = () => {
         <div className="text-gray-500 py-10 text-center">Loading…</div>
       ) : bookings.length === 0 ? (
         <div className="glass-card py-16 text-center">
-          <p className="text-4xl mb-3">📭</p>
+          
           <p className="text-gray-900 font-medium">No bookings in this category</p>
         </div>
       ) : (

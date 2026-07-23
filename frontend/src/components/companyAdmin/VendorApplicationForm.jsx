@@ -83,7 +83,7 @@ const VendorApplicationForm = () => {
               d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted! 🎉</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted! </h2>
         <p className="text-gray-500 text-sm max-w-sm mx-auto mb-6">
           Your vendor application is under review. We&apos;ll notify you via email
           within 3–5 business days.

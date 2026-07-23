@@ -93,7 +93,7 @@ const LocationPicker = ({ value, onChange }) => {
 
       {!value?.lat && (
         <p className="text-xs text-gray-500 mt-2 text-center">
-          📍 Click anywhere on the map to set your company location
+          Click anywhere on the map to set your company location
         </p>
       )}
     </div>

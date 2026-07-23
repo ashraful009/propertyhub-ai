@@ -5,9 +5,9 @@ import axiosInstance from '../api/axiosInstance';
 export const CATEGORIES = ['Apartments', 'Villas', 'Land'];
 
 export const CATEGORY_ICONS = {
-  Apartments: '🏢',
-  Villas:     '🏡',
-  Land:       '🌿',
+  Apartments: '',
+  Villas:     '',
+  Land:       '',
 };
 
 export const YES_NO = ['Yes', 'No'];

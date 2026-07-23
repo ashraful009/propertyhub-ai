@@ -19,10 +19,10 @@ const STATUS_COLORS = {
 };
 
 const PAYMENT_CONFIG = {
-  unpaid:       { label: 'Unpaid',       color: 'text-amber-600',   icon: '⏳' },
-  booking_paid: { label: 'Booking Paid', color: 'text-blue-600',    icon: '💳' },
-  fully_paid:   { label: 'Fully Paid',   color: 'text-emerald-600', icon: '✅' },
-  paid:         { label: 'Paid',         color: 'text-emerald-600', icon: '✅' },
+  unpaid:       { label: 'Unpaid',       color: 'text-amber-600',   icon: '' },
+  booking_paid: { label: 'Booking Paid', color: 'text-blue-600',    icon: '' },
+  fully_paid:   { label: 'Fully Paid',   color: 'text-emerald-600', icon: '' },
+  paid:         { label: 'Paid',         color: 'text-emerald-600', icon: '' },
 };
 
 // Whole months between a date and now
@@ -189,7 +189,7 @@ const CustomerDashboard = () => {
         </div>
       ) : (
         <div className="glass-card py-20 text-center">
-          <span className="text-5xl block mb-4">📭</span>
+          
           <h3 className="text-lg font-bold text-gray-900 mb-2">No Bookings Found</h3>
           <p className="text-gray-500 mb-6 max-w-sm mx-auto">
             You haven&apos;t requested any units yet. Browse properties and find your perfect home!

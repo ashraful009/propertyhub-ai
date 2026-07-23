@@ -16,10 +16,10 @@ export const SECTION_ORDER = [
 ];
 
 export const SECTION_ICONS = {
-  'Personal Information': '👤',
-  'Address Information': '🏠',
-  'Emergency Contact': '🚨',
-  'Financial Information': '💳'
+  'Personal Information': '',
+  'Address Information': '',
+  'Emergency Contact': '',
+  'Financial Information': ''
 };
 
 export const FIELD_META = [

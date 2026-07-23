@@ -9,10 +9,10 @@ import BookingLimitOverrides from './BookingLimitOverrides';
 // one dashboard tab with internal sub-tabs.
 // ─────────────────────────────────────────────────────────────────────────────
 const SUBTABS = [
-  { id: 'settings',   label: '⚙️ Settings',           render: () => <PolicySettings /> },
-  { id: 'cancelled',  label: '🚫 Auto-Cancelled',     render: () => <AutoCancelledBookings /> },
-  { id: 'refunds',    label: '↩️ Refund Requests',    render: () => <RefundRequests /> },
-  { id: 'limits',     label: '🚦 Booking Limits',     render: () => <BookingLimitOverrides /> },
+  { id: 'settings',   label: 'Settings',           render: () => <PolicySettings /> },
+  { id: 'cancelled',  label: 'Auto-Cancelled',     render: () => <AutoCancelledBookings /> },
+  { id: 'refunds',    label: 'Refund Requests',    render: () => <RefundRequests /> },
+  { id: 'limits',     label: 'Booking Limits',     render: () => <BookingLimitOverrides /> },
 ];
 
 const PolicyCenter = () => {

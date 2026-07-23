@@ -45,7 +45,7 @@ const RefundRequests = () => {
   if (refunds.length === 0) {
     return (
       <div className="glass-card py-16 text-center">
-        <p className="text-4xl mb-3">📭</p>
+        
         <p className="text-gray-900 font-medium">No refund requests yet</p>
       </div>
     );

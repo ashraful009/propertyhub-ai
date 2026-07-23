@@ -81,7 +81,7 @@ const Footer = () => {
         <div className="border-t border-slate-100 mt-10 pt-6 flex flex-col sm:flex-row
                         items-center justify-between gap-3">
           <p className="text-gray-500 text-xs">
-            © {year} FlatSell. All rights reserved.
+            {year} FlatSell. All rights reserved.
           </p>
           <div className="flex gap-5">
             {['Privacy Policy', 'Terms of Service'].map((t) => (

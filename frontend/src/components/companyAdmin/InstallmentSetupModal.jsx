@@ -138,7 +138,7 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
             <div className="bg-gradient-to-br from-blue-50/40 to-slate-50 border border-blue-100 rounded-xl p-4 flex flex-col justify-between">
               <div>
                 <h3 className="text-xs font-bold text-blue-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <span>📅</span> Installment Policy
+                   Installment Policy
                 </h3>
                 <ul className="space-y-2 text-[11px] text-slate-600">
                   <li className="flex gap-1.5">
@@ -173,7 +173,7 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
             <div className="bg-gradient-to-br from-emerald-50/40 to-slate-50 border border-emerald-100 rounded-xl p-4 flex flex-col justify-between">
               <div>
                 <h3 className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <span>↩️</span> Refund Policy
+                   Refund Policy
                 </h3>
                 <ul className="space-y-2 text-[11px] text-slate-600">
                   <li className="flex gap-1.5">
@@ -196,7 +196,7 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
             <div className="bg-gradient-to-br from-amber-50/40 to-slate-50 border border-amber-100 rounded-xl p-4 flex flex-col justify-between">
               <div>
                 <h3 className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <span>🚫</span> Inactivity Cancellation
+                   Inactivity Cancellation
                 </h3>
                 <ul className="space-y-2 text-[11px] text-slate-600">
                   <li className="flex gap-1.5">
@@ -250,7 +250,7 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
             />
             {error && (
               <p className="text-red-600 text-xs mt-1.5 flex items-center gap-1.5">
-                <span>⚠️</span> {error}
+                 {error}
               </p>
             )}
             <p className="text-gray-500 text-[11px] mt-1.5">
@@ -262,7 +262,7 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
           {preview && (
             <section className="bg-primary-500/10 border border-primary-500/30 rounded-xl p-4 animate-fadeIn">
               <h4 className="text-sm font-bold text-primary-600 mb-3 flex items-center gap-2">
-                💡 Plan Preview
+                Plan Preview
               </h4>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                 <div className="text-gray-500">Tier</div>

@@ -9,13 +9,13 @@ import SalesReport from '../../components/shared/SalesReport';
 import PolicyCenter from '../../components/superAdmin/PolicyCenter';
 
 const TABS = [
-  { id: 'pending',   label: '⏳ Pending Properties'  },
-  { id: 'manage',    label: '📦 Manage All'           },
-  { id: 'add',       label: '➕ Add Property'         },
-  { id: 'companies', label: '🏢 Company' },
-  { id: 'margin',    label: '💰 Margin'     },
-  { id: 'sales',     label: '📈 Sales Report'         },
-  { id: 'policies',  label: '🛡️ Policies'             },
+  { id: 'pending',   label: 'Pending Properties'  },
+  { id: 'manage',    label: 'Manage All'           },
+  { id: 'add',       label: 'Add Property'         },
+  { id: 'companies', label: 'Company' },
+  { id: 'margin',    label: 'Margin'     },
+  { id: 'sales',     label: 'Sales Report'         },
+  { id: 'policies',  label: 'Policies'             },
 ];
 
 const SuperAdminDashboard = () => {
@@ -86,7 +86,7 @@ const SuperAdminDashboard = () => {
                 </p>
               </div>
               <button onClick={() => setActiveTab('add')} className="btn-primary text-xs py-2 px-4">
-                ➕ Add Property
+                Add Property
               </button>
             </div>
             <ManageProperties mode="admin" />
@@ -100,7 +100,7 @@ const SuperAdminDashboard = () => {
               <h2 className="text-xl font-bold text-gray-900">Add New Property</h2>
               <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-green-500/10 border
                               border-green-500/25 rounded-xl w-fit">
-                <span className="text-green-600 text-sm">⚡</span>
+                
                 <p className="text-green-600 text-sm font-medium">
                   Super Admin properties are auto-published immediately.
                 </p>

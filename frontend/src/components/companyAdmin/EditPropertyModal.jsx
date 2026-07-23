@@ -135,7 +135,7 @@ const EditPropertyModal = ({ property, onClose, onUpdated }) => {
           {error && (
             <div className="px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl
                             text-red-600 text-sm">
-              ⚠️ {error}
+              {error}
             </div>
           )}
 

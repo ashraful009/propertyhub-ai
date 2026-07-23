@@ -93,7 +93,7 @@ const BookingSuccessPage = () => {
                 ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-600'
                 : 'bg-blue-500/15 border-blue-500/30 text-blue-600'
             }`}>
-              {isDuePayment ? '✅ Fully Paid' : '💳 Booking Money Paid'}
+              {isDuePayment ? 'Fully Paid' : 'Booking Money Paid'}
             </div>
 
             <p className="text-sm text-primary-600 mt-4">

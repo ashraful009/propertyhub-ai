@@ -38,7 +38,7 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
   const handlePay = async (inst) => {
     if (inst.isOverdue) {
       const ok = window.confirm(
-        `⚠️ This installment is overdue.\n\n` +
+        `This installment is overdue.\n\n` +
         `A late fee of ৳5,000 will be added.\n\n` +
         `Original amount: ${fmt(inst.amountDue)}\n` +
         `Late fee:        ৳5,000\n` +
@@ -207,7 +207,7 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
                                      hover:bg-primary-500/25 hover:border-primary-500/50 transition-all
                                      disabled:opacity-60"
                         >
-                          {downloadingId === inst._id ? '...' : '📥 Invoice'}
+                          {downloadingId === inst._id ? '...' : 'Invoice'}
                         </button>
                       ) : bookingStatus === 'cancelled' ? (
                         <span className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-500/15 text-gray-500 border border-gray-500/30">
@@ -237,7 +237,7 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
                   )}
                   {!isPaid && isOverdue && (
                     <div className="mt-3 pt-3 border-t border-rose-500/15 text-[11px] text-rose-300 flex items-center gap-1.5">
-                      ⚠️ This installment is past its due date (the 15th). A ৳5,000 late fee will be added at payment.
+                      This installment is past its due date (the 15th). A ৳5,000 late fee will be added at payment.
                     </div>
                   )}
                 </div>

@@ -8,9 +8,9 @@ import HomeHeroSection from '../../components/shared/HomeHeroSection';
 const CITIES = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal'];
 
 const CATEGORIES = [
-  { key: 'apartment',  icon: '🏢', label: 'Apartments', gradient: 'from-blue-600/25 to-blue-900/20',   border: 'hover:border-blue-500/40'  },
-  { key: 'villa',      icon: '🏡', label: 'Villas',     gradient: 'from-pink-600/25 to-pink-900/20',   border: 'hover:border-pink-500/40'  },
-  { key: 'land',       icon: '🌿', label: 'Land',       gradient: 'from-green-600/25 to-green-900/20', border: 'hover:border-green-500/40' },
+  { key: 'apartment',  icon: '', label: 'Apartments', gradient: 'from-blue-600/25 to-blue-900/20',   border: 'hover:border-blue-500/40'  },
+  { key: 'villa',      icon: '', label: 'Villas',     gradient: 'from-pink-600/25 to-pink-900/20',   border: 'hover:border-pink-500/40'  },
+  { key: 'land',       icon: '', label: 'Land',       gradient: 'from-green-600/25 to-green-900/20', border: 'hover:border-green-500/40' },
 ];
 
 // ── Counter animation hook ────────────────────────────────────────────────────
@@ -151,7 +151,7 @@ const HomePage = () => {
             </div>
           ) : (
             <div className="glass-card py-16 text-center">
-              <p className="text-4xl mb-3">🏗️</p>
+              
               <p className="text-gray-900 font-semibold">No properties yet</p>
               <p className="text-gray-500 text-sm mt-1">
                 Check back soon — companies are listing properties daily.
@@ -182,7 +182,7 @@ const HomePage = () => {
                             rounded-full blur-3xl -translate-x-1/2 translate-y-1/2" />
 
             <div className="relative">
-              <span className="text-5xl mb-5 block">🏢</span>
+              
               <h2 className="text-3xl sm:text-4xl font-black text-gray-900 mb-4">
                 Are you a Real Estate Company?
               </h2>

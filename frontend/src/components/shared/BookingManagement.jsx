@@ -44,7 +44,7 @@ const BookingManagement = () => {
   if (bookings.length === 0) {
     return (
       <div className="glass-card py-20 text-center">
-        <p className="text-4xl mb-4">📭</p>
+        
         <p className="text-gray-900 font-medium">No Bookings Yet</p>
       </div>
     );

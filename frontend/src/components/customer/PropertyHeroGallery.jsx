@@ -77,7 +77,7 @@ const PropertyHeroGallery = ({
           </>
         ) : (
           <div className="h-64 rounded-2xl bg-white flex items-center justify-center mb-3">
-            <span className="text-6xl">{categoryIcons[category] || '🏢'}</span>
+            <span className="text-6xl">{categoryIcons[category] || ''}</span>
           </div>
         )}
       </div>

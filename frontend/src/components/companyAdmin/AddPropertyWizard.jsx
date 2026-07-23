@@ -27,7 +27,7 @@ const AddPropertyWizard = ({ onSuccess, defaultCategory = 'Apartments' }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Property Submitted! 🏠</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Property Submitted! </h2>
         <p className="text-gray-500 text-sm mb-8 max-w-sm mx-auto">
           Your property is pending review. It will appear publicly once approved by the admin.
         </p>
@@ -43,7 +43,7 @@ const AddPropertyWizard = ({ onSuccess, defaultCategory = 'Apartments' }) => {
     <form onSubmit={handleSubmit} className="space-y-8">
       {error && (
         <div className="px-4 py-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-600 text-sm animate-fadeIn flex items-center gap-2">
-          <span>⚠️</span> {error}
+           {error}
         </div>
       )}
 
@@ -84,7 +84,7 @@ const AddPropertyWizard = ({ onSuccess, defaultCategory = 'Apartments' }) => {
       />
 
       <button type="submit" disabled={loading} className="btn-primary w-full py-4 text-base">
-        {loading ? 'Uploading & Submitting...' : '🏠 Submit Property'}
+        {loading ? 'Uploading & Submitting...' : 'Submit Property'}
       </button>
     </form>
   );

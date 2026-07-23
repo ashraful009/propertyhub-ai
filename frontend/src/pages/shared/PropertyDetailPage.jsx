@@ -15,7 +15,7 @@ import PropertySidebar from '../../components/customer/PropertySidebar';
 const TABS = ['Overview', 'Floor Plan', 'Location'];
 
 const CATEGORY_ICONS = {
-  apartment: '🏢', villa: '🏡', land: '🌿',
+  apartment: '', villa: '', land: '',
 };
 
 const PropertyDetailPage = () => {
@@ -53,7 +53,7 @@ const PropertyDetailPage = () => {
   if (error || !property) {
     return (
       <div className="container-main py-20 text-center">
-        <p className="text-4xl mb-3">😕</p>
+        
         <p className="text-gray-900 font-semibold mb-2">{error}</p>
         <Link to="/" className="btn-primary mt-4 inline-flex">← Back to Home</Link>
       </div>
@@ -189,7 +189,7 @@ const PropertyDetailPage = () => {
                 ) : (
                   <div className="glass-card py-10 text-center">
                     <p className="text-gray-500 text-sm">
-                      📍 {address}, {city}
+                      {address}, {city}
                       <br />
                       <span className="text-gray-600">No map coordinates available for this property.</span>
                     </p>

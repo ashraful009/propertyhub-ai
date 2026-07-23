@@ -48,11 +48,11 @@ const SECTION_ORDER = [
 ];
 
 const SECTION_ICONS = {
-  'Personal Information':  '👤',
-  'Contact Information':   '📞',
-  'Financial Information': '💳',
-  'Property Details':      '🏠',
-  'Nominee Information':   '👥',
+  'Personal Information':  '',
+  'Contact Information':   '',
+  'Financial Information': '',
+  'Property Details':      '',
+  'Nominee Information':   '',
 };
 
 const STATUS_STYLES = {
@@ -181,7 +181,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
         {}
         <div className="mb-6">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-purple-600 mb-2 flex items-center gap-1.5">
-            <span>🔑</span> Account Holder
+             Account Holder
           </h3>
           <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/70">
             {b.customerId?.avatar ? (
@@ -205,7 +205,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
           sectionsToRender.map((section) => (
             <div key={section} className="mb-5">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-purple-600 mb-1 flex items-center gap-1.5">
-                <span>{SECTION_ICONS[section] || '📄'}</span> {section}
+                <span>{SECTION_ICONS[section] || ''}</span> {section}
               </h3>
               <div>
                 {grouped[section].map((row, i) => (
@@ -226,7 +226,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
         {docEntries.length > 0 && (
           <div className="mb-5">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-purple-600 mb-1 flex items-center gap-1.5">
-              <span>📎</span> Uploaded Documents
+               Uploaded Documents
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {docEntries.map(([key, raw]) => {
@@ -245,12 +245,12 @@ const BookingDetailModal = ({ booking, onClose }) => {
                     ) : doc.url ? (
                       <a href={doc.url} target="_blank" rel="noreferrer"
                          className="flex h-32 flex-col items-center justify-center gap-1 text-purple-600 hover:bg-slate-100 transition-colors">
-                        <span className="text-3xl">📄</span>
-                        <span className="text-xs font-medium">View ↗</span>
+                        
+                        <span className="text-xs font-medium">View </span>
                       </a>
                     ) : (
                       <div className="flex h-32 flex-col items-center justify-center gap-1 px-2 text-center">
-                        <span className="text-3xl opacity-40">🖼️</span>
+                        
                         <span className="text-[11px] text-gray-400">Preview unavailable</span>
                       </div>
                     )}
@@ -269,7 +269,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
         {b.message && (
           <div className="mb-5">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-purple-600 mb-1 flex items-center gap-1.5">
-              <span>📝</span> Message
+               Message
             </h3>
             <p className="text-sm text-gray-700 italic p-3 rounded-xl bg-slate-50/70">
               &ldquo;{b.message}&rdquo;
@@ -280,7 +280,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
         {}
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-wide text-purple-600 mb-1 flex items-center gap-1.5">
-            <span>📅</span> Booking Details
+             Booking Details
           </h3>
           <div>
             <Row label="Booking Date" value={fmtDate(b.createdAt)} />

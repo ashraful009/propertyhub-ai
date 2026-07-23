@@ -9,7 +9,7 @@ const CheckoutSidebarSummary = ({
   return (
     <div className="glass-card p-5 sticky top-20 space-y-4">
       <h3 className="text-gray-900 font-bold text-sm border-b border-blue-100 pb-3">
-        💰 Payment Summary
+        Payment Summary
       </h3>
 
       <div className="space-y-3">
@@ -29,14 +29,14 @@ const CheckoutSidebarSummary = ({
 
       <div className="p-3 bg-primary-500/10 border border-primary-500/20 rounded-xl">
         <p className="text-primary-600 text-xs leading-relaxed">
-          💡 You will pay <strong>৳{bookingMoney.toLocaleString()}</strong> now as booking money.
+          You will pay <strong>৳{bookingMoney.toLocaleString()}</strong> now as booking money.
           The remaining <strong>৳{dueAmount.toLocaleString()}</strong> can be paid later from your dashboard.
         </p>
       </div>
 
       {}
       <div className="flex flex-wrap gap-2 pt-2">
-        {['🔒 Secure', '💳 Stripe', '🛡️ Protected'].map((badge) => (
+        {['Secure', 'Stripe', 'Protected'].map((badge) => (
           <span key={badge} className="text-xs px-2.5 py-1 bg-slate-50 border border-blue-100 rounded-lg text-gray-500">
             {badge}
           </span>

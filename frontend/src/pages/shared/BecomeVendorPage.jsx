@@ -125,7 +125,7 @@ const BecomeVendorPage = () => {
                     id="policy-modal-trigger"
                     onClick={() => setStep('show-modal')}
                   >
-                    📋 Read & Accept Terms
+                    Read & Accept Terms
                   </button>
                 </div>
               </>

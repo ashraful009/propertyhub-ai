@@ -29,7 +29,7 @@ const PropertySidebar = ({
           onClick={() => setActiveTab('Floor Plan')}
           className={`${cat === 'apartment' ? 'btn-primary' : 'btn-secondary'} w-full mb-3`}
         >
-          {cat === 'apartment' ? '🏗️ View Floor Plan' : cat === 'villa' ? '🏡 View Villa Preview' : '🌿 View Land Preview'}
+          {cat === 'apartment' ? 'View Floor Plan' : cat === 'villa' ? 'View Villa Preview' : 'View Land Preview'}
         </button>
 
         {cat === 'apartment' ? (
@@ -45,7 +45,7 @@ const PropertySidebar = ({
             }}
             className="btn-primary w-full"
           >
-            📋 Request Booking
+            Request Booking
           </button>
         )}
       </div>
@@ -58,8 +58,7 @@ const PropertySidebar = ({
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600/30
                             to-primary-800/30 border border-primary-500/20 flex items-center
                             justify-center flex-shrink-0 text-lg">
-              🏢
-            </div>
+                          </div>
             <div className="min-w-0">
               <p className="text-gray-900 font-semibold text-sm truncate">{companyId.name}</p>
               {companyId.email && (

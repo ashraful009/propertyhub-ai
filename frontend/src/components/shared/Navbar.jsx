@@ -9,13 +9,13 @@ const getInitials = (name = '') =>
 const getDashboardLinks = (roles = []) => {
   const links = [];
   if (roles.includes('Super Admin'))
-    links.push({ label: 'Admin Dashboard',   path: '/dashboard/super-admin',   icon: '⚡' });
+    links.push({ label: 'Admin Dashboard',   path: '/dashboard/super-admin',   icon: '' });
   if (roles.includes('Company Admin'))
-    links.push({ label: 'Company Dashboard', path: '/dashboard/company-admin', icon: '🏢' });
+    links.push({ label: 'Company Dashboard', path: '/dashboard/company-admin', icon: '' });
   if (roles.includes('seller') || roles.includes('Seller'))
-    links.push({ label: 'Seller Dashboard',  path: '/dashboard/seller',        icon: '🏠' });
+    links.push({ label: 'Seller Dashboard',  path: '/dashboard/seller',        icon: '' });
   if (roles.includes('customer') || roles.includes('user'))
-    links.push({ label: 'My Profile',        path: '/dashboard/customer',      icon: '👤' });
+    links.push({ label: 'My Profile',        path: '/dashboard/customer',      icon: '' });
   return links;
 };
 
@@ -133,7 +133,7 @@ const Navbar = () => {
                                bg-accent-500/15 text-accent-400 border border-accent-500/30
                                hover:bg-accent-500/25 transition-all duration-200"
                   >
-                    🏷️ Become a Vendor
+                    Become a Vendor
                   </Link>
                 )}
 
@@ -318,7 +318,7 @@ const Navbar = () => {
                       className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-accent-400
                                  hover:bg-accent-500/10 rounded-xl transition-colors"
                     >
-                      🏷️ Become a Vendor
+                      Become a Vendor
                     </Link>
                   )}
 

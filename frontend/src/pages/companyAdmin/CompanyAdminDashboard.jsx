@@ -9,13 +9,13 @@ import SalesReport from '../../components/shared/SalesReport';
 import VendorRefunds from '../../components/companyAdmin/VendorRefunds';
 
 const TABS = [
-  { id: 'manage',  label: '📦 Manage Properties' },
-  { id: 'add',     label: '➕ Add Property'       },
-  { id: 'pending', label: '📋 My Submissions'     },
-  { id: 'bookings',label: '📅 Bookings / Leads'   },
-  { id: 'refunds', label: '💸 Refunds'            },
-  { id: 'sales',   label: '📈 Sales Report'       },
-  { id: 'settings',label: '⚙️ Settings'            },
+  { id: 'manage',  label: 'Manage Properties' },
+  { id: 'add',     label: 'Add Property'       },
+  { id: 'pending', label: 'My Submissions'     },
+  { id: 'bookings',label: 'Bookings / Leads'   },
+  { id: 'refunds', label: 'Refunds'            },
+  { id: 'sales',   label: 'Sales Report'       },
+  { id: 'settings',label: 'Settings'            },
 ];
 
 const CompanyAdminDashboard = () => {
@@ -71,7 +71,7 @@ const CompanyAdminDashboard = () => {
                 <p className="text-gray-500 text-sm mt-1">Edit, activate, or delete your own properties</p>
               </div>
               <button onClick={() => setActiveTab('add')} className="btn-primary text-xs py-2 px-4">
-                ➕ Add New
+                Add New
               </button>
             </div>
             <ManageProperties mode="company" />

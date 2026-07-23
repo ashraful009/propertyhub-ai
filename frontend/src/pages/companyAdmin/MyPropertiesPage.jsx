@@ -4,11 +4,11 @@ import { toast } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const PAYMENT_STATUS_CONFIG = {
-  unpaid:       { label: 'Unpaid',       color: 'text-amber-600',   bg: 'bg-amber-500/15 border-amber-500/30',   icon: '⏳' },
-  booking_paid: { label: 'Booking Paid', color: 'text-blue-600',    bg: 'bg-blue-500/15 border-blue-500/30',     icon: '💳' },
-  fully_paid:   { label: 'Fully Paid',   color: 'text-emerald-600', bg: 'bg-emerald-500/15 border-emerald-500/30',icon: '✅' },
+  unpaid:       { label: 'Unpaid',       color: 'text-amber-600',   bg: 'bg-amber-500/15 border-amber-500/30',   icon: '' },
+  booking_paid: { label: 'Booking Paid', color: 'text-blue-600',    bg: 'bg-blue-500/15 border-blue-500/30',     icon: '' },
+  fully_paid:   { label: 'Fully Paid',   color: 'text-emerald-600', bg: 'bg-emerald-500/15 border-emerald-500/30',icon: '' },
   // Legacy support
-  paid:         { label: 'Paid',         color: 'text-emerald-600', bg: 'bg-emerald-500/15 border-emerald-500/30',icon: '✅' },
+  paid:         { label: 'Paid',         color: 'text-emerald-600', bg: 'bg-emerald-500/15 border-emerald-500/30',icon: '' },
 };
 
 const STATUS_COLORS = {
@@ -86,7 +86,7 @@ const MyPropertiesPage = () => {
 
       {bookings.length === 0 ? (
         <div className="glass-card p-12 text-center">
-          <span className="text-5xl block mb-4">📭</span>
+          
           <h3 className="text-lg font-bold text-gray-900 mb-2">No Properties Yet</h3>
           <p className="text-gray-500 mb-4">You haven't booked any properties yet.</p>
           <Link to="/properties" className="btn-primary">Browse Properties</Link>
@@ -122,7 +122,7 @@ const MyPropertiesPage = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-white flex items-center justify-center text-4xl">
-                        {prop?.category === 'villa' ? '🏡' : prop?.category === 'land' ? '🌿' : '🏢'}
+                        {prop?.category === 'villa' ? '' : prop?.category === 'land' ? '' : ''}
                       </div>
                     )}
                     {}
@@ -141,7 +141,7 @@ const MyPropertiesPage = () => {
                         {prop?.title || 'Unknown Property'}
                       </Link>
                       <p className="text-gray-500 text-xs mt-1">
-                        📍 {prop?.address}, {prop?.city}
+                        {prop?.address}, {prop?.city}
                       </p>
                     </div>
 
@@ -246,7 +246,7 @@ const MyPropertiesPage = () => {
                                   Processing...
                                 </>
                               ) : (
-                                <>💳 Pay {formatCurrency(dueAmount)}</>
+                                <>Pay {formatCurrency(dueAmount)}</>
                               )}
                             </button>
                           ) : (

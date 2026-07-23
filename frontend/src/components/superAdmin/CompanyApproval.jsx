@@ -74,7 +74,7 @@ const CompanyApproval = () => {
               <button 
                 onClick={() => setViewDoc(c.tradeLicense)}
                 className="text-primary-600 text-sm hover:underline flex items-center gap-1">
-                📄 View Trade License Document
+                View Trade License Document
               </button>
             </div>
 
@@ -84,13 +84,13 @@ const CompanyApproval = () => {
                   onClick={() => handleStatusUpdate(c._id, 'approved')}
                   disabled={loadingIds.has(c._id)}
                   className="btn-primary py-1.5 px-4 text-sm bg-emerald-600 border-none hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {loadingIds.has(c._id) ? '⏳ Approving...' : '✓ Approve'}
+                  {loadingIds.has(c._id) ? 'Approving...' : '✓ Approve'}
                 </button>
                 <button 
                   onClick={() => handleStatusUpdate(c._id, 'rejected')}
                   disabled={loadingIds.has(c._id)}
                   className="btn-secondary py-1.5 px-4 text-sm text-red-500 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {loadingIds.has(c._id) ? '⏳ Processing...' : '✕ Reject'}
+                  {loadingIds.has(c._id) ? 'Processing...' : '✕ Reject'}
                 </button>
               </div>
             )}
@@ -110,7 +110,7 @@ const CompanyApproval = () => {
               <div className="flex items-center gap-3">
                 <a href={viewDoc} target="_blank" rel="noopener noreferrer"
                    className="text-primary-600 text-sm hover:underline">
-                  ↗ Open in New Tab
+                  Open in New Tab
                 </a>
                 <button onClick={() => setViewDoc(null)} className="text-gray-500 hover:text-gray-900 text-lg">✕</button>
               </div>

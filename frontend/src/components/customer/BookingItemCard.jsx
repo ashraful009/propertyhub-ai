@@ -65,7 +65,7 @@ const BookingItemCard = ({
           <img src={propImage} alt="" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-500 text-3xl">
-            {b.propertyId?.category === 'villa' ? '🏡' : b.propertyId?.category === 'land' ? '🌿' : '🏢'}
+            {b.propertyId?.category === 'villa' ? '' : b.propertyId?.category === 'land' ? '' : ''}
           </div>
         )}
       </div>
@@ -76,7 +76,7 @@ const BookingItemCard = ({
           {}
           {showInactivityWarn && (
             <div className="mb-3 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-start gap-2">
-              <span className="text-amber-600">⚠️</span>
+              
               <p className="text-amber-300 text-xs leading-relaxed">
                 No payment activity for <strong>{monthsInactive} month{monthsInactive > 1 ? 's' : ''}</strong>.
                 This booking will be <strong>automatically cancelled with no refund</strong> at{' '}
@@ -99,7 +99,7 @@ const BookingItemCard = ({
                              bg-primary-500/15 text-primary-600 border-primary-500/30
                              hover:bg-primary-500/25 hover:border-primary-500/50 transition-all"
                 >
-                  📅 Set Installment
+                  Set Installment
                 </button>
               )}
               {hasInstallPlan && (
@@ -107,7 +107,7 @@ const BookingItemCard = ({
                   className="px-2.5 py-1 rounded-lg text-[10px] font-semibold border
                                    bg-blue-500/15 text-blue-300 border-blue-500/30"
                 >
-                  📅 {b.installmentPlan.totalCount}-Installment Plan
+                  {b.installmentPlan.totalCount}-Installment Plan
                 </span>
               )}
               <span className={`px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusColors[b.status]}`}>
@@ -115,12 +115,12 @@ const BookingItemCard = ({
               </span>
               {cancelledNoRefund && (
                 <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold border bg-red-500/15 text-red-300 border-red-500/40">
-                  🚫 NO REFUND
+                  NO REFUND
                 </span>
               )}
               {isCancelled && b.cancellationReason === 'refund_requested' && (
                 <span className="px-2.5 py-1 rounded-lg text-[10px] font-bold border bg-blue-500/15 text-blue-300 border-blue-500/40">
-                  ↩️ REFUNDED
+                  REFUNDED
                 </span>
               )}
             </div>
@@ -163,7 +163,7 @@ const BookingItemCard = ({
                              text-white text-xs font-bold hover:from-blue-600 hover:to-indigo-700
                              transition-all duration-200 shadow-sm"
                 >
-                  💳 Pay Installment
+                  Pay Installment
                 </button>
               ) : showDueBtn ? (
                 <button
@@ -229,7 +229,7 @@ const BookingItemCard = ({
                          bg-red-500/10 text-red-300 border-red-500/30
                          hover:bg-red-500/20 transition-all disabled:opacity-60"
             >
-              {refunding === b._id ? 'Processing…' : '↩️ Request Refund'}
+              {refunding === b._id ? 'Processing…' : 'Request Refund'}
             </button>
           </div>
         ) : refundExpired ? (
@@ -247,7 +247,7 @@ const BookingItemCard = ({
                          bg-primary-500/15 text-primary-600 border border-primary-500/25
                          hover:bg-primary-500/25 hover:border-primary-500/50 transition-all duration-200"
             >
-              📥 Download Invoice
+              Download Invoice
             </button>
           </div>
         )}

@@ -87,7 +87,7 @@ const UnitDetailModal = ({ unit, property, onClose }) => {
           <div className="space-y-4 mb-5">
             {}
             <div className="flex items-center gap-2 p-3 rounded-xl bg-primary-500/10 border border-primary-500/20">
-              <span className="text-primary-600 text-sm">🏷️</span>
+              
               <span className="text-primary-600 font-semibold text-sm">
                 {flatType.label || 'Unnamed Type'}
               </span>
@@ -96,14 +96,14 @@ const UnitDetailModal = ({ unit, property, onClose }) => {
             {}
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {[
-                { icon: '📐', label: 'Square Feet',     value: flatType.sqft ? `${flatType.sqft} sft` : '—' },
-                { icon: '💰', label: 'Price (BDT)',      value: flatType.pricePerUnit ? `৳${Number(flatType.pricePerUnit).toLocaleString()}` : '—' },
-                { icon: '🛏️', label: 'Bedrooms',         value: flatType.bedrooms ?? '—' },
-                { icon: '🚿', label: 'Washrooms',        value: flatType.bathrooms ?? '—' },
-                { icon: '🍳', label: 'Kitchen',          value: flatType.kitchen || '—' },
-                { icon: '🍽️', label: 'Dining',           value: flatType.dining || '—' },
-                { icon: '🖼️', label: 'Drawing',          value: flatType.drawing || '—' },
-                { icon: '🅿️', label: 'Parking Area',     value: flatType.parking || '—' },
+                { icon: '', label: 'Square Feet',     value: flatType.sqft ? `${flatType.sqft} sft` : '—' },
+                { icon: '', label: 'Price (BDT)',      value: flatType.pricePerUnit ? `৳${Number(flatType.pricePerUnit).toLocaleString()}` : '—' },
+                { icon: '', label: 'Bedrooms',         value: flatType.bedrooms ?? '—' },
+                { icon: '', label: 'Washrooms',        value: flatType.bathrooms ?? '—' },
+                { icon: '', label: 'Kitchen',          value: flatType.kitchen || '—' },
+                { icon: '', label: 'Dining',           value: flatType.dining || '—' },
+                { icon: '', label: 'Drawing',          value: flatType.drawing || '—' },
+                { icon: '', label: 'Parking Area',     value: flatType.parking || '—' },
               ].map(({ icon, label, value }) => (
                 <div key={label}
                   className="bg-slate-50 border border-blue-100 rounded-xl px-3 py-2.5">
@@ -116,7 +116,7 @@ const UnitDetailModal = ({ unit, property, onClose }) => {
             {}
             {flatType.description && (
               <div className="bg-slate-50 border border-blue-100 rounded-xl px-3 py-2.5">
-                <p className="text-gray-500 text-xs mb-1">📝 Type Description</p>
+                <p className="text-gray-500 text-xs mb-1">Type Description</p>
                 <p className="text-gray-600 text-sm leading-relaxed">{flatType.description}</p>
               </div>
             )}
@@ -176,7 +176,7 @@ const UnitDetailModal = ({ unit, property, onClose }) => {
                 disabled={loading}
                 className="btn-primary w-full flex items-center justify-center gap-2"
               >
-                {loading ? 'Confirming...' : '📋 Request Booking'}
+                {loading ? 'Confirming...' : 'Request Booking'}
               </button>
             </div>
           ) : (
@@ -187,7 +187,7 @@ const UnitDetailModal = ({ unit, property, onClose }) => {
         ) : (
           <div className={`w-full py-3 rounded-xl text-center text-sm font-semibold
                           ${cfg.bg} ${cfg.color} border`}>
-            {unit.status === 'booked' ? '⏳ This unit is already booked' : '🚫 This unit has been sold'}
+            {unit.status === 'booked' ? 'This unit is already booked' : 'This unit has been sold'}
           </div>
         )}
       </div>

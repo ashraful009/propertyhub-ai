@@ -7,9 +7,9 @@ import Pagination from '../../components/shared/Pagination';
 
 const CATEGORIES = [
   { value: '', label: 'All Types' },
-  { value: 'apartment',  label: '🏢 Apartments'  },
-  { value: 'villa',      label: '🏡 Villas'       },
-  { value: 'land',       label: '🌿 Land'         },
+  { value: 'apartment',  label: 'Apartments'  },
+  { value: 'villa',      label: 'Villas'       },
+  { value: 'land',       label: 'Land'         },
 ];
 
 const SORT_OPTIONS = [
@@ -219,7 +219,7 @@ const PropertiesPage = () => {
               </div>
             ) : (
               <div className="glass-card py-20 text-center">
-                <p className="text-4xl mb-3">🔍</p>
+                
                 <p className="text-gray-900 font-semibold mb-1">No properties found</p>
                 <p className="text-gray-500 text-sm mb-5">
                   Try adjusting your filters or clearing them.

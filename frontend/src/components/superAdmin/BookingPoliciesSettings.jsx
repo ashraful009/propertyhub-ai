@@ -9,7 +9,7 @@ const FIELD_SECTIONS = [
   {
     id: 'personal',
     title: 'Personal Information',
-    icon: '👤',
+    icon: '',
     fields: [
       { key: 'fullName',          label: 'Full Name (NID/Passport matching)' },
       { key: 'fatherMotherName',  label: "Father's / Mother's Name" },
@@ -23,7 +23,7 @@ const FIELD_SECTIONS = [
   {
     id: 'contact',
     title: 'Contact Information',
-    icon: '📞',
+    icon: '',
     fields: [
       { key: 'mobile',           label: 'Mobile Number' },
       { key: 'email',            label: 'Email Address' },
@@ -34,7 +34,7 @@ const FIELD_SECTIONS = [
   {
     id: 'financial',
     title: 'Financial Information',
-    icon: '💳',
+    icon: '',
     fields: [
       { key: 'tinCertificate', label: 'TIN Certificate Number' },
       { key: 'paymentSource',  label: 'Payment Source' },
@@ -44,7 +44,7 @@ const FIELD_SECTIONS = [
   {
     id: 'property',
     title: 'Property Details',
-    icon: '🏠',
+    icon: '',
     fields: [
       { key: 'projectNameLocation',   label: 'Project Name / Location' },
       { key: 'sizeFloor',             label: 'Size / Floor' },
@@ -56,7 +56,7 @@ const FIELD_SECTIONS = [
   {
     id: 'nominee',
     title: 'Nominee Information',
-    icon: '👥',
+    icon: '',
     fields: [
       { key: 'nomineeName',     label: 'Nominee Name' },
       { key: 'nomineeRelation', label: 'Relation with Nominee' },
@@ -66,7 +66,7 @@ const FIELD_SECTIONS = [
   {
     id: 'documents',
     title: 'Required Documents (Uploads)',
-    icon: '📄',
+    icon: '',
     fields: [
       { key: 'customerPhoto', label: 'Customer Photo' },
       { key: 'nidCopy',       label: 'NID Copy' },
@@ -78,9 +78,9 @@ const FIELD_SECTIONS = [
 ];
 
 const CATEGORIES = [
-  { key: 'apartment', label: 'Apartments', icon: '🏢', color: 'from-blue-600 to-blue-800',   border: 'border-blue-500/30',   activeBg: 'bg-blue-500/15',   activeText: 'text-blue-600' },
-  { key: 'villa',     label: 'Villas',     icon: '🏡', color: 'from-emerald-600 to-emerald-800', border: 'border-emerald-500/30', activeBg: 'bg-emerald-500/15', activeText: 'text-emerald-600' },
-  { key: 'land',      label: 'Land',       icon: '🌿', color: 'from-amber-600 to-amber-800', border: 'border-amber-500/30', activeBg: 'bg-amber-500/15', activeText: 'text-amber-600' },
+  { key: 'apartment', label: 'Apartments', icon: '', color: 'from-blue-600 to-blue-800',   border: 'border-blue-500/30',   activeBg: 'bg-blue-500/15',   activeText: 'text-blue-600' },
+  { key: 'villa',     label: 'Villas',     icon: '', color: 'from-emerald-600 to-emerald-800', border: 'border-emerald-500/30', activeBg: 'bg-emerald-500/15', activeText: 'text-emerald-600' },
+  { key: 'land',      label: 'Land',       icon: '', color: 'from-amber-600 to-amber-800', border: 'border-amber-500/30', activeBg: 'bg-amber-500/15', activeText: 'text-amber-600' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -177,7 +177,7 @@ const BookingPoliciesSettings = () => {
       {}
       <div>
         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-          📋 Booking Policies
+          Booking Policies
         </h2>
         <p className="text-gray-500 text-sm mt-1">
           Configure KYC requirements and booking money percentage for each property category.
@@ -231,7 +231,7 @@ const BookingPoliciesSettings = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-gray-900 font-semibold text-sm flex items-center gap-2">
-              💰 Booking Money Percentage
+              Booking Money Percentage
             </h3>
             <p className="text-gray-500 text-xs mt-0.5">
               Percentage of total price required as booking money for {activeCat?.label}
@@ -267,7 +267,7 @@ const BookingPoliciesSettings = () => {
         <div className="flex items-center justify-between mb-5">
           <div>
             <h3 className="text-gray-900 font-semibold text-sm flex items-center gap-2">
-              ✅ Required KYC & Booking Fields
+              Required KYC & Booking Fields
             </h3>
             <p className="text-gray-500 text-xs mt-0.5">
               Select which fields customers must fill out before booking a {activeCat?.label?.toLowerCase()} property
@@ -364,7 +364,7 @@ const BookingPoliciesSettings = () => {
             Saving...
           </>
         ) : (
-          <>💾 Save {activeCat?.label} Policy</>
+          <>Save {activeCat?.label} Policy</>
         )}
       </button>
     </div>

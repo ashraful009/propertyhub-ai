@@ -27,7 +27,7 @@ const ApartmentSpecStep = ({
   <>
     <section className="glass-card p-6">
       <div className="flex items-center gap-3 mb-5 pb-3 border-b border-blue-100">
-        <span className="text-2xl">🏗️</span>
+        
         <div>
           <h3 className="text-gray-900 font-semibold text-base">Property Overview</h3>
           <p className="text-gray-500 text-xs mt-0.5">Building specifications</p>
@@ -54,7 +54,7 @@ const ApartmentSpecStep = ({
 
     <section className="glass-card p-6">
       <div className="flex items-center gap-3 mb-5 pb-3 border-b border-blue-100">
-        <span className="text-2xl">🏠</span>
+        
         <div>
           <h3 className="text-gray-900 font-semibold text-base">Unit Types</h3>
           <p className="text-gray-500 text-xs mt-0.5">Define different flat configurations</p>
@@ -100,7 +100,7 @@ const ApartmentSpecStep = ({
 
     <section className="glass-card p-6">
       <div className="flex items-center gap-3 mb-5 pb-3 border-b border-blue-100">
-        <span className="text-2xl">🗺️</span>
+        
         <div>
           <h3 className="text-gray-900 font-semibold text-base">Interactive Visualizer</h3>
         </div>

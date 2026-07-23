@@ -164,7 +164,7 @@ const AddPropertyForm = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Property Submitted! 🏠</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">Property Submitted! </h2>
         <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">
           Your property is pending review. It will appear publicly once approved by the admin.
         </p>
@@ -287,7 +287,7 @@ const AddPropertyForm = () => {
         <>
           {}
           <section>
-            <SectionTitle>🏡 Villa — Location</SectionTitle>
+            <SectionTitle>Villa — Location</SectionTitle>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Area *">
                 <input name="area" type="text" value={villaForm.area}
@@ -401,7 +401,7 @@ const AddPropertyForm = () => {
         <>
           {}
           <section>
-            <SectionTitle>🌿 Land — Location</SectionTitle>
+            <SectionTitle>Land — Location</SectionTitle>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field label="Area *">
                 <input name="area" type="text" value={landForm.area}
@@ -552,7 +552,7 @@ const AddPropertyForm = () => {
             </svg>
             Uploading &amp; Submitting...
           </>
-        ) : '🏠 Submit Property for Review'}
+        ) : 'Submit Property for Review'}
       </button>
     </form>
   );

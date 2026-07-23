@@ -248,8 +248,8 @@ const MarginTracking = () => {
                      shadow-[0_0_15px_rgba(16,185,129,0.3)]"
         >
           {downloading
-            ? <><span className="animate-spin">⏳</span> Generating PDF...</>
-            : <>📥 Download Margin Report</>
+            ? <> Generating PDF...</>
+            : <>Download Margin Report</>
           }
         </button>
       </div>
@@ -257,7 +257,7 @@ const MarginTracking = () => {
       {}
       <section className="glass-card p-5 border border-blue-100">
         <div className="flex items-center gap-2 mb-4 pb-3 border-b border-blue-100">
-          <span className="text-base">🔍</span>
+          
           <h3 className="text-gray-900 font-semibold text-sm">Report Filters</h3>
           {isFiltered && (
             <button
@@ -330,7 +330,7 @@ const MarginTracking = () => {
           {}
           {filterError && (
             <p className="text-red-600 text-xs flex items-center gap-1.5 animate-fadeIn">
-              <span>⚠️</span> {filterError}
+               {filterError}
             </p>
           )}
 
@@ -361,7 +361,7 @@ const MarginTracking = () => {
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full
                                  bg-primary-500/15 border border-primary-500/30
                                  text-primary-600 text-[11px] font-medium">
-                  📅 {DATE_PRESETS.find((p) => p.key === applied.filterType)?.label}
+                  {DATE_PRESETS.find((p) => p.key === applied.filterType)?.label}
                   {applied.filterType === 'custom' && applied.startDate && (
                     <> · {applied.startDate} → {applied.endDate}</>
                   )}
@@ -371,7 +371,7 @@ const MarginTracking = () => {
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full
                                  bg-emerald-500/15 border border-emerald-500/30
                                  text-emerald-300 text-[11px] font-medium">
-                  🏢 Report: {selectedCompanyName}
+                  Report: {selectedCompanyName}
                 </span>
               )}
             </div>
@@ -387,7 +387,7 @@ const MarginTracking = () => {
                           opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-600
-                            flex items-center justify-center text-2xl">💰</div>
+                            flex items-center justify-center text-2xl"></div>
             <div>
               <p className="text-gray-500 text-sm font-medium">Total Platform Commission</p>
               <h3 className="text-3xl font-black text-gray-900 mt-1">
@@ -402,7 +402,7 @@ const MarginTracking = () => {
                           opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-14 h-14 rounded-2xl bg-primary-500/20 text-primary-600
-                            flex items-center justify-center text-2xl">📊</div>
+                            flex items-center justify-center text-2xl"></div>
             <div>
               <p className="text-gray-500 text-sm font-medium">Total Sales Volume</p>
               <h3 className="text-3xl font-black text-gray-900 mt-1">
@@ -417,7 +417,7 @@ const MarginTracking = () => {
                           opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="flex items-center gap-4 relative z-10">
             <div className="w-14 h-14 rounded-2xl bg-blue-500/20 text-blue-600
-                            flex items-center justify-center text-2xl">📝</div>
+                            flex items-center justify-center text-2xl"></div>
             <div>
               <p className="text-gray-500 text-sm font-medium">Total Successful Bookings</p>
               <h3 className="text-3xl font-black text-gray-900 mt-1">
@@ -435,7 +435,7 @@ const MarginTracking = () => {
         {}
         <div className="glass-card p-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4 border-b border-blue-100 pb-3">
-            🏢 Commission Breakdown by Company
+            Commission Breakdown by Company
           </h3>
 
           <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar">
@@ -483,7 +483,7 @@ const MarginTracking = () => {
             <div>
               <div className="mb-4 border-b border-blue-100 pb-3 flex justify-between items-end">
                 <div>
-                  <h3 className="text-lg font-bold text-gray-900">🏠 Property Breakdown</h3>
+                  <h3 className="text-lg font-bold text-gray-900">Property Breakdown</h3>
                   <p className="text-primary-600 text-xs mt-1 font-medium">
                     {selectedCompany.companyName}
                   </p>
@@ -542,7 +542,7 @@ const MarginTracking = () => {
             </div>
           ) : (
             <div className="h-full flex flex-col items-center justify-center text-center py-20 opacity-50">
-              <span className="text-5xl mb-4">👈</span>
+              
               <p className="text-gray-600 font-medium">Select a company</p>
               <p className="text-gray-500 text-sm mt-1 max-w-[200px]">
                 Click any company from the list to view its property-level commission breakdown.

@@ -10,13 +10,13 @@ const STATUS_BADGE = {
 };
 
 const STATUS_ICON = {
-  pending:  '⏳',
-  approved: '✅',
-  rejected: '❌',
+  pending:  '',
+  approved: '',
+  rejected: '',
 };
 
 const CATEGORY_ICONS = {
-  Apartments: '🏢', Villas: '🏡', Land: '🌾',
+  Apartments: '', Villas: '', Land: '',
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ const ManageProperties = ({ mode = 'company' }) => {
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         {}
         <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">🔍</span>
+          
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -184,7 +184,7 @@ const ManageProperties = ({ mode = 'company' }) => {
       {}
       {filtered.length === 0 && (
         <div className="glass-card py-16 text-center">
-          <span className="text-5xl block mb-3">📭</span>
+          
           <p className="text-gray-900 font-semibold text-lg">No properties found</p>
           <p className="text-gray-500 text-sm mt-1">
             {search || filterStatus !== 'all' || filterActive !== 'all'
@@ -214,7 +214,7 @@ const ManageProperties = ({ mode = 'company' }) => {
                     className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-2xl">
-                    {CATEGORY_ICONS[p.category] || '🏢'}
+                    {CATEGORY_ICONS[p.category] || ''}
                   </div>
                 )}
               </div>
@@ -238,7 +238,7 @@ const ManageProperties = ({ mode = 'company' }) => {
                 <p className="text-gray-500 text-xs">
                   {CATEGORY_ICONS[p.category]} {p.category}
                   <span className="mx-1.5 text-gray-600">·</span>
-                  📍 {p.city}
+                  {p.city}
                   <span className="mx-1.5 text-gray-600">·</span>
                   ৳{p.price?.toLocaleString()}
                 </p>
@@ -281,7 +281,7 @@ const ManageProperties = ({ mode = 'company' }) => {
                   className="px-3 py-1.5 bg-primary-500/15 border border-primary-500/30
                              text-primary-600 hover:bg-primary-500/25 text-xs font-semibold
                              rounded-lg transition-colors disabled:opacity-50">
-                  ✏️ Edit
+                  Edit
                 </button>
 
                 {}
@@ -291,7 +291,7 @@ const ManageProperties = ({ mode = 'company' }) => {
                   className="px-3 py-1.5 bg-red-500/10 border border-red-500/30
                              text-red-600 hover:bg-red-500/20 text-xs font-semibold
                              rounded-lg transition-colors disabled:opacity-50">
-                  {processing[p._id] === 'deleting' ? '...' : '🗑️ Delete'}
+                  {processing[p._id] === 'deleting' ? '...' : 'Delete'}
                 </button>
               </div>
             </div>
@@ -314,7 +314,7 @@ const ManageProperties = ({ mode = 'company' }) => {
                         bg-black/75 backdrop-blur-sm animate-fadeIn">
           <div className="w-full max-w-sm glass-card p-6 animate-slideUp">
             <div className="text-center mb-6">
-              <span className="text-5xl block mb-3">⚠️</span>
+              
               <h3 className="text-gray-900 font-bold text-lg mb-2">Delete Property?</h3>
               <p className="text-gray-500 text-sm">
                 <span className="text-gray-900 font-medium">&ldquo;{deleteTarget.title}&rdquo;</span>
