@@ -2,16 +2,15 @@ const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
-// ─── Configure Cloudinary SDK ─────────────────────────────────────────────────
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key:    process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
-  timeout: 120000, // Extend timeout to 120 seconds for large uploads
+  timeout: 120000, 
 });
 
-// ─── Multer Storage: Property Images ─────────────────────────────────────────
-// resource_type: 'image' — handles jpg, jpeg, png, webp
+
 const imageStorage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => ({
@@ -22,8 +21,7 @@ const imageStorage = new CloudinaryStorage({
   }),
 });
 
-// ─── Multer Storage: Documents (Trade License - PDF / Image) ─────────────
-// resource_type: 'auto' so Cloudinary auto-detects PDF vs image
+
 const documentStorage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
@@ -37,9 +35,7 @@ const documentStorage = new CloudinaryStorage({
   },
 });
 
-// ─── Multer Storage: Booking KYC Documents (customer photo, NID, TIN, etc.) ──
-// Each file gets a unique public_id (fieldname + timestamp + random) so multiple
-// documents uploaded in one request never collide.
+
 const bookingDocStorage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
@@ -52,15 +48,15 @@ const bookingDocStorage = new CloudinaryStorage({
   },
 });
 
-// ─── Multer Upload Instances ──────────────────────────────────────────────────
+
 const uploadImage = multer({
   storage: imageStorage,
-  limits:  { fileSize: 10 * 1024 * 1024 }, // 10MB per image
+  limits:  { fileSize: 10 * 1024 * 1024 },
 });
 
 const uploadBookingDocs = multer({
   storage: bookingDocStorage,
-  limits:  { fileSize: 10 * 1024 * 1024 }, // 10MB per document
+  limits:  { fileSize: 10 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     const allowedMimes = [
       'application/pdf',
@@ -76,7 +72,7 @@ const uploadBookingDocs = multer({
 
 const uploadDocument = multer({
   storage: documentStorage,
-  limits:  { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits:  { fileSize: 10 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedMimes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
     if (allowedMimes.includes(file.mimetype)) {
@@ -87,18 +83,11 @@ const uploadDocument = multer({
   },
 });
 
-// ─── Direct Upload Helper (for programmatic uploads) ─────────────────────────
-/**
- * Upload a file to Cloudinary directly (when not using multer-storage-cloudinary)
- * @param {string} filePath  - Local file path or remote URL
- * @param {string} folder    - Cloudinary subfolder under 'flatsell/'
- * @param {string} resource_type - 'image' | 'raw' | 'auto' (use 'auto' for PDFs)
- */
 const uploadToCloudinary = async (filePath, folder, resource_type = 'auto') => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
       folder:        `flatsell/${folder}`,
-      resource_type, // 'auto' handles both images and PDFs seamlessly
+      resource_type, 
     });
     return result;
   } catch (error) {

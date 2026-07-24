@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const {
   requestRefundService,
   getAllRefundsService,
   getVendorRefundsService,
   completeRefundService,
-} = require('./refund.service');
-const { successResponse } = require('../../../responses');
-const { ValidationError } = require('../../../errors');
+} = require("./refund.service");
+const { successResponse } = require("../../../responses");
+const { ValidationError } = require("../../../errors");
 
 const requestRefund = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new ValidationError('Invalid booking id.');
+      throw new ValidationError("Invalid booking id.");
     }
 
     const result = await requestRefundService(id, req.user._id);
@@ -20,7 +20,7 @@ const requestRefund = async (req, res, next) => {
     return successResponse(
       res,
       { refund: result.refund, booking: result.booking },
-      `Refund approved. ৳${result.refundAmount.toLocaleString()} (80%) will be refunded; ৳${result.retentionAmount.toLocaleString()} (${result.retentionPct}%) is retained.`
+      `Refund approved. ৳${result.refundAmount.toLocaleString()} (80%) will be refunded; ৳${result.retentionAmount.toLocaleString()} (${result.retentionPct}%) is retained.`,
     );
   } catch (error) {
     next(error);
@@ -50,11 +50,11 @@ const completeRefund = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new ValidationError('Invalid refund id.');
+      throw new ValidationError("Invalid refund id.");
     }
 
     const refund = await completeRefundService(id, req.user._id);
-    return successResponse(res, { refund }, 'Refund marked as completed.');
+    return successResponse(res, { refund }, "Refund marked as completed.");
   } catch (error) {
     next(error);
   }
