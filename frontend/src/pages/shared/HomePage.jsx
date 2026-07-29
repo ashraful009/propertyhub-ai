@@ -5,7 +5,6 @@ import PropertyCard from '../../components/shared/PropertyCard';
 import PropertyCardSkeleton from '../../components/shared/PropertyCardSkeleton';
 import HomeHeroSection from '../../components/shared/HomeHeroSection';
 
-const CITIES = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal'];
 
 const CATEGORIES = [
   { key: 'apartment',  icon: '', label: 'Apartments', gradient: 'from-blue-600/25 to-blue-900/20',   border: 'hover:border-blue-500/40'  },
@@ -54,7 +53,7 @@ const StatItem = ({ target, suffix = '+', label }) => {
 const HomePage = () => {
   const navigate = useNavigate();
 
-  const [searchCity,   setSearchCity]   = useState('');
+
   const [properties,   setProperties]   = useState([]);
   const [propLoading,  setPropLoading]  = useState(true);
 
@@ -65,14 +64,6 @@ const HomePage = () => {
       .finally(() => setPropLoading(false));
   }, []);
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    navigate(`/properties${searchCity ? `?city=${encodeURIComponent(searchCity)}` : ''}`);
-  };
-
-  const handleCityClick = (city) => {
-    navigate(`/properties?city=${encodeURIComponent(city)}`);
-  };
 
   const handleCategory = (cat) => {
     navigate(`/properties?category=${cat}`);

@@ -2,7 +2,7 @@
 const PropertyCardSkeleton = () => (
   <div className="relative rounded-2xl overflow-hidden
                   aspect-[4/5] sm:aspect-[3/4] xl:aspect-[4/5]
-                  max-w-[280px] w-full mx-auto
+                  max-w-[400px] w-full mx-auto
                   ring-1 ring-white/[0.06] bg-white">
     {}
     <div className="absolute inset-0 skeleton rounded-none" />

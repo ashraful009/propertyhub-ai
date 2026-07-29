@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import axiosInstance from '../api/axiosInstance';
+
 import toast from 'react-hot-toast';
 
 export const useChatStream = (propertyId) => {
