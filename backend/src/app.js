@@ -76,6 +76,7 @@ app.use('/api/installments',      require('./features/customer/installments/inst
 app.use('/api/settings',          require('./features/admin/settings/platformSettings.routes'));
 app.use('/api/refunds',           require('./features/admin/refunds/refund.routes'));
 app.use('/api/admin',             require('./features/admin/dashboard/admin.routes'));
+app.use('/api/chatbot',           require('./features/shared/chatbot/chatbot.routes'));
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────────
 app.use((req, res) => {

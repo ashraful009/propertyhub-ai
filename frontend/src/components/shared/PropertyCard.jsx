@@ -29,6 +29,7 @@ const PropertyCard = ({ property }) => {
       to={`/property/${_id}`}
       className="group block relative rounded-2xl overflow-hidden
                  aspect-[4/5] sm:aspect-[3/4] xl:aspect-[4/5]
+                 max-w-[280px] w-full mx-auto
                  hover:shadow-2xl hover:shadow-primary-500/10
                  transition-all duration-500 ring-1 ring-white/[0.06]
                  hover:ring-primary-500/30"

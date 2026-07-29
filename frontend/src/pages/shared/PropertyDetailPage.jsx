@@ -11,6 +11,7 @@ import PropertyHeroGallery from '../../components/customer/PropertyHeroGallery';
 import PropertyQuickStats from '../../components/customer/PropertyQuickStats';
 import PropertyAboutTab from '../../components/customer/PropertyAboutTab';
 import PropertySidebar from '../../components/customer/PropertySidebar';
+import PropertyChatbot from '../../components/customer/PropertyChatbot';
 
 const TABS = ['Overview', 'Floor Plan', 'Location'];
 
@@ -221,6 +222,9 @@ const PropertyDetailPage = () => {
           onClose={() => setSelectedUnit(null)}
         />
       )}
+
+      {/* AI Chatbot */}
+      <PropertyChatbot propertyId={property._id} />
     </div>
   );
 };
