@@ -6,7 +6,6 @@ import PropertyPriceSection from './PropertyPriceSection';
 
 const CATEGORIES = ['apartment', 'villa', 'land'];
 
-// ── Reusable tiny components ──────────────────────────────────────────────────
 const SectionTitle = ({ children }) => (
   <h3 className="text-gray-900 font-semibold mb-4 pb-2 border-b border-blue-100">{children}</h3>
 );
@@ -25,7 +24,6 @@ const YesNoSelect = ({ name, value, onChange }) => (
   </select>
 );
 
-// ── Initial state factories ───────────────────────────────────────────────────
 const VILLA_DEFAULTS = {
   area: '', roadAccess: '', neighborhood: 'Residential',
   totalLandSize: '', totalFloors: '', bedrooms: '', bathrooms: '',
@@ -45,11 +43,9 @@ const LAND_DEFAULTS = {
   nearbySchool: '', nearbyHospital: '', nearbyMarket: '', futureDevelopment: '',
 };
 
-// ═══════════════════════════════════════════════════════════════════════════════
 const AddPropertyForm = () => {
   const navigate = useNavigate();
 
-  // ── Shared state ────────────────────────────────────────────────────────────
   const [form, setForm] = useState({
     title: '', description: '', price: '',
     address: '', city: '', category: 'apartment',
@@ -65,14 +61,12 @@ const AddPropertyForm = () => {
   const [error, setError]       = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  // ── Handlers ────────────────────────────────────────────────────────────────
   const handleChange = (e) => {
     setError('');
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ── Auto Geocode on Address Blur ─────────────────────────────────────────
   const handleAddressBlur = async () => {
     if (!form.address) return;
     const query = `${form.address}, ${form.city || ''}, Bangladesh`.trim();
@@ -112,11 +106,9 @@ const AddPropertyForm = () => {
     setPreviews((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // ── Apartment visualizer helpers ────────────────────────────────────────────
   const floors = Math.max(1, Math.min(Number(form.totalFloors), 20));
   const unitPerFloor = Math.max(1, Math.min(Number(form.unitsPerFloor), 10));
 
-  // ── Submit ──────────────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (images.length === 0) {
@@ -134,7 +126,6 @@ const AddPropertyForm = () => {
     }
     images.forEach((img) => fd.append('images', img));
 
-    // Category-specific payloads
     if (form.category === 'villa') {
       fd.append('villaDetails', JSON.stringify(villaForm));
     }
@@ -154,7 +145,6 @@ const AddPropertyForm = () => {
     }
   };
 
-  // ── Success screen ─────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <div className="text-center py-10 animate-slideUp">
@@ -176,7 +166,6 @@ const AddPropertyForm = () => {
     );
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <form onSubmit={handleSubmit} className="space-y-7">
       {error && (

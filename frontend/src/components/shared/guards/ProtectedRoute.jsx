@@ -11,7 +11,6 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // Role-based access control
   if (allowedRoles && allowedRoles.length > 0) {
     const userRolesLower = user?.roles?.map((r) => String(r).toLowerCase()) || [];
     const isSuperAdmin   = userRolesLower.includes('super admin');

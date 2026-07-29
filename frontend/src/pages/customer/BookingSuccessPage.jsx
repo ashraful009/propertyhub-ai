@@ -19,9 +19,8 @@ const BookingSuccessPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const sessionId   = searchParams.get('session_id');
-  const paymentType = searchParams.get('type') || 'booking'; // 'booking' | 'due' | 'installment'
-  // Initialise to 'error' immediately when session_id is missing — avoids
-  // setting state inside the effect for that branch.
+  const paymentType = searchParams.get('type') || 'booking'; 
+
   const [status, setStatus] = useState(() => (sessionId ? 'processing' : 'error'));
   const called = useRef(false);
 
@@ -35,7 +34,7 @@ const BookingSuccessPage = () => {
       if (called.current) return;
       called.current = true;
       try {
-        // Installment payments use a separate confirmation endpoint
+        
         const endpoint = isInstallmentPayment
           ? '/installments/confirm'
           : '/bookings/confirm';

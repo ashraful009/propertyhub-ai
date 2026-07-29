@@ -62,7 +62,7 @@ const AppRouter = () => {
               <Route path="/dashboard/seller" element={<SellerDashboard />} />
             </Route>
 
-            {/* Legacy URL Redirects */}
+            {}
             <Route path="/booking-checkout/:id" element={<BookingCheckoutPage />} />
             <Route path="/super-admin" element={<Navigate to="/dashboard/super-admin" replace />} />
             <Route path="/company-admin" element={<Navigate to="/dashboard/company-admin" replace />} />

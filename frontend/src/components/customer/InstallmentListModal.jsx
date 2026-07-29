@@ -32,7 +32,7 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
 
   useEffect(() => {
     if (open) fetchList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [open, bookingId]);
 
   const handlePay = async (inst) => {
@@ -84,7 +84,6 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
 
   if (!open) return null;
 
-  // Roll-up summary
   const paidCount    = installments.filter((i) => i.status === 'paid').length;
   const overdueCount = installments.filter((i) => i.isOverdue).length;
   const totalCount   = installments.length;
@@ -116,7 +115,7 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 hover:bg-blue-100 text-gray-500 hover:text-gray-900 transition-colors"
           >
-            ✕
+            
           </button>
         </div>
 
@@ -232,7 +231,7 @@ const InstallmentListModal = ({ open, onClose, bookingId }) => {
                   {}
                   {isPaid && (
                     <div className="mt-3 pt-3 border-t border-emerald-500/15 text-[11px] text-emerald-300/80 flex items-center gap-1.5">
-                      ✓ Paid · Total {fmt(inst.paidAmount)}
+                       Paid · Total {fmt(inst.paidAmount)}
                     </div>
                   )}
                   {!isPaid && isOverdue && (

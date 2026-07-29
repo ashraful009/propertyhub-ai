@@ -10,7 +10,7 @@ const run = async () => {
   await connectDB();
 
   const settings = await PlatformSettings.getSettings();
-  console.log('✅ PlatformSettings ready:', {
+  console.log(' PlatformSettings ready:', {
     inactivityCancelMonths:     settings.inactivityCancelMonths,
     inactivityWarnMonths:       settings.inactivityWarnMonths,
     refundWindowDays:           settings.refundWindowDays,
@@ -30,27 +30,27 @@ const run = async () => {
     await b.save();
     backfilled += 1;
   }
-  console.log(`✅ Backfilled lastPaymentDate on ${backfilled} paid booking(s).`);
+  console.log(` Backfilled lastPaymentDate on ${backfilled} paid booking(s).`);
 
   const walletResult = await Company.updateMany(
     { $or: [{ walletBalance: null }, { walletBalance: { $exists: false } }] },
     { $set: { walletBalance: 0 } }
   );
-  console.log(`✅ Initialised walletBalance on ${walletResult.modifiedCount} company/companies.`);
+  console.log(` Initialised walletBalance on ${walletResult.modifiedCount} company/companies.`);
 
   await Promise.all([
     Booking.syncIndexes(),
     Company.syncIndexes(),
     PlatformSettings.syncIndexes(),
   ]);
-  console.log('✅ Indexes synced (Booking, Company, PlatformSettings).');
+  console.log(' Indexes synced (Booking, Company, PlatformSettings).');
 
   await mongoose.disconnect();
-  console.log('🎉 Policy migration complete.');
+  console.log(' Policy migration complete.');
   process.exit(0);
 };
 
 run().catch((err) => {
-  console.error('❌ Migration failed:', err);
+  console.error(' Migration failed:', err);
   process.exit(1);
 });

@@ -25,7 +25,7 @@ const RegisterPage = () => {
     setError('');
     try {
       await axiosInstance.post('/auth/register', form);
-      // Redirect to OTP verification with email as query param
+      
       navigate(`/verify-otp?email=${encodeURIComponent(form.email)}`);
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');

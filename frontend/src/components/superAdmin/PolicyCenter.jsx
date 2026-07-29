@@ -4,10 +4,6 @@ import AutoCancelledBookings from './AutoCancelledBookings';
 import RefundRequests from './RefundRequests';
 import BookingLimitOverrides from './BookingLimitOverrides';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PolicyCenter — Super Admin hub for all three booking policies, grouped under
-// one dashboard tab with internal sub-tabs.
-// ─────────────────────────────────────────────────────────────────────────────
 const SUBTABS = [
   { id: 'settings',   label: 'Settings',           render: () => <PolicySettings /> },
   { id: 'cancelled',  label: 'Auto-Cancelled',     render: () => <AutoCancelledBookings /> },

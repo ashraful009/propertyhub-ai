@@ -21,7 +21,6 @@ export const useChatStream = (propertyId) => {
     setInput('');
     setIsLoading(true);
 
-    // Prepare history to send
     const history = messages.map(({ role, content }) => ({ role, content }));
 
     try {
@@ -72,9 +71,13 @@ export const useChatStream = (propertyId) => {
               if (data.content) {
                 setMessages((prev) => {
                   const newMessages = [...prev];
-                  const lastMessage = newMessages[newMessages.length - 1];
+                  const lastIndex = newMessages.length - 1;
+                  const lastMessage = newMessages[lastIndex];
                   if (lastMessage.role === 'assistant') {
-                    lastMessage.content += data.content;
+                    newMessages[lastIndex] = {
+                      ...lastMessage,
+                      content: lastMessage.content + data.content
+                    };
                   }
                   return newMessages;
                 });

@@ -18,7 +18,6 @@ const FormField = ({ label, required, children }) => (
   </div>
 );
 
-// ─────────────────────────────────────────────────────────────────────────────
 const EditPropertyModal = ({ property, onClose, onUpdated }) => {
   const [form, setForm] = useState({
     title:           property.title           || '',
@@ -49,7 +48,6 @@ const EditPropertyModal = ({ property, onClose, onUpdated }) => {
 
   const showFlatTypes = ['Apartments', 'Villas'].includes(form.category);
 
-  // Prevent scroll underneath
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
@@ -127,7 +125,7 @@ const EditPropertyModal = ({ property, onClose, onUpdated }) => {
             className="w-9 h-9 flex items-center justify-center rounded-xl
                        bg-slate-50 hover:bg-blue-50 text-gray-500 hover:text-gray-900
                        transition-colors text-lg">
-            ✕
+            
           </button>
         </div>
 
@@ -222,7 +220,7 @@ const EditPropertyModal = ({ property, onClose, onUpdated }) => {
                         className="absolute top-2 right-2 w-6 h-6 flex items-center justify-center
                                    rounded-full bg-red-500/20 text-red-600 hover:bg-red-500/30
                                    text-xs transition-colors">
-                        ✕
+                        
                       </button>
                     )}
                     <p className="text-primary-600 text-xs font-semibold mb-3 uppercase">Type {idx + 1}</p>
@@ -345,7 +343,7 @@ const EditPropertyModal = ({ property, onClose, onUpdated }) => {
                   </svg>
                   Saving...
                 </span>
-              ) : '✓ Save Changes'}
+              ) : ' Save Changes'}
             </button>
           </div>
         </form>

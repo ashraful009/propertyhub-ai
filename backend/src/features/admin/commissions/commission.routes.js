@@ -9,7 +9,6 @@ const { protect, authorize } = require('../../../middleware/auth.middleware');
 
 const router = express.Router();
 
-// ── Super Admin Only ────────────────────────────────────────────────────────
 router.use(protect);
 router.use(authorize('Super Admin'));
 

@@ -1,12 +1,5 @@
 const mongoose = require('mongoose');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// BookingLimitOverride — a Super Admin grant that raises a user's total active
-// booking cap above the platform default (Policy 3).
-//
-// One active override per user (unique). `overrideLimit` replaces the global
-// `maxTotalActiveBookings` for that user.
-// ─────────────────────────────────────────────────────────────────────────────
 const bookingLimitOverrideSchema = new mongoose.Schema(
   {
     userId: {

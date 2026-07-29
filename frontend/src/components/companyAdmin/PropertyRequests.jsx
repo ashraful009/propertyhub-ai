@@ -10,8 +10,8 @@ const STATUS_COLORS = {
 const PropertyRequests = ({ mode = 'admin' }) => {
   const [properties, setProperties] = useState([]);
   const [loading,    setLoading]    = useState(true);
-  const [action,     setAction]     = useState({}); // { [id]: 'approving' | 'rejecting' }
-  const [rejectModal, setRejectModal] = useState(null); // { id, reason }
+  const [action,     setAction]     = useState({}); 
+  const [rejectModal, setRejectModal] = useState(null); 
 
   const endpoint = mode === 'admin' ? '/properties/pending' : '/properties/my';
 
@@ -36,7 +36,7 @@ const PropertyRequests = ({ mode = 'admin' }) => {
         status,
         rejectedReason: reason,
       });
-      // Optimistic update
+      
       if (mode === 'admin') {
         setProperties((prev) => prev.filter((p) => p._id !== id));
       } else {
@@ -157,7 +157,7 @@ const PropertyRequests = ({ mode = 'admin' }) => {
                                text-green-600 hover:bg-green-500/25 text-xs font-semibold
                                rounded-lg transition-colors disabled:opacity-50"
                   >
-                    {action[p._id] === 'approved' ? '...' : '✓ Approve'}
+                    {action[p._id] === 'approved' ? '...' : ' Approve'}
                   </button>
                   <button
                     onClick={() => setRejectModal({ id: p._id, reason: '' })}
@@ -166,7 +166,7 @@ const PropertyRequests = ({ mode = 'admin' }) => {
                                text-red-600 hover:bg-red-500/20 text-xs font-semibold
                                rounded-lg transition-colors disabled:opacity-50"
                   >
-                    ✕ Reject
+                     Reject
                   </button>
                 </div>
               )}

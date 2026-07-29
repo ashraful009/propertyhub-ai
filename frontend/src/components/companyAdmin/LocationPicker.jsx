@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet';
 import L from 'leaflet';
 
-// ── Fix broken Leaflet marker icons in Vite ───────────────────────────────
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerIcon   from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -14,7 +13,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl:     markerShadow,
 });
 
-// ── Map click handler component ────────────────────────────────────────────
 const ClickHandler = ({ onPick }) => {
   useMapEvents({
     click: async (e) => {
@@ -22,8 +20,7 @@ const ClickHandler = ({ onPick }) => {
       onPick({ lat, lng, address: 'Fetching address...' });
 
       try {
-        // Nominatim reverse geocoding — free, no API key needed
-        // Added email parameter to comply with Nominatim Usage Policy and prevent 403 Forbidden
+
         const res = await fetch(
           `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&email=mdashrafulislam0807@gmail.com`,
           { headers: { 'Accept-Language': 'en' } }
@@ -38,7 +35,6 @@ const ClickHandler = ({ onPick }) => {
   return null;
 };
 
-// ── Auto center map when center prop changes ───────────────────────────────
 const MapUpdater = ({ center }) => {
   const map = useMap();
   useEffect(() => {
@@ -50,7 +46,7 @@ const MapUpdater = ({ center }) => {
 };
 
 const LocationPicker = ({ value, onChange }) => {
-  // Default center: Dhaka, Bangladesh
+  
   const DEFAULT_CENTER = [23.8103, 90.4125];
   const center = value?.lat ? [value.lat, value.lng] : DEFAULT_CENTER;
 

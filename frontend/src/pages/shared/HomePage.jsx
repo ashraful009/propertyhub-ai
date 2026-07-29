@@ -13,7 +13,6 @@ const CATEGORIES = [
   { key: 'land',       icon: '', label: 'Land',       gradient: 'from-green-600/25 to-green-900/20', border: 'hover:border-green-500/40' },
 ];
 
-// ── Counter animation hook ────────────────────────────────────────────────────
 const useCounter = (target, duration = 1500) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
@@ -40,7 +39,6 @@ const useCounter = (target, duration = 1500) => {
   return { count, ref };
 };
 
-// ── Stat item ─────────────────────────────────────────────────────────────────
 const StatItem = ({ target, suffix = '+', label }) => {
   const { count, ref } = useCounter(target);
   return (
@@ -53,7 +51,6 @@ const StatItem = ({ target, suffix = '+', label }) => {
   );
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
 const HomePage = () => {
   const navigate = useNavigate();
 
@@ -61,7 +58,6 @@ const HomePage = () => {
   const [properties,   setProperties]   = useState([]);
   const [propLoading,  setPropLoading]  = useState(true);
 
-  // Fetch featured properties
   useEffect(() => {
     axiosInstance.get('/properties/approved?limit=6')
       .then((r) => setProperties(r.data.data.properties))

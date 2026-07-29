@@ -1,16 +1,5 @@
 const PDFDocument = require('pdfkit');
 
-/**
- * generateInvoicePDF
- * Generates a styled invoice PDF in memory and returns a Buffer.
- *
- * @param {Object} opts
- * @param {Object} opts.booking     - Booking document (populated)
- * @param {Object} opts.property    - Property document
- * @param {Object} opts.company     - Company document
- * @param {Object} opts.customer    - User (customer) document
- * @returns {Promise<Buffer>}
- */
 const generateInvoicePDF = ({ booking, property, company, customer }) => {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
@@ -29,9 +18,8 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
     const SUCCESS   = '#16a34a';
 
     const fmt = (n) => `BDT ${Number(n || 0).toLocaleString('en-BD')}`;
-    const W   = 595 - 100; // usable width (A4 595pt minus margins)
+    const W   = 595 - 100; 
 
-    // ── Header Band ─────────────────────────────────────────────────────────
     doc.rect(0, 0, 595, 100).fill(DARK);
 
     doc.fillColor('#ffffff')
@@ -46,7 +34,6 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
        .fontSize(9)
        .text('House No. 2, Road No. 11, Block F, Banani, Dhaka-1213', 50, 76);
 
-    // Invoice label (top right)
     doc.fillColor('#ffffff')
        .fontSize(22).font('Helvetica-Bold')
        .text('INVOICE', 400, 32, { align: 'right', width: 145 });
@@ -56,11 +43,9 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
        .text(`Invoice #: ${booking._id.toString().slice(-8).toUpperCase()}`, 400, 60, { align: 'right', width: 145 })
        .text(`Date: ${new Date().toLocaleDateString('en-BD', { year: 'numeric', month: 'long', day: 'numeric' })}`, 400, 74, { align: 'right', width: 145 });
 
-    // ── Bill To / From Section ───────────────────────────────────────────────
     doc.fillColor(TEXT_DARK);
     const topY = 120;
 
-    // Left: Billed To
     doc.rect(50, topY, (W / 2) - 10, 90).fill(LIGHT_BG).stroke('#e2e8f0');
     doc.fillColor(TEXT_GRAY).fontSize(8).font('Helvetica-Bold')
        .text('BILLED TO', 62, topY + 10, { characterSpacing: 1 });
@@ -70,7 +55,6 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
        .text(customer?.email || '', 62, topY + 40)
        .text(customer?.phone || 'N/A', 62, topY + 54);
 
-    // Right: Vendor
     const rX = 50 + (W / 2) + 10;
     doc.rect(rX, topY, (W / 2) - 10, 90).fill(LIGHT_BG).stroke('#e2e8f0');
     doc.fillColor(TEXT_GRAY).fontSize(8).font('Helvetica-Bold')
@@ -81,7 +65,6 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
        .text(company?.email || '', rX + 12, topY + 40)
        .text(company?.phone || 'N/A', rX + 12, topY + 54);
 
-    // ── Property Details Section ─────────────────────────────────────────────
     const secY = topY + 110;
     doc.fillColor(PRIMARY).fontSize(12).font('Helvetica-Bold')
        .text('Property Details', 50, secY);
@@ -98,20 +81,17 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
       doc.fillColor(TEXT_DARK).fontSize(9).font('Helvetica-Bold').text(value, 220, y);
     });
 
-    // ── Financial Summary Table ──────────────────────────────────────────────
     const tY = secY + 110;
     doc.fillColor(PRIMARY).fontSize(12).font('Helvetica-Bold')
        .text('Payment Summary', 50, tY);
     doc.moveTo(50, tY + 16).lineTo(545, tY + 16).strokeColor('#e2e8f0').lineWidth(1).stroke();
 
-    // Table header
     const hY = tY + 24;
     doc.rect(50, hY, W, 22).fill(PRIMARY);
     doc.fillColor('#ffffff').fontSize(9).font('Helvetica-Bold')
        .text('Description',          62,  hY + 6)
        .text('Amount',               400, hY + 6, { width: 95, align: 'right' });
 
-    // Table rows
     const dueAmount   = (booking.totalPrice || 0) - (booking.bookingAmount || 0);
     const tableRows   = [
       ['Total Property Price',       fmt(booking.totalPrice)],
@@ -129,7 +109,6 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
          .text(amt, 400, ry + 7, { width: 95, align: 'right' });
     });
 
-    // Total paid row
     const tPaidY = hY + 22 + tableRows.length * 24;
     const paid   = booking.paymentStatus === 'fully_paid'
       ? booking.totalPrice
@@ -141,7 +120,6 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
        .text(paidLabel, 62, tPaidY + 8)
        .text(fmt(paid), 400, tPaidY + 8, { width: 95, align: 'right' });
 
-    // ── Status Badge ─────────────────────────────────────────────────────────
     const badgeY = tPaidY + 50;
     const statusColors = {
       fully_paid:   [SUCCESS, 'FULLY PAID'],
@@ -153,7 +131,6 @@ const generateInvoicePDF = ({ booking, property, company, customer }) => {
     doc.fillColor('#ffffff').fontSize(9).font('Helvetica-Bold')
        .text(badgeLabel, 50, badgeY + 7, { width: 120, align: 'center' });
 
-    // ── Footer ──────────────────────────────────────────────────────────────
     const footY = 750;
     doc.moveTo(50, footY).lineTo(545, footY).strokeColor('#e2e8f0').lineWidth(1).stroke();
     doc.fillColor(TEXT_GRAY).fontSize(8).font('Helvetica')

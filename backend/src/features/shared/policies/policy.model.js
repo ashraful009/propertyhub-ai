@@ -7,7 +7,7 @@ const policySchema = new mongoose.Schema(
       required: true,
       unique:   true,
       trim:     true,
-      // e.g. 'vendor', 'customer', 'seller'
+      
     },
     title: {
       type:    String,

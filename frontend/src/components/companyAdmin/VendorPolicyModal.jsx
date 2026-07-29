@@ -5,20 +5,18 @@ const VendorPolicyModal = ({ content, title, onAccept, onClose }) => {
   const [scrollPercent, setScrollPercent] = useState(0);
   const scrollRef = useRef(null);
 
-  // ── Scroll listener — enable Continue only when user reaches the bottom ──
   const handleScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
     const { scrollTop, scrollHeight, clientHeight } = el;
     const percent = Math.round(((scrollTop + clientHeight) / scrollHeight) * 100);
     setScrollPercent(Math.min(percent, 100));
-    // Give a 2px tolerance for sub-pixel rendering
+    
     if (scrollTop + clientHeight >= scrollHeight - 2) {
       setCanContinue(true);
     }
   };
 
-  // Check on mount in case content is short enough to not need scrolling
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;

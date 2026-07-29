@@ -232,10 +232,17 @@ const updatePropertyStatusService = async (id, status, rejectedReason) => {
 };
 
 const getApprovedPropertiesService = async (query) => {
-  const { city, category, limit = 12, page = 1 } = query;
+  const { city, category, minPrice, maxPrice, companyId, limit = 12, page = 1 } = query;
   const filter = { status: 'approved', isActive: true };
   if (city) filter.city = new RegExp(city, 'i');
   if (category) filter.category = category;
+  if (companyId) filter.companyId = companyId;
+  
+  if (minPrice || maxPrice) {
+    filter.price = {};
+    if (minPrice) filter.price.$gte = Number(minPrice);
+    if (maxPrice) filter.price.$lte = Number(maxPrice);
+  }
 
   const skip = (Number(page) - 1) * Number(limit);
   const properties = await findApprovedPropertiesWithFilters(filter, skip, Number(limit));

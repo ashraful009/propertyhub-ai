@@ -6,7 +6,7 @@ const commissionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Booking',
       required: true,
-      unique: true, // One commission per booking
+      unique: true, 
     },
     propertyId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -47,7 +47,6 @@ const commissionSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Indexes to speed up aggregation pipelines
 commissionSchema.index({ companyId: 1 });
 commissionSchema.index({ propertyId: 1 });
 commissionSchema.index({ category: 1 });

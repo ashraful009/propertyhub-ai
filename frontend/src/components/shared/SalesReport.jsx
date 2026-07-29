@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ── Date preset helpers ───────────────────────────────────────────────────────
 const toISO = (d) => d.toISOString().split('T')[0];
 
 const getPresetRange = (preset) => {
@@ -33,7 +32,6 @@ const STATUS_COLORS = {
 
 const CAT_ICONS = { apartment: '', villa: '', land: '' };
 
-// ─────────────────────────────────────────────────────────────────────────────
 const SalesReport = ({ mode = 'company' }) => {
   const [bookings,     setBookings]     = useState([]);
   const [loading,      setLoading]      = useState(false);

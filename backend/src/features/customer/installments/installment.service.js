@@ -312,10 +312,10 @@ const confirmInstallmentPaymentService = async (sessionId) => {
         booking: fullBooking,
         installment,
         pdfBuffer,
-      }).catch((e) => console.error('❌ Installment email error:', e.message));
+      }).catch((e) => console.error(' Installment email error:', e.message));
     }
   } catch (e) {
-    console.error('❌ Installment PDF/Email error (non-fatal):', e.message);
+    console.error(' Installment PDF/Email error (non-fatal):', e.message);
   }
 
   return { installment, alreadyConfirmed: false };

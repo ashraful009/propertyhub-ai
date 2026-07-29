@@ -23,11 +23,11 @@ const LoginPage = () => {
     setError('');
     try {
       const { data } = await axiosInstance.post('/auth/login', form);
-      login(data.data.user);       // Update AuthContext
-      // GuestRoute will redirect to dashboard automatically
+      login(data.data.user);       
+      
     } catch (err) {
       const msg = err.response?.data?.message || 'Login failed. Please try again.';
-      // If account not verified → go to verify page
+      
       if (err.response?.data?.data?.needsVerification) {
         navigate(`/verify-otp?email=${form.email}`);
         return;

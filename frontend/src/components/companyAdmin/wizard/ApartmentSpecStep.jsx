@@ -65,7 +65,7 @@ const ApartmentSpecStep = ({
           <div key={idx} className="bg-slate-50 border border-blue-100 rounded-xl p-5 relative">
             {flatTypes.length > 1 && (
               <button type="button" onClick={() => removeFlatType(idx)} className="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-red-500/20 text-red-600 hover:bg-red-500/30 text-sm">
-                ✕
+                
               </button>
             )}
             <p className="text-primary-600 text-xs font-semibold mb-4 uppercase tracking-wider">Type {idx + 1}</p>

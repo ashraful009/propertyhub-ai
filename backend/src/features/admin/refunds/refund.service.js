@@ -124,7 +124,7 @@ const requestRefundService = async (bookingId, userId) => {
     refundAmount,
     retentionAmount,
     amountPaid,
-  }).catch((e) => console.error('❌ Refund (customer) email failed:', e.message));
+  }).catch((e) => console.error(' Refund (customer) email failed:', e.message));
 
   if (booking.companyId?.email) {
     sendVendorRefundDeductionEmail({
@@ -134,7 +134,7 @@ const requestRefundService = async (bookingId, userId) => {
       customerName: booking.customerId.name,
       refundAmount,
       walletBalance: newBalance,
-    }).catch((e) => console.error('❌ Refund (vendor) email failed:', e.message));
+    }).catch((e) => console.error(' Refund (vendor) email failed:', e.message));
   }
 
   return { refundAmount, retentionAmount, retentionPct, refund, booking };

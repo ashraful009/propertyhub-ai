@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../features/shared/auth/user.model');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// protect — verifies the HttpOnly JWT cookie and attaches req.user
-// ─────────────────────────────────────────────────────────────────────────────
 const protect = async (req, res, next) => {
   let token = req.cookies?.token;
 
@@ -29,7 +26,7 @@ const protect = async (req, res, next) => {
       });
     }
 
-    req.user = user; // Attach user to request (sensitive fields stripped by toJSON)
+    req.user = user; 
     next();
   } catch (err) {
     return res.status(401).json({
@@ -39,17 +36,12 @@ const protect = async (req, res, next) => {
   }
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// authorize — checks req.user.roles against allowed roles
-// Usage: router.get('/admin', protect, authorize('Super Admin'), handler)
-// ─────────────────────────────────────────────────────────────────────────────
 const authorize = (...allowedRoles) => {
   return (req, res, next) => {
     if (!req.user) {
       return res.status(401).json({ success: false, message: 'Not authenticated' });
     }
 
-    // Check if the user holds at least one of the allowed roles
     const hasRole = req.user.roles.some((role) => allowedRoles.includes(role));
 
     if (!hasRole) {

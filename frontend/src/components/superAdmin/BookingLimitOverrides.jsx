@@ -2,15 +2,11 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// BookingLimitOverrides — Policy 3 Super Admin view: users who have hit their
-// active-booking cap, with the ability to grant a higher limit + reason.
-// ─────────────────────────────────────────────────────────────────────────────
 const BookingLimitOverrides = () => {
   const [users, setUsers]   = useState([]);
   const [loading, setLoading] = useState(true);
   const [baseLimit, setBaseLimit] = useState(5);
-  const [editing, setEditing] = useState(null); // userId being edited
+  const [editing, setEditing] = useState(null); 
   const [draft, setDraft]     = useState({ overrideLimit: '', reason: '' });
   const [busy, setBusy]       = useState(false);
 

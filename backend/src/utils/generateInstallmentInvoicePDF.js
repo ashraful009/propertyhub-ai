@@ -1,17 +1,5 @@
 const PDFDocument = require('pdfkit');
 
-/**
- * generateInstallmentInvoicePDF
- * Builds a per-installment payment receipt PDF in memory and returns a Buffer.
- *
- * @param {Object} opts
- * @param {Object} opts.booking      - Booking document (populated)
- * @param {Object} opts.installment  - Installment document
- * @param {Object} opts.property     - Property document
- * @param {Object} opts.company      - Company document
- * @param {Object} opts.customer     - User (customer) document
- * @returns {Promise<Buffer>}
- */
 const generateInstallmentInvoicePDF = ({ booking, installment, property, company, customer }) => {
   return new Promise((resolve, reject) => {
     const doc     = new PDFDocument({ margin: 50, size: 'A4' });
@@ -35,7 +23,6 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
     const fmtDate  = (d) => new Date(d).toLocaleDateString('en-BD', { year: 'numeric', month: 'long', day: 'numeric' });
     const shortId  = (id) => id?.toString().slice(-8).toUpperCase() || '—';
 
-    // ── Header Band ──────────────────────────────────────────────────────────
     doc.rect(0, 0, 595, 100).fill(DARK);
 
     doc.fillColor('#ffffff').fontSize(28).font('Helvetica-Bold')
@@ -54,7 +41,6 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
          350, 74, { align: 'right', width: 195 }
        );
 
-    // ── Bill To / Vendor ─────────────────────────────────────────────────────
     const topY = 120;
 
     doc.rect(50, topY, (W / 2) - 10, 90).fill(LIGHT_BG).stroke('#e2e8f0');
@@ -76,7 +62,6 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
        .text(company?.email || '', rX + 12, topY + 40)
        .text(company?.phone || 'N/A', rX + 12, topY + 54);
 
-    // ── Property / Plan Details ─────────────────────────────────────────────
     const secY = topY + 110;
     doc.fillColor(PRIMARY).fontSize(12).font('Helvetica-Bold')
        .text('Property & Installment Plan', 50, secY);
@@ -96,13 +81,11 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
       doc.fillColor(TEXT_DARK).fontSize(9).font('Helvetica-Bold').text(String(value), 220, y);
     });
 
-    // ── Installment-Specific Payment Summary ────────────────────────────────
     const tY = secY + 24 + planRows.length * 18 + 18;
     doc.fillColor(PRIMARY).fontSize(12).font('Helvetica-Bold')
        .text(`Installment ${installment.installmentNumber} of ${installment.totalInstallments}`, 50, tY);
     doc.moveTo(50, tY + 16).lineTo(545, tY + 16).strokeColor('#e2e8f0').lineWidth(1).stroke();
 
-    // Header row
     const hY = tY + 24;
     doc.rect(50, hY, W, 22).fill(PRIMARY);
     doc.fillColor('#ffffff').fontSize(9).font('Helvetica-Bold')
@@ -127,14 +110,12 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
          .text(amt, 400, ry + 7, { width: 95, align: 'right' });
     });
 
-    // Total paid row
     const tPaidY = hY + 22 + tableRows.length * 24;
     doc.rect(50, tPaidY, W, 28).fill(SUCCESS);
     doc.fillColor('#ffffff').fontSize(10).font('Helvetica-Bold')
        .text('AMOUNT PAID',           62,  tPaidY + 8)
        .text(fmt(installment.paidAmount), 400, tPaidY + 8, { width: 95, align: 'right' });
 
-    // Due-date strip
     const dY = tPaidY + 40;
     doc.fillColor(TEXT_GRAY).fontSize(9).font('Helvetica')
        .text('Due Date:', 50, dY);
@@ -146,7 +127,6 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
     doc.fillColor(TEXT_DARK).fontSize(9).font('Helvetica-Bold')
        .text(fmtDate(installment.paidAt || new Date()), 360, dY);
 
-    // Status badge
     const badgeY = dY + 24;
     const [badgeColor, badgeLabel] = wasLate
       ? [WARN, 'PAID (LATE)']
@@ -155,7 +135,6 @@ const generateInstallmentInvoicePDF = ({ booking, installment, property, company
     doc.fillColor('#ffffff').fontSize(9).font('Helvetica-Bold')
        .text(badgeLabel, 50, badgeY + 7, { width: 130, align: 'center' });
 
-    // ── Footer ──────────────────────────────────────────────────────────────
     const footY = 750;
     doc.moveTo(50, footY).lineTo(545, footY).strokeColor('#e2e8f0').lineWidth(1).stroke();
     doc.fillColor(TEXT_GRAY).fontSize(8).font('Helvetica')

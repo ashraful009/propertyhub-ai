@@ -73,7 +73,7 @@ const createCheckoutSessionService = async (data, userId, userEmail) => {
       bookingMoneyPercentage = policy.bookingMoneyPercentage;
     }
   } catch (e) {
-    // Ignore and use default
+    
   }
 
   let bookingAmount = Math.round(totalPrice * (bookingMoneyPercentage / 100));

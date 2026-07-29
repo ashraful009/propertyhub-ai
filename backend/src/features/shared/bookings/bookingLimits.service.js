@@ -2,21 +2,6 @@ const Booking               = require('./booking.model');
 const BookingLimitOverride  = require('../overrides/bookingLimitOverride.model');
 const PlatformSettings      = require('../../admin/settings/platformSettings.model');
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Policy 3 — Booking Limits Per User
-//
-// "Active booking" = not cancelled/rejected AND not yet fully paid.
-//   status ∈ {pending, confirmed}  AND  paymentStatus ≠ fully_paid
-//
-// Rules:
-//   • Per-vendor: a user may hold up to `maxActiveBookingsPerVendor` (default 2)
-//     active bookings with the SAME vendor — but only while NONE of them has a
-//     confirmed payment. Once at least one is paid (booking_paid/fully_paid),
-//     the cap no longer blocks (the exception in the spec).
-//   • Total: a user may hold up to `maxTotalActiveBookings` (default 5) active
-//     bookings across ALL vendors, unless a Super Admin override raises the cap.
-// ─────────────────────────────────────────────────────────────────────────────
-
 const ACTIVE_STATUS_FILTER = {
   status:        { $in: ['pending', 'confirmed'] },
   paymentStatus: { $ne: 'fully_paid' },
@@ -24,13 +9,6 @@ const ACTIVE_STATUS_FILTER = {
 
 const PAID_STATUSES = ['booking_paid', 'fully_paid'];
 
-/**
- * Compute a user's current booking-limit picture (optionally for a target vendor).
- *
- * @param {string} userId
- * @param {string} [companyId] - the vendor the user is trying to book from
- * @returns {Promise<Object>} a rich status object (see fields below)
- */
 const getLimitStatus = async (userId, companyId = null) => {
   const settings        = await PlatformSettings.getSettings();
   const perVendorLimit  = settings.maxActiveBookingsPerVendor;
@@ -64,16 +42,9 @@ const getLimitStatus = async (userId, companyId = null) => {
   };
 };
 
-/**
- * Decide whether a NEW booking from `companyId` is allowed for `userId`.
- *
- * @returns {Promise<{ allowed: boolean, reason?: string, code?: string, status: Object }>}
- *   code: 'VENDOR_LIMIT' | 'TOTAL_LIMIT' (when blocked)
- */
 const canCreateBooking = async (userId, companyId) => {
   const status = await getLimitStatus(userId, companyId);
 
-  // ── Total cap (across all vendors) ───────────────────────────────────────
   if (status.totalActive >= status.totalLimit) {
     return {
       allowed: false,
@@ -83,7 +54,6 @@ const canCreateBooking = async (userId, companyId) => {
     };
   }
 
-  // ── Per-vendor cap (Requires at least one booking to be fully paid to unblock new bookings) ──
   if (
     companyId &&
     status.vendorActive >= status.perVendorLimit

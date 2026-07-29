@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 
-// ── Helpers ────────────────────────────────────────────────────────────────
 const getInitials = (name = '') =>
   name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2) || 'U';
 
@@ -25,14 +24,12 @@ const shouldShowVendorBtn = (isAuthenticated, roles = []) => {
   return !roles.some((r) => vendorRoles.includes(r));
 };
 
-// ── Nav links (public) ─────────────────────────────────────────────────────
 const NAV_LINKS = [
   { label: 'Home',       path: '/' },
   { label: 'Properties', path: '/properties' },
   
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
 const Navbar = () => {
   const { user, isAuthenticated, loading, logout } = useAuth();
   const navigate = useNavigate();
@@ -43,7 +40,6 @@ const Navbar = () => {
 
   const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -54,14 +50,12 @@ const Navbar = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Add shadow on scroll
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close mobile menu on route change
   const handleNavClick = () => setMobileOpen(false);
 
   const handleLogout = async () => {

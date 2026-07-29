@@ -230,10 +230,10 @@ const confirmStripeBookingService = async (sessionId) => {
         company: fullBooking.companyId,
         booking: fullBooking,
         pdfBuffer,
-      }).catch((e) => console.error('❌ Invoice email error:', e.message));
+      }).catch((e) => console.error(' Invoice email error:', e.message));
     }
   } catch (emailErr) {
-    console.error('❌ PDF/Email generation error (non-fatal):', emailErr.message);
+    console.error(' PDF/Email generation error (non-fatal):', emailErr.message);
   }
 
   return { booking, message: 'Booking confirmed successfully' };

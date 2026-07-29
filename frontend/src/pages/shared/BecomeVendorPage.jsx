@@ -9,17 +9,15 @@ import LoadingScreen from '../../components/shared/LoadingScreen';
 const BecomeVendorPage = () => {
   const { user, isAuthenticated } = useAuth();
 
-  const [step,          setStep]          = useState('policy'); // 'policy' | 'form'
+  const [step,          setStep]          = useState('policy'); 
   const [policy,        setPolicy]        = useState(null);
   const [policyLoading, setPolicyLoading] = useState(true);
   const [policyError,   setPolicyError]   = useState('');
 
-  // Redirect if already a vendor/admin
   const vendorRoles = ['Super Admin', 'Company Admin', 'seller'];
   const isAlreadyVendor = user?.roles?.some((r) => vendorRoles.includes(r));
   if (isAlreadyVendor) return <Navigate to="/" replace />;
 
-  // Fetch vendor policy on mount
   useEffect(() => {
     const fetchPolicy = async () => {
       try {

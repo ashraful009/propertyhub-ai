@@ -1,11 +1,10 @@
 const mongoose = require('mongoose');
 
-// ── Flat Type Sub-document (Apartments) ───────────────────────────────────────
 const flatTypeSchema = new mongoose.Schema(
   {
-    label:       { type: String, default: '' },  // e.g. "Type A 1200 sft"
-    sqft:        { type: Number, default: 0  },  // square feet
-    pricePerUnit:{ type: Number, default: 0  },  // per unit price
+    label:       { type: String, default: '' },  
+    sqft:        { type: Number, default: 0  },  
+    pricePerUnit:{ type: Number, default: 0  },  
     bedrooms:    { type: Number, default: 0  },
     bathrooms:   { type: Number, default: 0  },
     kitchen:     { type: String, enum: ['Yes', 'No'], default: 'Yes' },
@@ -17,16 +16,14 @@ const flatTypeSchema = new mongoose.Schema(
   { _id: true }
 );
 
-// ── Villa Details Sub-document ────────────────────────────────────────────────
 const villaDetailsSchema = new mongoose.Schema(
   {
-    // Location
+    
     area:             { type: String, default: '' },
-    roadAccess:       { type: String, default: '' },   // distance from main road
+    roadAccess:       { type: String, default: '' },   
     neighborhood:     { type: String, enum: ['Residential', 'Resort'], default: 'Residential' },
 
-    // Property Overview
-    totalLandSize:    { type: Number, default: 0 },    // in Katha
+    totalLandSize:    { type: Number, default: 0 },    
     totalFloors:      { type: Number, default: 0 },
     bedrooms:         { type: Number, default: 0 },
     bathrooms:        { type: Number, default: 0 },
@@ -35,65 +32,56 @@ const villaDetailsSchema = new mongoose.Schema(
     kitchen:          { type: String, enum: ['Yes', 'No'], default: 'Yes' },
     description:      { type: String, default: '' },
 
-    // Construction Details
     constructionYear: { type: Number, default: 0 },
     developerName:    { type: String, default: '' },
-    materialsQuality: { type: String, default: '' },   // Tiles, Fittings, Wood, etc.
+    materialsQuality: { type: String, default: '' },   
     earthquakeResistant: { type: String, enum: ['Yes', 'No'], default: 'No' },
 
-    // Features & Amenities
     privatePool:      { type: String, enum: ['Yes', 'No'], default: 'No' },
     garden:           { type: String, enum: ['Yes', 'No'], default: 'No' },
     garage:           { type: String, enum: ['Yes', 'No'], default: 'No' },
     rooftopTerrace:   { type: String, enum: ['Yes', 'No'], default: 'No' },
     servantRoom:      { type: String, enum: ['Yes', 'No'], default: 'No' },
     securitySystem:   { type: String, enum: ['Yes', 'No'], default: 'No' },
-    // Price is stored on the root property document (property.price)
+    
   },
   { _id: false }
 );
 
-// ── Land Details Sub-document ─────────────────────────────────────────────────
 const landDetailsSchema = new mongoose.Schema(
   {
-    // Location
+    
     area:              { type: String, default: '' },
     roadAccess:        { type: String, enum: ['Yes', 'No'], default: 'No' },
 
-    // Land Size & Measurement
-    totalSize:         { type: Number, default: 0 },   // in Katha
+    totalSize:         { type: Number, default: 0 },   
     plotShape:         { type: String, enum: ['Square', 'Rectangle', 'Irregular'], default: 'Rectangle' },
 
-    // Land Type & Usage
     landType:          { type: String, enum: ['Residential', 'Commercial', 'Agricultural'], default: 'Residential' },
     fillingStatus:     { type: String, enum: ['Low land', 'Ready to use'], default: 'Ready to use' },
     constructionReady: { type: String, enum: ['Yes', 'No'], default: 'No' },
 
-    // Legal Information
     khatianNumber:     { type: String, default: '' },
     dagNumber:         { type: String, default: '' },
     landOwnership:     { type: String, enum: ['Single owner', 'Multiple owners'], default: 'Single owner' },
     anyDispute:        { type: String, enum: ['Yes', 'No'], default: 'No' },
 
-    // Utilities & Facilities
     electricityLine:   { type: String, enum: ['Yes', 'No'], default: 'No' },
     gasWaterConnection:{ type: String, enum: ['Yes', 'No'], default: 'No' },
     drainageSystem:    { type: String, enum: ['Yes', 'No'], default: 'No' },
 
-    // Nearby Facilities
     nearbySchool:      { type: String, default: '' },
     nearbyHospital:    { type: String, default: '' },
     nearbyMarket:      { type: String, default: '' },
     futureDevelopment: { type: String, default: '' },
-    // Price is stored on the root property document (property.price)
+    
   },
   { _id: false }
 );
 
-// ── Main Property Schema ──────────────────────────────────────────────────────
 const propertySchema = new mongoose.Schema(
   {
-    // ── Core Info ─────────────────────────────────────────────────────────────
+    
     title: {
       type:     String,
       required: [true, 'Property title is required'],
@@ -109,18 +97,15 @@ const propertySchema = new mongoose.Schema(
       min:      [0, 'Price cannot be negative'],
     },
 
-    // ── Category ──────────────────────────────────────────────────────────────
     category: {
       type:     String,
       enum:     ['apartment', 'villa', 'land'],
       required: true,
     },
 
-    // ── Media ─────────────────────────────────────────────────────────────────
-    mainImage:     { type: String, default: '' },   // homepage cover image
-    galleryImages: [String],                         // up to 10, for property details
+    mainImage:     { type: String, default: '' },   
+    galleryImages: [String],                         
 
-    // ── Ownership ─────────────────────────────────────────────────────────────
     companyId: {
       type:     mongoose.Schema.Types.ObjectId,
       ref:      'Company',
@@ -132,39 +117,31 @@ const propertySchema = new mongoose.Schema(
       required: true,
     },
 
-    // ── Status Lifecycle ──────────────────────────────────────────────────────
     status: {
       type:    String,
       enum:    ['pending', 'approved', 'rejected'],
       default: 'pending',
     },
-    isActive:       { type: Boolean, default: true  }, // vendor can hide/show
+    isActive:       { type: Boolean, default: true  }, 
     approvedAt:     { type: Date },
     rejectedReason: { type: String, default: '' },
 
-    // ── Location & Address ────────────────────────────────────────────────────
     address:  { type: String, required: true, trim: true },
     city:     { type: String, required: true, trim: true },
 
-    // ── Property Overview Fields ───────────────────────────────────────────────
-    totalUnitsCount: { type: Number, default: 0    }, // explicit total units
-    landSize:        { type: String, default: ''   }, // e.g. "5 Katha"
-    handoverTime:    { type: String, default: ''   }, // e.g. "Q4 2026"
+    totalUnitsCount: { type: Number, default: 0    }, 
+    landSize:        { type: String, default: ''   }, 
+    handoverTime:    { type: String, default: ''   }, 
 
-    // ── Building Config (drives Unit auto-generation — Apartments) ────────────
     totalFloors:   { type: Number, min: 1, default: 1 },
     unitsPerFloor: { type: Number, min: 1, default: 1 },
 
-    // ── Flat Types (Apartments) ───────────────────────────────────────────────
     flatTypes: [flatTypeSchema],
 
-    // ── Villa Details (Villas category only) ──────────────────────────────────
     villaDetails: { type: villaDetailsSchema, default: undefined },
 
-    // ── Land Details (Land category only) ─────────────────────────────────────
     landDetails: { type: landDetailsSchema, default: undefined },
 
-    // ── Map Location ──────────────────────────────────────────────────────────
     location: {
       lat: { type: Number, default: 0 },
       lng: { type: Number, default: 0 },
@@ -173,7 +150,6 @@ const propertySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Index for fast public listing
 propertySchema.index({ status: 1, isActive: 1, category: 1, city: 1 });
 
 module.exports = mongoose.model('Property', propertySchema);

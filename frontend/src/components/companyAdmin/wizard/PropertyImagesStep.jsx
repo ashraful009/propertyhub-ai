@@ -69,7 +69,7 @@ const PropertyImagesStep = ({
             <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-blue-100">
               <img src={src} alt="" className="w-full h-full object-cover" />
               <button type="button" onClick={() => removeGallery(i)} className="absolute top-1 right-1 w-5 h-5 bg-black/70 rounded-full text-gray-900 flex items-center justify-center opacity-0 group-hover:opacity-100 text-xs">
-                ✕
+                
               </button>
             </div>
           ))}

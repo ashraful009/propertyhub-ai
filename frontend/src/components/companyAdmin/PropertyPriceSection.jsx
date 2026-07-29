@@ -1,6 +1,5 @@
 
-// Binds to `form.price` (the root property price field) for all categories.
-// Villa and Land no longer carry a separate totalPrice in their subdocuments.
+
 const PropertyPriceSection = ({ category, price, onChange }) => {
   const isApartment = category === 'Apartments' || category === 'apartment';
   const isVilla     = category === 'Villas'     || category === 'villa';

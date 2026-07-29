@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import EditPropertyModal from './EditPropertyModal';
 
-// ─────────────────────────────────────────────────────────────────────────────
 const STATUS_BADGE = {
   pending:  'badge-pending',
   approved: 'badge-approved',
@@ -19,11 +18,6 @@ const CATEGORY_ICONS = {
   Apartments: '', Villas: '', Land: '',
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ManageProperties
-// mode = 'company' → shows only own properties (GET /properties/my)
-// mode = 'admin'   → shows ALL properties (GET /properties/all)
-// ─────────────────────────────────────────────────────────────────────────────
 const ManageProperties = ({ mode = 'company' }) => {
   const [properties,   setProperties]   = useState([]);
   const [filtered,     setFiltered]     = useState([]);
@@ -37,7 +31,6 @@ const ManageProperties = ({ mode = 'company' }) => {
 
   const endpoint = mode === 'admin' ? '/properties/all' : '/properties/my';
 
-  // ── Fetch ──────────────────────────────────────────────────────────────────
   const fetchProperties = useCallback(async () => {
     setLoading(true);
     try {
@@ -55,7 +48,6 @@ const ManageProperties = ({ mode = 'company' }) => {
 
   useEffect(() => { fetchProperties(); }, [fetchProperties]);
 
-  // ── Filters ────────────────────────────────────────────────────────────────
   useEffect(() => {
     let result = [...properties];
     if (filterStatus !== 'all') result = result.filter((p) => p.status === filterStatus);
@@ -70,7 +62,6 @@ const ManageProperties = ({ mode = 'company' }) => {
     setFiltered(result);
   }, [properties, filterStatus, filterActive, search]);
 
-  // ── Toggle Active ──────────────────────────────────────────────────────────
   const handleToggleActive = async (id) => {
     setProcessing((p) => ({ ...p, [id]: 'toggling' }));
     try {
@@ -85,7 +76,6 @@ const ManageProperties = ({ mode = 'company' }) => {
     }
   };
 
-  // ── Delete ─────────────────────────────────────────────────────────────────
   const handleDelete = async (id) => {
     setProcessing((p) => ({ ...p, [id]: 'deleting' }));
     try {
@@ -99,16 +89,12 @@ const ManageProperties = ({ mode = 'company' }) => {
     }
   };
 
-  // ── After edit ────────────────────────────────────────────────────────────
   const handleUpdated = (updated) => {
     setProperties((prev) =>
       prev.map((p) => p._id === updated._id ? updated : p)
     );
   };
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Skeleton
-  // ─────────────────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="space-y-3">
@@ -126,7 +112,6 @@ const ManageProperties = ({ mode = 'company' }) => {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
   return (
     <>
       {}

@@ -5,7 +5,6 @@ const { protect } = require('../../../middleware/auth.middleware');
 
 const router = express.Router();
 
-// ─── Validation Rules ─────────────────────────────────────────────────────────
 const registerValidation = [
   body('name')
     .trim()
@@ -28,25 +27,16 @@ const loginValidation = [
     .notEmpty().withMessage('Password is required'),
 ];
 
-// ─── Routes ───────────────────────────────────────────────────────────────────
-
-// POST /api/auth/register      — Register + send OTP email
 router.post('/register', registerValidation, register);
 
-// POST /api/auth/verify-otp    — Verify OTP → auto-login (sets cookie)
 router.post('/verify-otp', verifyOTP);
 
-// POST /api/auth/resend-otp    — Resend OTP to same email
 router.post('/resend-otp', resendOTP);
 
-// POST /api/auth/login         — Login → set HttpOnly cookie (token NOT in JSON body)
 router.post('/login', loginValidation, login);
 
-// GET  /api/auth/me            — Session persistence: verify cookie → return user
-//                                Call this in AuthContext useEffect on app mount
 router.get('/me', protect, getMe);
 
-// POST /api/auth/logout        — Clear token cookie
 router.post('/logout', protect, logout);
 
 module.exports = router;

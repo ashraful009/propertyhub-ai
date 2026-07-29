@@ -1,28 +1,63 @@
 const Groq = require('groq-sdk');
 const Property = require('../properties/property.model');
-const mongoose = require('mongoose');
+const BookingPolicy = require('../policies/bookingPolicy.model');
+const Policy = require('../policies/policy.model');
+const PlatformSettings = require('../../admin/settings/platformSettings.model');
+const { getApprovedPropertiesService } = require('../properties/property.service');
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-const getSimilarProperties = async (companyId, category, currentPropertyId) => {
+const executeSearchProperties = async (args) => {
   try {
-    const filter = {
-      status: 'approved',
-      isActive: true,
-      category,
-      _id: { $ne: currentPropertyId }
-    };
-    if (companyId) {
-      filter.companyId = companyId;
-    }
-    const properties = await Property.find(filter)
-      .select('title price address city category landSize totalFloors flatTypes villaDetails landDetails')
-      .limit(3)
-      .lean();
-    return properties;
-  } catch (error) {
-    console.error('Error fetching similar properties:', error);
+    const query = { limit: 5 };
+    if (args.category) query.category = args.category;
+    if (args.city) query.city = args.city;
+    if (args.minPrice) query.minPrice = args.minPrice;
+    if (args.maxPrice) query.maxPrice = args.maxPrice;
+    if (args.companyId) query.companyId = args.companyId;
+
+    const result = await getApprovedPropertiesService(query);
+    return result.properties.map(p => ({
+      _id: p._id,
+      title: p.title,
+      price: p.price,
+      city: p.city,
+      category: p.category,
+      mainImage: p.mainImage,
+      bookingMoneyPercentage: p.bookingMoneyPercentage,
+      bookingMoneyAmount: p.bookingMoneyAmount
+    }));
+  } catch {
     return [];
+  }
+};
+
+const executeGetPolicyInfo = async (args, property) => {
+  try {
+    if (args.topic === 'booking') {
+      const companyId = property.companyId?._id || property.companyId;
+      const policy = await BookingPolicy.findOne({ companyId, category: property.category }).lean();
+      const pct = policy ? policy.bookingMoneyPercentage : 20;
+      return `Booking Money Percentage: ${pct}%. Flow: Pending -> Booking Paid (partially) -> Fully Paid -> Confirmed. KYC and docs may be required.`;
+    }
+    if (args.topic === 'installment') {
+      return "Max 24 installments supported. Extra charge may apply. Plans are configured after booking is confirmed.";
+    }
+    if (args.topic === 'refund') {
+      const settings = await PlatformSettings.getSettings();
+      const pct = settings?.refundRetentionPercentage ?? 20;
+      const days = settings?.refundWindowDays ?? 30;
+      return `Refund Window: ${days} days. Retention Percentage: ${pct}%.`;
+    }
+    if (args.topic === 'general') {
+      const policy = await Policy.findOne({ roleTarget: 'customer' }).lean();
+      if (!policy) return "No general policy found.";
+      const text = policy.content.replace(/<[^>]*>?/gm, '');
+      return text.substring(0, 800) + (text.length > 800 ? '...' : '');
+    }
+    return "Unknown topic.";
+  } catch {
+    return "Error fetching policy.";
   }
 };
 
@@ -41,51 +76,60 @@ const streamPropertyChat = async (req, res) => {
   }
 
   try {
-    // 1. Fetch Property Data
     const property = await Property.findById(id).populate('companyId', 'name email phone').lean();
     if (!property) {
       res.write('data: {"error": "Property not found"}\n\n');
       return res.end();
     }
 
-    // 2. Build System Prompt
-    const systemPrompt = `
-You are an expert Real Estate AI Assistant for the platform FlatSell.
-You are currently helping a user who is viewing a specific property.
-ONLY answer questions related to this specific property. 
-If the user asks about politics, sports, or other unrelated topics, politely refuse and guide them back to real estate.
-If you do not know the answer based on the property details provided below, DO NOT invent information. Say "এই তথ্যটা আমার কাছে নেই, এজেন্টের সাথে যোগাযোগ করুন".
-For any booking or payment related queries, advise guest users to log in.
-Always respond in the language the user is speaking (Bengali/Banglish/English).
+    const systemPrompt = `You are an Expert Property Consultant for FlatSell.
+You are helping a user viewing a specific property. Answer property questions using the provided context.
+If asked about budget, categories (apartment/villa/land), or locations, proactively ask clarifying questions (e.g. budget limit) or use the search_properties tool to find matching properties. NEVER mix categories (if user asks for a villa, do not show apartments unless requested).
+Suggest 2-3 properties when appropriate, summarizing price, location, and booking money.
+For policies (booking/installment/refund), use the get_policy_info tool. NEVER guess percentages or rules.
+For any booking/payment actions, advise guest users to log in.
+Always respond in Bangla (বাংলা) regardless of what language the user's question is in. Never respond in English or mixed Banglish, even if the user writes in English. Refuse off-topic questions politely.
 
-PROPERTY DETAILS:
+CURRENT PROPERTY CONTEXT:
 Title: ${property.title}
 Category: ${property.category}
 Price: BDT ${property.price}
 Address: ${property.address}, ${property.city}
 Description: ${property.description}
-Company/Seller: ${property.companyId?.name} (Phone: ${property.companyId?.phone})
-
-Category Specific Details:
+Company: ${property.companyId?.name} (Phone: ${property.companyId?.phone})
 ${property.category === 'apartment' ? JSON.stringify({ totalFloors: property.totalFloors, unitsPerFloor: property.unitsPerFloor, flatTypes: property.flatTypes }) : ''}
 ${property.category === 'villa' ? JSON.stringify(property.villaDetails) : ''}
-${property.category === 'land' ? JSON.stringify(property.landDetails) : ''}
-`;
+${property.category === 'land' ? JSON.stringify(property.landDetails) : ''}`;
 
-    // 3. Define Tool
     const tools = [
       {
         type: 'function',
         function: {
-          name: 'get_similar_properties',
-          description: 'Suggest similar properties in the same category (and optionally same company).',
+          name: 'search_properties',
+          description: 'Search for approved properties based on budget, category, city, or company.',
           parameters: {
             type: 'object',
             properties: {
-              companyId: { type: 'string', description: 'The ID of the company' },
-              category: { type: 'string', description: 'The property category (apartment, villa, land)' }
+              minPrice: { type: 'number' },
+              maxPrice: { type: 'number' },
+              category: { type: 'string', enum: ['apartment', 'villa', 'land'] },
+              city: { type: 'string' },
+              companyId: { type: 'string' }
+            }
+          }
+        }
+      },
+      {
+        type: 'function',
+        function: {
+          name: 'get_policy_info',
+          description: 'Fetch official rules and data regarding bookings, installments, refunds, or general policies.',
+          parameters: {
+            type: 'object',
+            properties: {
+              topic: { type: 'string', enum: ['booking', 'installment', 'refund', 'general'] }
             },
-            required: ['category']
+            required: ['topic']
           }
         }
       }
@@ -97,97 +141,75 @@ ${property.category === 'land' ? JSON.stringify(property.landDetails) : ''}
       { role: 'user', content: message }
     ];
 
-    // 4. Initial Groq API Call
-    let stream = await groq.chat.completions.create({
-      messages,
-      model: 'llama-3.3-70b-versatile',
-      tools,
-      tool_choice: 'auto',
-      stream: true,
-    });
+    for (let turn = 0; turn < 5; turn++) {
+      const stream = await groq.chat.completions.create({
+        messages,
+        model: 'llama-3.3-70b-versatile',
+        tools,
+        tool_choice: 'auto',
+        stream: true,
+      });
 
-    let toolCallName = '';
-    let toolCallArgs = '';
-    let toolCallId = '';
-    let isToolCall = false;
+      let hasToolCalls = false;
+      let toolCalls = {};
 
-    for await (const chunk of stream) {
-      const delta = chunk.choices[0]?.delta || {};
-
-      if (delta.tool_calls && delta.tool_calls.length > 0) {
-        isToolCall = true;
-        const tc = delta.tool_calls[0];
-        if (tc.id) toolCallId = tc.id;
-        if (tc.function?.name) toolCallName = tc.function.name;
-        if (tc.function?.arguments) toolCallArgs += tc.function.arguments;
-      } else if (delta.content && !isToolCall) {
-        // Stream text immediately
-        const safeContent = JSON.stringify({ content: delta.content });
-        res.write(`data: ${safeContent}\n\n`);
-      }
-    }
-
-    // 5. Handle Tool Execution
-    if (isToolCall && toolCallName === 'get_similar_properties') {
-      try {
-        const args = JSON.parse(toolCallArgs || '{}');
-        // We use the current property's companyId if they just say "similar properties"
-        const compId = args.companyId || property.companyId?._id?.toString();
-        const cat = args.category || property.category;
+      for await (const chunk of stream) {
+        const delta = chunk.choices[0]?.delta || {};
         
-        const similarProps = await getSimilarProperties(compId, cat, property._id);
-        
-        // Append assistant's tool call request
-        messages.push({
-          role: 'assistant',
-          tool_calls: [
-            {
-              id: toolCallId,
-              type: 'function',
-              function: { name: toolCallName, arguments: toolCallArgs }
+        if (delta.tool_calls) {
+          hasToolCalls = true;
+          for (const tc of delta.tool_calls) {
+            if (!toolCalls[tc.index]) {
+              toolCalls[tc.index] = {
+                id: tc.id,
+                type: 'function',
+                function: { name: tc.function?.name || '', arguments: tc.function?.arguments || '' }
+              };
+            } else {
+              if (tc.function?.name) toolCalls[tc.index].function.name += tc.function.name;
+              if (tc.function?.arguments) toolCalls[tc.index].function.arguments += tc.function.arguments;
             }
-          ]
-        });
+          }
+        } else if (delta.content && !hasToolCalls) {
+          res.write(`data: ${JSON.stringify({ content: delta.content })}\n\n`);
+        }
+      }
 
-        // Append tool result
+      if (!hasToolCalls) break;
+
+      const toolCallsArray = Object.values(toolCalls);
+      messages.push({ role: 'assistant', tool_calls: toolCallsArray });
+
+      for (const tc of toolCallsArray) {
+        let result;
+        try {
+          const args = JSON.parse(tc.function.arguments || '{}');
+          if (tc.function.name === 'search_properties') {
+            result = await executeSearchProperties(args);
+          } else if (tc.function.name === 'get_policy_info') {
+            result = await executeGetPolicyInfo(args, property);
+          } else {
+            result = { error: 'Unknown tool' };
+          }
+        } catch {
+          result = { error: 'Failed to execute tool' };
+        }
         messages.push({
           role: 'tool',
-          tool_call_id: toolCallId,
-          name: toolCallName,
-          content: JSON.stringify(similarProps)
+          tool_call_id: tc.id,
+          name: tc.function.name,
+          content: JSON.stringify(result)
         });
-
-        // 6. Second Stream with tool results
-        const secondStream = await groq.chat.completions.create({
-          messages,
-          model: 'llama-3.3-70b-versatile',
-          stream: true,
-        });
-
-        for await (const chunk of secondStream) {
-          const content = chunk.choices[0]?.delta?.content || '';
-          if (content) {
-            const safeContent = JSON.stringify({ content });
-            res.write(`data: ${safeContent}\n\n`);
-          }
-        }
-      } catch (err) {
-        console.error('Tool execution error:', err);
-        const safeError = JSON.stringify({ content: '\n[Error fetching similar properties]' });
-        res.write(`data: ${safeError}\n\n`);
       }
     }
 
     res.write('data: {"done": true}\n\n');
     res.end();
 
-  } catch (error) {
-    console.error('Chatbot Stream Error:', error);
-    res.write(`data: {"error": "Failed to generate response."}\n\n`);
+  } catch {
+    res.write('data: {"error": "Failed to generate response."}\n\n');
     res.end();
   }
 };
 
-module.exports = {
-  streamPropertyChat
-};
+module.exports = { streamPropertyChat };

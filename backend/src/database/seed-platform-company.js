@@ -1,8 +1,4 @@
-/**
- * seed-platform-company.js
- * Run once: node seed-platform-company.js
- * Creates a "FlatSell Platform" system company owned by the Super Admin user.
- */
+
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User     = require('./src/features/auth/user.model');
@@ -38,6 +34,6 @@ const Company  = require('./src/features/companies/company.model');
     location:     { address: '', lat: 0, lng: 0 },
   });
 
-  console.log(`✅ Created "FlatSell Platform" company (id: ${company._id})`);
+  console.log(` Created "FlatSell Platform" company (id: ${company._id})`);
   await mongoose.disconnect();
 })();

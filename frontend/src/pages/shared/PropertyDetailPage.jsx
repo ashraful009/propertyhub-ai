@@ -5,7 +5,6 @@ import axiosInstance from '../../api/axiosInstance';
 import UnitVisualizer from '../../components/customer/UnitVisualizer';
 import UnitDetailModal from '../../components/customer/UnitDetailModal';
 
-// Modular components
 import PropertyDetailSkeleton from '../../components/customer/PropertyDetailSkeleton';
 import PropertyHeroGallery from '../../components/customer/PropertyHeroGallery';
 import PropertyQuickStats from '../../components/customer/PropertyQuickStats';
@@ -223,7 +222,7 @@ const PropertyDetailPage = () => {
         />
       )}
 
-      {/* AI Chatbot */}
+      {}
       <PropertyChatbot propertyId={property._id} />
     </div>
   );

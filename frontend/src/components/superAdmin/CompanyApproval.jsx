@@ -11,8 +11,8 @@ const STATUS_COLORS = {
 const CompanyApproval = () => {
   const [companies, setCompanies] = useState([]);
   const [loading,   setLoading]   = useState(true);
-  const [viewDoc,   setViewDoc]   = useState(null); // PDF URL
-  const [loadingIds, setLoadingIds] = useState(new Set()); // track per-company loading
+  const [viewDoc,   setViewDoc]   = useState(null); 
+  const [loadingIds, setLoadingIds] = useState(new Set()); 
 
   useEffect(() => {
     fetchCompanies();
@@ -42,7 +42,6 @@ const CompanyApproval = () => {
     }
   };
 
-  // Determine if the document URL is an image or PDF
   const isImageUrl = (url) => {
     if (!url) return false;
     const lower = url.toLowerCase();
@@ -84,13 +83,13 @@ const CompanyApproval = () => {
                   onClick={() => handleStatusUpdate(c._id, 'approved')}
                   disabled={loadingIds.has(c._id)}
                   className="btn-primary py-1.5 px-4 text-sm bg-emerald-600 border-none hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {loadingIds.has(c._id) ? 'Approving...' : '✓ Approve'}
+                  {loadingIds.has(c._id) ? 'Approving...' : ' Approve'}
                 </button>
                 <button 
                   onClick={() => handleStatusUpdate(c._id, 'rejected')}
                   disabled={loadingIds.has(c._id)}
                   className="btn-secondary py-1.5 px-4 text-sm text-red-500 hover:bg-red-500/10 disabled:opacity-50 disabled:cursor-not-allowed">
-                  {loadingIds.has(c._id) ? 'Processing...' : '✕ Reject'}
+                  {loadingIds.has(c._id) ? 'Processing...' : ' Reject'}
                 </button>
               </div>
             )}
@@ -112,7 +111,7 @@ const CompanyApproval = () => {
                    className="text-primary-600 text-sm hover:underline">
                   Open in New Tab
                 </a>
-                <button onClick={() => setViewDoc(null)} className="text-gray-500 hover:text-gray-900 text-lg">✕</button>
+                <button onClick={() => setViewDoc(null)} className="text-gray-500 hover:text-gray-900 text-lg"></button>
               </div>
             </div>
 

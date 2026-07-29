@@ -6,7 +6,6 @@ import { toast } from 'react-hot-toast';
 import InstallmentSetupModal from '../../components/companyAdmin/InstallmentSetupModal';
 import InstallmentListModal from '../../components/customer/InstallmentListModal';
 
-// Modular Components
 import CustomerDashboardHeader from '../../components/customer/CustomerDashboardHeader';
 import BookingLimitUsage from '../../components/customer/BookingLimitUsage';
 import BookingItemCard from '../../components/customer/BookingItemCard';
@@ -25,7 +24,6 @@ const PAYMENT_CONFIG = {
   paid:         { label: 'Paid',         color: 'text-emerald-600', icon: '' },
 };
 
-// Whole months between a date and now
 const monthsSince = (from) => {
   if (!from) return 0;
   const a = new Date(from);
@@ -47,15 +45,13 @@ const CustomerDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [payingDue, setPayingDue] = useState(null);
-  const [refunding, setRefunding] = useState(null); // bookingId being refunded
+  const [refunding, setRefunding] = useState(null); 
 
-  // Policy settings + booking-limit usage
   const [settings, setSettings] = useState(null);
   const [limit, setLimit]       = useState(null);
 
-  // Installment modals
-  const [setupBooking, setSetupBooking] = useState(null);  // booking object → opens setup modal
-  const [listBookingId, setListBookingId] = useState(null); // bookingId → opens list modal
+  const [setupBooking, setSetupBooking] = useState(null);  
+  const [listBookingId, setListBookingId] = useState(null); 
 
   const fetchBookings = async () => {
     try {

@@ -2,8 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ─── Constants ────────────────────────────────────────────────────────────────
-
 const DATE_PRESETS = [
   { key: 'all',        label: 'All Time'   },
   { key: 'today',      label: 'Today'      },
@@ -12,8 +10,6 @@ const DATE_PRESETS = [
   { key: 'this_year',  label: 'This Year'  },
   { key: 'custom',     label: 'Custom'     },
 ];
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const formatCurrency = (amount) => `৳${Number(amount || 0).toLocaleString()}`;
 
@@ -28,45 +24,34 @@ const toQueryString = ({ filterType, startDate, endDate, companyId }) => {
   return p.toString();
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
 const MarginTracking = () => {
-  // ── Overview & company list ──────────────────────────────────────────────
+  
   const [overview,   setOverview]   = useState({ totalCommission: 0, totalSalesVolume: 0, totalBookings: 0 });
   const [companies,  setCompanies]  = useState([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  // ── Drill-down (existing Level-3 panel) ─────────────────────────────────
   const [selectedCompany,    setSelectedCompany]    = useState(null);
   const [companyProperties,  setCompanyProperties]  = useState([]);
   const [loadingProperties,  setLoadingProperties]  = useState(false);
 
-  // ── Filter state (controls both on-screen data and PDF download) ─────────
   const [filterType,  setFilterType]  = useState('all');
   const [startDate,   setStartDate]   = useState('');
   const [endDate,     setEndDate]     = useState('');
   const [reportCompanyId, setReportCompanyId] = useState('');
 
-  // ── Dropdown data ────────────────────────────────────────────────────────
-  const [allCompanies, setAllCompanies] = useState([]); // loaded once for the dropdown
+  const [allCompanies, setAllCompanies] = useState([]); 
 
-  // ── Download state ───────────────────────────────────────────────────────
   const [downloading, setDownloading] = useState(false);
 
-  // ── Validation ───────────────────────────────────────────────────────────
   const [filterError, setFilterError] = useState('');
 
-  // ─── Applied filters (only committed on Apply click) ─────────────────────
   const [applied, setApplied] = useState({
     filterType: 'all', startDate: '', endDate: '', companyId: '',
   });
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Data fetching
-  // ─────────────────────────────────────────────────────────────────────────
-
   const fetchOverview = useCallback(async (filters) => {
     try {
-      const qs = toQueryString({ ...filters, companyId: '' }); // overview ignores company filter
+      const qs = toQueryString({ ...filters, companyId: '' }); 
       const { data } = await axiosInstance.get(`/commissions/overview${qs ? `?${qs}` : ''}`);
       setOverview(data.data);
     } catch {
@@ -76,7 +61,7 @@ const MarginTracking = () => {
 
   const fetchCompanies = useCallback(async (filters) => {
     try {
-      const qs = toQueryString({ ...filters, companyId: '' }); // company list ignores company filter
+      const qs = toQueryString({ ...filters, companyId: '' }); 
       const { data } = await axiosInstance.get(`/commissions/companies${qs ? `?${qs}` : ''}`);
       setCompanies(data.data.companies || []);
     } catch {
@@ -84,13 +69,12 @@ const MarginTracking = () => {
     }
   }, []);
 
-  // Load once without filters — used to populate the "Company" dropdown
   const fetchAllCompaniesForDropdown = useCallback(async () => {
     try {
       const { data } = await axiosInstance.get('/commissions/companies');
       setAllCompanies(data.data.companies || []);
     } catch {
-      // non-critical — dropdown just stays empty
+      
     }
   }, []);
 
@@ -108,12 +92,10 @@ const MarginTracking = () => {
     }
   };
 
-  // ─── Initial load ─────────────────────────────────────────────────────────
   useEffect(() => {
     fetchAllCompaniesForDropdown();
   }, [fetchAllCompaniesForDropdown]);
 
-  // ─── Re-fetch when applied filters change ────────────────────────────────
   useEffect(() => {
     setLoadingData(true);
     setSelectedCompany(null);
@@ -125,15 +107,11 @@ const MarginTracking = () => {
     ]).finally(() => setLoadingData(false));
   }, [applied, fetchOverview, fetchCompanies]);
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Filter actions
-  // ─────────────────────────────────────────────────────────────────────────
-
   const handlePresetClick = (key) => {
     setFilterType(key);
     setFilterError('');
     if (key !== 'custom') {
-      // Preset ranges apply immediately (no date inputs needed)
+      
       setStartDate('');
       setEndDate('');
       setApplied({ filterType: key, startDate: '', endDate: '', companyId: reportCompanyId });
@@ -155,7 +133,7 @@ const MarginTracking = () => {
 
   const handleCompanyFilterChange = (id) => {
     setReportCompanyId(id);
-    // For non-custom ranges apply immediately; custom only applies on button
+    
     if (filterType !== 'custom') {
       setApplied((prev) => ({ ...prev, companyId: id }));
     }
@@ -170,12 +148,8 @@ const MarginTracking = () => {
     setApplied({ filterType: 'all', startDate: '', endDate: '', companyId: '' });
   };
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // PDF download (uses applied filters + reportCompanyId)
-  // ─────────────────────────────────────────────────────────────────────────
-
   const handleDownloadMarginReport = async () => {
-    // Validate custom range before allowing download
+    
     if (filterType === 'custom') {
       if (!startDate || !endDate) {
         setFilterError('Please apply a valid custom date range before downloading.');
@@ -217,14 +191,9 @@ const MarginTracking = () => {
     }
   };
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Derived UI helpers
-  // ─────────────────────────────────────────────────────────────────────────
-
   const isFiltered = applied.filterType !== 'all' || applied.companyId;
   const selectedCompanyName = allCompanies.find((c) => c._id === reportCompanyId)?.companyName || '';
 
-  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <div className="space-y-6">
 
@@ -493,7 +462,7 @@ const MarginTracking = () => {
                   className="text-gray-500 hover:text-gray-900 text-xs px-2 py-1
                              rounded bg-slate-50 hover:bg-blue-50 transition-colors"
                 >
-                  Close ✕
+                  Close 
                 </button>
               </div>
 

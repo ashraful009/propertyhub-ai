@@ -2,11 +2,6 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// PolicySettings — Super Admin editor for the platform-wide policy thresholds.
-// Lets the admin retune every policy value (3 months, 20%, limit 5, …) WITHOUT
-// a code change, satisfying the "General Requirements" of all three policies.
-// ─────────────────────────────────────────────────────────────────────────────
 const FIELDS = [
   { key: 'inactivityWarnMonths',       label: 'Inactivity Warning (months)',     hint: 'Send the warning email after this many months of no payment', group: 'Policy 1 — Auto-Cancellation' },
   { key: 'inactivityCancelMonths',     label: 'Inactivity Cancellation (months)', hint: 'Auto-cancel (no refund) after this many months of no payment', group: 'Policy 1 — Auto-Cancellation' },

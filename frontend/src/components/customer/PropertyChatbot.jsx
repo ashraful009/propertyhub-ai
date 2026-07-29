@@ -26,10 +26,10 @@ const PropertyChatbot = ({ propertyId }) => {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {/* Chat Window */}
+      {}
       {isOpen && (
         <div className="bg-white w-[320px] sm:w-[380px] h-[450px] shadow-2xl rounded-2xl border border-gray-100 flex flex-col mb-4 overflow-hidden animate-fade-in-up">
-          {/* Header */}
+          {}
           <div className="bg-primary-600 text-white p-4 flex justify-between items-center rounded-t-2xl">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-primary-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,11 +44,11 @@ const PropertyChatbot = ({ propertyId }) => {
             </button>
           </div>
 
-          {/* Messages */}
+          {}
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50">
             {messages.length === 0 ? (
               <div className="text-center text-gray-500 text-sm mt-4">
-                👋 Hello! How can I help you with this property?
+                 Hello! How can I help you with this property?
                 
                 <div className="mt-6 flex flex-col gap-2">
                   {SUGGESTIONS.map((text, idx) => (
@@ -83,7 +83,7 @@ const PropertyChatbot = ({ propertyId }) => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input Box */}
+          {}
           <div className="p-3 bg-white border-t border-gray-100">
             <form onSubmit={handleSubmit} className="relative flex items-center">
               <input
@@ -108,7 +108,7 @@ const PropertyChatbot = ({ propertyId }) => {
         </div>
       )}
 
-      {/* Floating Toggle Button */}
+      {}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-14 h-14 bg-primary-600 hover:bg-primary-700 shadow-xl shadow-primary-600/20 rounded-full flex items-center justify-center text-white transition-transform hover:scale-105 active:scale-95"

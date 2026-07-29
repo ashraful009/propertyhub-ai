@@ -107,7 +107,7 @@ const updateCompanyStatusService = async (id, status, rejectedReason) => {
       });
       emailSent = true;
     } catch (emailErr) {
-      console.error(`❌ Failed to send vendor approval email to ${vendorEmail}:`, emailErr.message);
+      console.error(` Failed to send vendor approval email to ${vendorEmail}:`, emailErr.message);
     }
   }
 

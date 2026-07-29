@@ -41,7 +41,7 @@ const verifyOTP = async (req, res, next) => {
     const { email, otp } = req.body;
     const user = await verifyOTPService(email, otp);
     sendTokenCookie(res, user);
-    return successResponse(res, { user }, 'Email verified successfully! Welcome to FlatSell 🎉', 200);
+    return successResponse(res, { user }, 'Email verified successfully! Welcome to FlatSell ', 200);
   } catch (error) {
     next(error);
   }

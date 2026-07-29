@@ -2,14 +2,12 @@ const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer');
 
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key:    process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
   timeout: 120000, 
 });
-
 
 const imageStorage = new CloudinaryStorage({
   cloudinary,
@@ -20,7 +18,6 @@ const imageStorage = new CloudinaryStorage({
     transformation:  [{ width: 1200, crop: 'limit', quality: 'auto' }],
   }),
 });
-
 
 const documentStorage = new CloudinaryStorage({
   cloudinary,
@@ -35,7 +32,6 @@ const documentStorage = new CloudinaryStorage({
   },
 });
 
-
 const bookingDocStorage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
@@ -47,7 +43,6 @@ const bookingDocStorage = new CloudinaryStorage({
     };
   },
 });
-
 
 const uploadImage = multer({
   storage: imageStorage,

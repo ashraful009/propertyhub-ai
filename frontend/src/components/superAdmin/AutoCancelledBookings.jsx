@@ -2,10 +2,6 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// AutoCancelledBookings — Policy 1 Super Admin view: a filterable list of
-// cancelled bookings (auto inactivity / manual / refund-driven).
-// ─────────────────────────────────────────────────────────────────────────────
 const FILTERS = [
   { id: 'inactivity',       label: 'Auto (Inactivity)' },
   { id: 'refund_requested', label: 'Refund-Cancelled'  },

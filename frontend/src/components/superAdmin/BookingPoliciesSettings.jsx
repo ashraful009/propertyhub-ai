@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Field definitions grouped by section
-// ─────────────────────────────────────────────────────────────────────────────
 const FIELD_SECTIONS = [
   {
     id: 'personal',
@@ -83,20 +80,15 @@ const CATEGORIES = [
   { key: 'land',      label: 'Land',       icon: '', color: 'from-amber-600 to-amber-800', border: 'border-amber-500/30', activeBg: 'bg-amber-500/15', activeText: 'text-amber-600' },
 ];
 
-// ─────────────────────────────────────────────────────────────────────────────
-// BookingPoliciesSettings
-// ─────────────────────────────────────────────────────────────────────────────
 const BookingPoliciesSettings = () => {
   const [activeCategory, setActiveCategory] = useState('apartment');
   const [policies, setPolicies]     = useState({ apartment: null, villa: null, land: null });
   const [loading, setLoading]       = useState(true);
   const [saving, setSaving]         = useState(false);
 
-  // Local form state for the active category
   const [percentage, setPercentage] = useState(20);
   const [fields, setFields]         = useState({});
 
-  // ── Fetch policies on mount ─────────────────────────────────────────────
   useEffect(() => {
     const fetchPolicies = async () => {
       try {
@@ -111,7 +103,6 @@ const BookingPoliciesSettings = () => {
     fetchPolicies();
   }, []);
 
-  // ── Sync local state when switching category ────────────────────────────
   useEffect(() => {
     const policy = policies[activeCategory];
     if (policy) {
@@ -123,12 +114,10 @@ const BookingPoliciesSettings = () => {
     }
   }, [activeCategory, policies]);
 
-  // ── Toggle a field ──────────────────────────────────────────────────────
   const toggleField = (key) => {
     setFields((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // ── Select / Deselect all ───────────────────────────────────────────────
   const selectAll = () => {
     const allFields = {};
     FIELD_SECTIONS.forEach((section) => {
@@ -141,11 +130,9 @@ const BookingPoliciesSettings = () => {
     setFields({});
   };
 
-  // ── Count selected ─────────────────────────────────────────────────────
   const totalFields = FIELD_SECTIONS.reduce((acc, s) => acc + s.fields.length, 0);
   const selectedCount = Object.values(fields).filter(Boolean).length;
 
-  // ── Save ────────────────────────────────────────────────────────────────
   const handleSave = async () => {
     setSaving(true);
     try {

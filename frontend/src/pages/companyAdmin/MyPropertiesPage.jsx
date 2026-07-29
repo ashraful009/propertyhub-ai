@@ -7,7 +7,7 @@ const PAYMENT_STATUS_CONFIG = {
   unpaid:       { label: 'Unpaid',       color: 'text-amber-600',   bg: 'bg-amber-500/15 border-amber-500/30',   icon: '' },
   booking_paid: { label: 'Booking Paid', color: 'text-blue-600',    bg: 'bg-blue-500/15 border-blue-500/30',     icon: '' },
   fully_paid:   { label: 'Fully Paid',   color: 'text-emerald-600', bg: 'bg-emerald-500/15 border-emerald-500/30',icon: '' },
-  // Legacy support
+  
   paid:         { label: 'Paid',         color: 'text-emerald-600', bg: 'bg-emerald-500/15 border-emerald-500/30',icon: '' },
 };
 
@@ -21,7 +21,7 @@ const STATUS_COLORS = {
 const MyPropertiesPage = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading]   = useState(true);
-  const [payingDue, setPayingDue] = useState(null); // bookingId being processed
+  const [payingDue, setPayingDue] = useState(null); 
 
   useEffect(() => {
     fetchMyBookings();
@@ -38,7 +38,6 @@ const MyPropertiesPage = () => {
     }
   };
 
-  // ── Handle due payment ──────────────────────────────────────────────────
   const handleDuePayment = async (bookingId) => {
     setPayingDue(bookingId);
     try {
@@ -52,7 +51,6 @@ const MyPropertiesPage = () => {
     }
   };
 
-  // ── Format currency ────────────────────────────────────────────────────
   const formatCurrency = (amount) => {
     if (!amount || amount <= 0) return '—';
     return `৳${Number(amount).toLocaleString()}`;
@@ -106,7 +104,6 @@ const MyPropertiesPage = () => {
             const isFullyPaid   = booking.paymentStatus === 'fully_paid';
             const showDueBtn    = !isCancelled && isBookingPaid && dueAmount > 0;
 
-            // Get property image
             const propImage = prop?.mainImage || (prop?.galleryImages?.length > 0 ? prop.galleryImages[0] : null);
 
             return (
@@ -184,7 +181,7 @@ const MyPropertiesPage = () => {
                             <p className="text-xs text-gray-500">Booking Money</p>
                             {(isBookingPaid || isFullyPaid) && (
                               <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-600 font-semibold">
-                                ✓ PAID
+                                 PAID
                               </span>
                             )}
                           </div>
@@ -220,7 +217,7 @@ const MyPropertiesPage = () => {
                             <p className="text-xs text-gray-500">Due Payment</p>
                             {isFullyPaid && (
                               <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-600 font-semibold">
-                                ✓ CLEARED
+                                 CLEARED
                               </span>
                             )}
                           </div>

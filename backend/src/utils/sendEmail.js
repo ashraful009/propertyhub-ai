@@ -1,52 +1,31 @@
 const nodemailer = require('nodemailer');
 
-/**
- * Send an email using Gmail + App Password
- *
- * CRITICAL CONFIG:
- *   port: 587  — STARTTLS (standard, works with Gmail App Passwords)
- *   secure: false — MUST be false for port 587. Use true only for port 465 (SSL).
- *   Setting secure: true on port 587 causes "connection timeout" errors.
- */
 const createTransporter = () =>
   nodemailer.createTransport({
     host:   'smtp.gmail.com',
     port:   587,
-    secure: false, // ← CRITICAL: false for port 587 (STARTTLS)
+    secure: false, 
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
   });
 
-/**
- * Generic email sender
- * @param {Object} opts - { to, subject, html, attachments? }
- */
 const sendEmail = async ({ to, subject, html, attachments = [] }) => {
   const transporter = createTransporter();
 
   const info = await transporter.sendMail({
-    from:        `"FlatSell 🏢" <${process.env.EMAIL_USER}>`,
+    from:        `"FlatSell " <${process.env.EMAIL_USER}>`,
     to,
     subject,
     html,
     attachments,
   });
 
-  console.log(`📧 Email sent → ${to} [${info.messageId}]`);
+  console.log(` Email sent → ${to} [${info.messageId}]`);
   return info;
 };
 
-/**
- * Send payment confirmation email with PDF invoice attachment
- * @param {Object} opts
- * @param {Object} opts.customer  - { name, email }
- * @param {Object} opts.property  - { title, category, city }
- * @param {Object} opts.company   - { name }
- * @param {Object} opts.booking   - { totalPrice, bookingAmount, bookingMoneyPercentage, paymentStatus }
- * @param {Buffer} opts.pdfBuffer - Invoice PDF buffer from generateInvoicePDF
- */
 const sendPaymentConfirmationEmail = async ({ customer, property, company, booking, pdfBuffer }) => {
   const fmt = (n) => `৳${Number(n || 0).toLocaleString()}`;
   const isFullyPaid = booking.paymentStatus === 'fully_paid';
@@ -67,7 +46,7 @@ const sendPaymentConfirmationEmail = async ({ customer, property, company, booki
 
   return sendEmail({
     to:      customer.email,
-    subject: `✅ ${statusLabel} — FlatSell`,
+    subject: ` ${statusLabel} — FlatSell`,
     html,
     attachments: pdfBuffer
       ? [{ filename: `FlatSell-Invoice-${booking._id.toString().slice(-8).toUpperCase()}.pdf`, content: pdfBuffer, contentType: 'application/pdf' }]
@@ -75,11 +54,6 @@ const sendPaymentConfirmationEmail = async ({ customer, property, company, booki
   });
 };
 
-// ─── Email Templates ──────────────────────────────────────────────────────────
-
-/**
- * OTP Verification Email template
- */
 const otpEmailTemplate = (name, otp) => `
 <!DOCTYPE html>
 <html lang="en">
@@ -111,7 +85,7 @@ const otpEmailTemplate = (name, otp) => `
           <tr>
             <td style="padding:40px 36px;">
               <h2 style="margin:0 0 12px;color:#fff;font-size:22px;font-weight:700;">
-                Verify your email 👋
+                Verify your email 
               </h2>
               <p style="margin:0 0 24px;color:#9ca3af;font-size:15px;line-height:1.6;">
                 Hi <strong style="color:#e5e7eb;">${name}</strong>, welcome to FlatSell!<br/>
@@ -147,7 +121,6 @@ const otpEmailTemplate = (name, otp) => `
 </html>
 `;
 
-// ─── Payment Confirmation Email Template ─────────────────────────────────────
 const paymentConfirmationEmailTemplate = ({
   customerName, propertyTitle, companyName, category, city,
   paidAmount, totalPrice, statusLabel, isFullyPaid,
@@ -180,7 +153,7 @@ const paymentConfirmationEmailTemplate = ({
           <tr>
             <td style="background:${isFullyPaid ? '#15803d' : '#1d4ed8'};padding:14px 36px;text-align:center;">
               <p style="margin:0;color:#fff;font-size:15px;font-weight:700;">
-                ✅ ${statusLabel}
+                 ${statusLabel}
               </p>
             </td>
           </tr>
@@ -197,7 +170,7 @@ const paymentConfirmationEmailTemplate = ({
               <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;margin:0 0 24px;">
                 <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Property</p>
                 <p style="margin:0 0 12px;color:#fff;font-size:18px;font-weight:700;">${propertyTitle}</p>
-                <p style="margin:0;color:#9ca3af;font-size:13px;">📍 ${city} &nbsp;|&nbsp; 🏷️ ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
+                <p style="margin:0;color:#9ca3af;font-size:13px;"> ${city} &nbsp;|&nbsp; ️ ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
               </div>
 
               <!-- Vendor -->
@@ -221,7 +194,7 @@ const paymentConfirmationEmailTemplate = ({
               </table>
 
               <p style="margin:0 0 8px;color:#6b7280;font-size:13px;line-height:1.6;">
-                📎 Your invoice PDF is attached to this email. You can also download it anytime from your customer dashboard.
+                 Your invoice PDF is attached to this email. You can also download it anytime from your customer dashboard.
               </p>
 
               <div style="border-top:1px solid rgba(255,255,255,0.08);margin:28px 0 0;padding-top:20px;">
@@ -240,15 +213,6 @@ const paymentConfirmationEmailTemplate = ({
 </html>
 `;
 
-// ─── Vendor Approval Email ───────────────────────────────────────────────────
-
-/**
- * Send approval confirmation email to a newly approved vendor
- * @param {Object} opts
- * @param {string} opts.vendorName  - Name of the company owner
- * @param {string} opts.companyName - Approved company name
- * @param {string} opts.vendorEmail - Vendor's registered email address
- */
 const sendVendorApprovalEmail = async ({ vendorName, companyName, vendorEmail }) => {
   const loginUrl = `${process.env.CLIENT_URL || 'http://localhost:5173'}/login`;
 
@@ -256,7 +220,7 @@ const sendVendorApprovalEmail = async ({ vendorName, companyName, vendorEmail })
 
   return sendEmail({
     to:      vendorEmail,
-    subject: 'Welcome to FlatSell - Your Vendor Account is Approved! 🎉',
+    subject: 'Welcome to FlatSell - Your Vendor Account is Approved! ',
     html,
   });
 };
@@ -289,7 +253,7 @@ const vendorApprovalEmailTemplate = ({ vendorName, companyName, loginUrl }) => `
           <!-- Status Banner -->
           <tr>
             <td style="background:#15803d;padding:14px 36px;text-align:center;">
-              <p style="margin:0;color:#fff;font-size:16px;font-weight:700;">🎉 Vendor Account Approved!</p>
+              <p style="margin:0;color:#fff;font-size:16px;font-weight:700;"> Vendor Account Approved!</p>
             </td>
           </tr>
 
@@ -310,17 +274,17 @@ const vendorApprovalEmailTemplate = ({ vendorName, companyName, loginUrl }) => `
 
               <!-- Features List -->
               <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px 24px;margin:0 0 28px;">
-                <p style="margin:0 0 10px;color:#e5e7eb;font-size:14px;">✅ &nbsp; List your Apartments, Villas & Land</p>
-                <p style="margin:0 0 10px;color:#e5e7eb;font-size:14px;">✅ &nbsp; Manage bookings & customer inquiries</p>
-                <p style="margin:0 0 10px;color:#e5e7eb;font-size:14px;">✅ &nbsp; Track your sales & commission reports</p>
-                <p style="margin:0;color:#e5e7eb;font-size:14px;">✅ &nbsp; Access your company storefront</p>
+                <p style="margin:0 0 10px;color:#e5e7eb;font-size:14px;"> &nbsp; List your Apartments, Villas & Land</p>
+                <p style="margin:0 0 10px;color:#e5e7eb;font-size:14px;"> &nbsp; Manage bookings & customer inquiries</p>
+                <p style="margin:0 0 10px;color:#e5e7eb;font-size:14px;"> &nbsp; Track your sales & commission reports</p>
+                <p style="margin:0;color:#e5e7eb;font-size:14px;"> &nbsp; Access your company storefront</p>
               </div>
 
               <!-- CTA Button -->
               <div style="text-align:center;margin:0 0 28px;">
                 <a href="${loginUrl}" target="_blank"
                    style="display:inline-block;background:linear-gradient(135deg,#4f52e6,#6370f1);color:#fff;font-size:16px;font-weight:700;padding:14px 40px;border-radius:10px;text-decoration:none;letter-spacing:0.3px;">
-                  🚀 &nbsp; Go to Your Dashboard
+                   &nbsp; Go to Your Dashboard
                 </a>
               </div>
 
@@ -344,20 +308,6 @@ const vendorApprovalEmailTemplate = ({ vendorName, companyName, loginUrl }) => `
 </html>
 `;
 
-// ─── Installment Payment Confirmation Email ──────────────────────────────────
-
-/**
- * Send a payment confirmation email for a single installment, with the
- * per-installment PDF receipt attached.
- *
- * @param {Object} opts
- * @param {Object} opts.customer    - { name, email }
- * @param {Object} opts.property    - { title, category, city }
- * @param {Object} opts.company     - { name }
- * @param {Object} opts.booking     - Booking document
- * @param {Object} opts.installment - Installment document
- * @param {Buffer} opts.pdfBuffer   - From generateInstallmentInvoicePDF
- */
 const sendInstallmentPaymentEmail = async ({ customer, property, company, booking, installment, pdfBuffer }) => {
   const fmt     = (n) => `৳${Number(n || 0).toLocaleString()}`;
   const fmtDate = (d) => new Date(d).toLocaleDateString('en-BD', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -386,7 +336,7 @@ const sendInstallmentPaymentEmail = async ({ customer, property, company, bookin
 
   return sendEmail({
     to:      customer.email,
-    subject: `✅ Installment ${n}/${total} Paid — FlatSell`,
+    subject: ` Installment ${n}/${total} Paid — FlatSell`,
     html,
     attachments: pdfBuffer
       ? [{
@@ -426,7 +376,7 @@ const installmentPaymentEmailTemplate = ({
 
         <tr><td style="background:${isFinal ? '#15803d' : '#1d4ed8'};padding:14px 36px;text-align:center;">
           <p style="margin:0;color:#fff;font-size:15px;font-weight:700;">
-            ✅ Installment ${installmentN} of ${totalCount} Paid${isFinal ? ' — Property Fully Paid!' : ''}
+             Installment ${installmentN} of ${totalCount} Paid${isFinal ? ' — Property Fully Paid!' : ''}
           </p>
         </td></tr>
 
@@ -439,14 +389,14 @@ const installmentPaymentEmailTemplate = ({
           <div style="background:#0f0f1a;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;margin:0 0 24px;">
             <p style="margin:0 0 4px;color:#6b7280;font-size:11px;text-transform:uppercase;letter-spacing:1px;">Property</p>
             <p style="margin:0 0 12px;color:#fff;font-size:18px;font-weight:700;">${propertyTitle}</p>
-            <p style="margin:0;color:#9ca3af;font-size:13px;">📍 ${city} &nbsp;|&nbsp; 🏷️ ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
+            <p style="margin:0;color:#9ca3af;font-size:13px;"> ${city} &nbsp;|&nbsp; ️ ${category.charAt(0).toUpperCase() + category.slice(1)}</p>
             <p style="margin:8px 0 0;color:#6b7280;font-size:12px;">Vendor: ${companyName}</p>
           </div>
 
           ${wasLate ? `
           <div style="background:#7c2d12;border:1px solid #d97706;border-radius:8px;padding:12px 16px;margin:0 0 18px;">
             <p style="margin:0;color:#fbbf24;font-size:13px;font-weight:600;">
-              ⚠️ This installment was paid after the 15th. A late fee of ${lateFee} was added.
+              ️ This installment was paid after the 15th. A late fee of ${lateFee} was added.
             </p>
           </div>` : ''}
 
@@ -479,7 +429,7 @@ const installmentPaymentEmailTemplate = ({
           </table>
 
           <p style="margin:0 0 8px;color:#6b7280;font-size:13px;line-height:1.6;">
-            📎 Your receipt PDF is attached to this email. You can also download it anytime from your customer dashboard.
+             Your receipt PDF is attached to this email. You can also download it anytime from your customer dashboard.
           </p>
 
           <div style="border-top:1px solid rgba(255,255,255,0.08);margin:28px 0 0;padding-top:20px;">
@@ -496,13 +446,8 @@ const installmentPaymentEmailTemplate = ({
 </html>
 `;
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Booking Policy emails (Policy 1 — Auto-Cancellation, Policy 2 — Refund)
-// ─────────────────────────────────────────────────────────────────────────────
-
 const fmtBdt = (n) => `৳${Number(n || 0).toLocaleString()}`;
 
-/** Minimal branded shell so every policy email shares the same look. */
 const policyShell = ({ bannerColor, bannerText, bodyHtml }) => `
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8" />
@@ -531,10 +476,6 @@ const policyShell = ({ bannerColor, bannerText, bodyHtml }) => `
   </table>
 </body></html>`;
 
-/**
- * Policy 1 — 2-month inactivity warning ("cancelled in 30 days").
- * @param {Object} opts { customer, property, daysUntilCancel }
- */
 const sendInactivityWarningEmail = async ({ customer, property, daysUntilCancel = 30 }) => {
   const bodyHtml = `
     <p style="margin:0 0 18px;color:#9ca3af;font-size:15px;line-height:1.6;">
@@ -544,7 +485,7 @@ const sendInactivityWarningEmail = async ({ customer, property, daysUntilCancel 
       <strong style="color:#fff;">${property?.title || 'your property'}</strong> for a while.</p>
     <div style="background:#7c2d12;border:1px solid #d97706;border-radius:8px;padding:14px 18px;margin:0 0 18px;">
       <p style="margin:0;color:#fbbf24;font-size:14px;font-weight:700;">
-        ⚠️ Your booking will be automatically cancelled in ${daysUntilCancel} days due to no payment.</p>
+        ️ Your booking will be automatically cancelled in ${daysUntilCancel} days due to no payment.</p>
       <p style="margin:8px 0 0;color:#fcd34d;font-size:13px;">
         Cancellation due to inactivity is final and <strong>no refund</strong> will be issued.</p>
     </div>
@@ -554,15 +495,11 @@ const sendInactivityWarningEmail = async ({ customer, property, daysUntilCancel 
 
   return sendEmail({
     to:      customer.email,
-    subject: '⚠️ Action Required — Your FlatSell Booking May Be Cancelled',
-    html:    policyShell({ bannerColor: '#b45309', bannerText: '⚠️ Payment Inactivity Warning', bodyHtml }),
+    subject: '️ Action Required — Your FlatSell Booking May Be Cancelled',
+    html:    policyShell({ bannerColor: '#b45309', bannerText: '️ Payment Inactivity Warning', bodyHtml }),
   });
 };
 
-/**
- * Policy 1 — final auto-cancellation notice (no refund).
- * @param {Object} opts { customer, property, monthsInactive }
- */
 const sendAutoCancellationEmail = async ({ customer, property, monthsInactive }) => {
   const bodyHtml = `
     <p style="margin:0 0 18px;color:#9ca3af;font-size:15px;line-height:1.6;">
@@ -572,7 +509,7 @@ const sendAutoCancellationEmail = async ({ customer, property, monthsInactive })
       has been <strong style="color:#f87171;">automatically cancelled</strong> after
       ${monthsInactive} months with no payment.</p>
     <div style="background:#7f1d1d;border:1px solid #ef4444;border-radius:8px;padding:14px 18px;margin:0 0 18px;">
-      <p style="margin:0;color:#fca5a5;font-size:14px;font-weight:700;">🚫 Cancelled — No Refund</p>
+      <p style="margin:0;color:#fca5a5;font-size:14px;font-weight:700;"> Cancelled — No Refund</p>
       <p style="margin:8px 0 0;color:#fecaca;font-size:13px;">
         As per our payment-inactivity policy, no refund is issued for inactivity cancellations.</p>
     </div>
@@ -581,15 +518,11 @@ const sendAutoCancellationEmail = async ({ customer, property, monthsInactive })
 
   return sendEmail({
     to:      customer.email,
-    subject: '🚫 Your FlatSell Booking Was Cancelled (No Payment)',
-    html:    policyShell({ bannerColor: '#991b1b', bannerText: '🚫 Booking Cancelled — No Refund', bodyHtml }),
+    subject: ' Your FlatSell Booking Was Cancelled (No Payment)',
+    html:    policyShell({ bannerColor: '#991b1b', bannerText: ' Booking Cancelled — No Refund', bodyHtml }),
   });
 };
 
-/**
- * Policy 2 — refund approval confirmation to the CUSTOMER.
- * @param {Object} opts { customer, property, refundAmount, retentionAmount, amountPaid }
- */
 const sendRefundApprovedEmail = async ({ customer, property, refundAmount, retentionAmount, amountPaid }) => {
   const bodyHtml = `
     <p style="margin:0 0 18px;color:#9ca3af;font-size:15px;line-height:1.6;">
@@ -612,15 +545,11 @@ const sendRefundApprovedEmail = async ({ customer, property, refundAmount, reten
 
   return sendEmail({
     to:      customer.email,
-    subject: '✅ Refund Approved — FlatSell',
-    html:    policyShell({ bannerColor: '#15803d', bannerText: '✅ Refund Approved', bodyHtml }),
+    subject: ' Refund Approved — FlatSell',
+    html:    policyShell({ bannerColor: '#15803d', bannerText: ' Refund Approved', bodyHtml }),
   });
 };
 
-/**
- * Policy 2 — refund deduction notice to the VENDOR.
- * @param {Object} opts { vendorEmail, companyName, property, customerName, refundAmount, walletBalance }
- */
 const sendVendorRefundDeductionEmail = async ({ vendorEmail, companyName, property, customerName, refundAmount, walletBalance }) => {
   const bodyHtml = `
     <p style="margin:0 0 18px;color:#9ca3af;font-size:15px;line-height:1.6;">
@@ -643,8 +572,8 @@ const sendVendorRefundDeductionEmail = async ({ vendorEmail, companyName, proper
 
   return sendEmail({
     to:      vendorEmail,
-    subject: '💸 Customer Refund Deducted from Your Wallet — FlatSell',
-    html:    policyShell({ bannerColor: '#991b1b', bannerText: '💸 Refund Deduction', bodyHtml }),
+    subject: ' Customer Refund Deducted from Your Wallet — FlatSell',
+    html:    policyShell({ bannerColor: '#991b1b', bannerText: ' Refund Deduction', bodyHtml }),
   });
 };
 
@@ -654,7 +583,7 @@ module.exports = {
   sendPaymentConfirmationEmail,
   sendVendorApprovalEmail,
   sendInstallmentPaymentEmail,
-  // Booking policy emails
+  
   sendInactivityWarningEmail,
   sendAutoCancellationEmail,
   sendRefundApprovedEmail,

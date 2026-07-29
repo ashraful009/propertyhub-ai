@@ -3,10 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// Constants
 import { FIELD_META, SECTION_ORDER, SECTION_ICONS } from '../../data/checkout.constants';
 
-// Modular Components
 import CheckoutHeader from '../../components/customer/CheckoutHeader';
 import CheckoutPropertySummary from '../../components/customer/CheckoutPropertySummary';
 import CheckoutForm from '../../components/customer/CheckoutForm';
@@ -23,38 +21,32 @@ const BookingCheckoutPage = () => {
   const [loading, setLoading]   = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  // Policy 2 — refund policy acknowledgment
   const [settings, setSettings]             = useState(null);
   const [refundAccepted, setRefundAccepted] = useState(false);
-  // Policy 3 — booking limit block (null = allowed)
+  
   const [limitBlock, setLimitBlock] = useState(null);
 
-  // Form data
   const [formData, setFormData] = useState({});
   const [fileData, setFileData] = useState({});
   const [errors, setErrors]     = useState({});
 
-  // ── Fetch unit, property, and policy ──────────────────────────────────
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Get unit with property
+        
         const unitRes = await axiosInstance.get(`/units/${unitId}`);
         const unitObj = unitRes.data.data.unit;
         setUnit(unitObj);
 
-        // 2. Get full property
         const propRes = await axiosInstance.get(`/properties/${unitObj.propertyId._id || unitObj.propertyId}`);
         const propObj = propRes.data.data.property;
         setProperty(propObj);
 
-        // 3. Get booking policy
         const companyId = propObj.companyId._id || propObj.companyId;
         const category  = propObj.category;
         const policyRes = await axiosInstance.get(`/booking-policies/company/${companyId}/category/${category}`);
         setPolicy(policyRes.data.data.policy);
 
-        // 4. Platform refund settings + booking-limit pre-check (Policies 2 & 3)
         try {
           const [settingsRes, limitRes] = await Promise.all([
             axiosInstance.get('/settings/public'),
@@ -62,11 +54,10 @@ const BookingCheckoutPage = () => {
           ]);
           setSettings(settingsRes.data.data.settings);
           if (!limitRes.data.data.allowed) setLimitBlock(limitRes.data.data.blocked);
-        } catch {
-          // Non-fatal: fall back to default copy and allow the form to render
+        } catch (err) {
+          console.error('Failed to load settings or limit check', err);
         }
 
-        // Pre-fill property fields if they're required
         const prefill = {};
         if (propObj) {
           prefill.projectNameLocation = `${propObj.title}, ${propObj.address}, ${propObj.city}`;
@@ -85,11 +76,9 @@ const BookingCheckoutPage = () => {
     fetchData();
   }, [unitId, navigate]);
 
-  // ── Derive required fields ────────────────────────────────────────────
   const requiredFields = policy?.requiredFields || {};
   const activeFieldKeys = Object.keys(requiredFields).filter((k) => requiredFields[k] && FIELD_META[k]);
 
-  // Group by section
   const groupedFields = {};
   activeFieldKeys.forEach((key) => {
     const meta = FIELD_META[key];
@@ -97,7 +86,6 @@ const BookingCheckoutPage = () => {
     groupedFields[meta.section].push({ key, ...meta });
   });
 
-  // ── Calculate booking money ───────────────────────────────────────────
   const calculateTotalPrice = () => {
     if (!property) return 0;
     const cat = property.category;
@@ -121,7 +109,6 @@ const BookingCheckoutPage = () => {
   const bookingMoney  = Math.round(totalPrice * (percentage / 100));
   const dueAmount     = totalPrice - bookingMoney;
 
-  // ── Form handlers ─────────────────────────────────────────────────────
   const handleChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => ({ ...prev, [key]: '' }));
@@ -132,7 +119,6 @@ const BookingCheckoutPage = () => {
     setErrors((prev) => ({ ...prev, [key]: '' }));
   };
 
-  // ── Validation ────────────────────────────────────────────────────────
   const validate = () => {
     const newErrors = {};
     activeFieldKeys.forEach((key) => {
@@ -147,7 +133,6 @@ const BookingCheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ── Submit ────────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
@@ -161,7 +146,7 @@ const BookingCheckoutPage = () => {
 
     setSubmitting(true);
     try {
-      // Prepare KYC data (non-file fields)
+      
       const kycData = {};
       activeFieldKeys.forEach((key) => {
         if (FIELD_META[key].type !== 'file') {
@@ -169,7 +154,6 @@ const BookingCheckoutPage = () => {
         }
       });
 
-      // Upload the KYC documents to Cloudinary first
       let documents = {};
       const fileKeys = Object.keys(fileData).filter((k) => fileData[k]);
       if (fileKeys.length > 0) {
@@ -198,7 +182,6 @@ const BookingCheckoutPage = () => {
     }
   };
 
-  // ── Loading state ─────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
@@ -221,7 +204,6 @@ const BookingCheckoutPage = () => {
     );
   }
 
-  // ── Policy 3: booking limit reached — block the form ──────────────────────
   if (limitBlock) {
     const isTotal = limitBlock.code === 'TOTAL_LIMIT';
     return (

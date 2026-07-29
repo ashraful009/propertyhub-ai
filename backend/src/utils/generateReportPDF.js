@@ -1,37 +1,12 @@
 const PDFDocument = require('pdfkit');
 
-/**
- * pdfkit ships with Helvetica (WinAnsi) only, which cannot encode the Bangladeshi
- * Taka symbol (৳, U+09F3) or other non-Latin glyphs — they render as garbage
- * (e.g. "Ÿ3 As A"). This sanitizer normalizes them to the ASCII fallback "BDT "
- * so existing callers don't have to remember the constraint.
- *
- * If full Unicode is ever needed (Bengali property names, etc.), register a
- * TTF via `doc.registerFont('Body', '/path/to/NotoSansBengali-Regular.ttf')`
- * and switch every `doc.font('Helvetica…')` call to the registered name.
- */
 const sanitizeForWinAnsi = (val) => {
   if (val === null || val === undefined) return '—';
   return String(val)
-    .replace(/৳\s*/g, 'BDT ')   // BDT Taka sign
-    .replace(/[ঀ-৿]/g, '?'); // any remaining Bengali code points
+    .replace(/৳\s*/g, 'BDT ')   
+    .replace(/[ঀ-৿]/g, '?'); 
 };
 
-/**
- * generateReportPDF
- * Builds a generic tabular PDF report in memory and returns a Buffer.
- *
- * @param {Object}   opts
- * @param {string}   opts.title        - Report title
- * @param {string}   opts.subtitle     - Company name or scope label
- * @param {string}   opts.dateRange    - Human-readable date range string
- * @param {string[]} opts.columns      - Column header labels
- * @param {number[]} opts.colWidths    - Width for each column (must sum to 495)
- * @param {Array[]}  opts.rows         - 2D array of cell values
- * @param {Object[]} opts.summaryRows  - [{ label, value }] shown at the bottom
- * @param {Object[]} opts.summaryBox   - [{ label, value }] 3-metric card row below the title
- * @returns {Promise<Buffer>}
- */
 const generateReportPDF = ({
   title,
   subtitle,
@@ -56,9 +31,8 @@ const generateReportPDF = ({
     const TEXT_DARK = '#1e293b';
     const TEXT_GRAY = '#64748b';
     const LIGHT_BG  = '#f8f9ff';
-    const W         = 495; // A4 (595) - 2 × 50 margin
+    const W         = 495; 
 
-    // ── Page Header ───────────────────────────────────────────────────────────
     doc.rect(0, 0, 595, 90).fill(DARK);
 
     doc.fillColor('#ffffff')
@@ -73,7 +47,6 @@ const generateReportPDF = ({
        .fontSize(8)
        .text('01611-652333  |  House No. 2, Road No. 11, Block F, Banani, Dhaka-1213', 50, 66);
 
-    // ── Report Title Block ────────────────────────────────────────────────────
     const tY = 108;
     doc.fillColor(TEXT_DARK).fontSize(18).font('Helvetica-Bold')
        .text(sanitizeForWinAnsi(title), 50, tY);
@@ -92,7 +65,6 @@ const generateReportPDF = ({
     doc.moveTo(50, tY + 68).lineTo(545, tY + 68)
        .strokeColor('#e2e8f0').lineWidth(1).stroke();
 
-    // ── Summary Metric Cards ──────────────────────────────────────────────────
     let tableY = tY + 80;
 
     if (summaryBox.length > 0) {
@@ -106,7 +78,7 @@ const generateReportPDF = ({
       summaryBox.forEach(({ label, value }, i) => {
         const boxW   = Math.floor(W / n);
         const bx     = 50 + i * boxW;
-        // Last card absorbs any rounding remainder
+        
         const actualW = i === n - 1 ? W - i * boxW : boxW;
 
         doc.rect(bx, boxStartY, actualW, boxH).fill(BOX_COLORS[i % BOX_COLORS.length]);
@@ -122,7 +94,6 @@ const generateReportPDF = ({
       tableY = boxStartY + boxH + 18;
     }
 
-    // ── Table Header Row ──────────────────────────────────────────────────────
     doc.rect(50, tableY, W, 22).fill(PRIMARY);
 
     let xCursor = 50;
@@ -133,7 +104,6 @@ const generateReportPDF = ({
     });
     tableY += 22;
 
-    // ── Data Rows ─────────────────────────────────────────────────────────────
     if (rows.length === 0) {
       doc.rect(50, tableY, W, 30).fill(LIGHT_BG).stroke('#e2e8f0');
       doc.fillColor(TEXT_GRAY).fontSize(9).font('Helvetica')
@@ -167,7 +137,6 @@ const generateReportPDF = ({
       });
     }
 
-    // ── Summary Footer ────────────────────────────────────────────────────────
     if (summaryRows.length > 0) {
       tableY += 16;
       doc.moveTo(50, tableY).lineTo(545, tableY).strokeColor('#e2e8f0').stroke();
@@ -182,7 +151,6 @@ const generateReportPDF = ({
       });
     }
 
-    // ── Page Footer ───────────────────────────────────────────────────────────
     doc.fillColor(TEXT_GRAY).fontSize(7).font('Helvetica')
        .text(
          `© ${new Date().getFullYear()} FlatSell. Confidential Report. All Rights Reserved.`,

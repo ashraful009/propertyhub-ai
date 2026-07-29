@@ -42,7 +42,6 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
     [booking]
   );
 
-  // Live preview of per-installment amount + total cost
   const preview = useMemo(() => {
     const n = Number(count);
     if (!Number.isInteger(n) || n < 1 || n > MAX_INSTALLMENTS) return null;
@@ -125,7 +124,7 @@ const InstallmentSetupModal = ({ open, onClose, booking, onSuccess }) => {
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 hover:bg-blue-100 text-gray-500 hover:text-gray-900 transition-colors"
           >
-            ✕
+            
           </button>
         </div>
 

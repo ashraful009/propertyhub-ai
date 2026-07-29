@@ -20,11 +20,9 @@ const SORT_OPTIONS = [
 
 const LIMIT = 12;
 
-// ─────────────────────────────────────────────────────────────────────────────
 const PropertiesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Read filters from URL
   const [city,     setCity]     = useState(searchParams.get('city')     || '');
   const [category, setCategory] = useState(searchParams.get('category') || '');
   const [sort,     setSort]     = useState(searchParams.get('sort')     || 'newest');
@@ -35,7 +33,6 @@ const PropertiesPage = () => {
   const [loading,    setLoading]    = useState(true);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
-  // Sync search params to URL
   const applyFilters = useCallback((newFilters = {}) => {
     const merged = { city, category, sort, page: 1, ...newFilters };
     const params = {};
@@ -48,9 +45,8 @@ const PropertiesPage = () => {
     setCategory(merged.category || '');
     setSort(merged.sort || 'newest');
     setPage(Number(merged.page) || 1);
-  }, [city, category, sort, page, setSearchParams]);
+  }, [city, category, sort, setSearchParams]);
 
-  // Fetch properties whenever filters change
   const fetchProperties = useCallback(async () => {
     setLoading(true);
     setProperties([]);
@@ -62,7 +58,6 @@ const PropertiesPage = () => {
       const { data } = await axiosInstance.get(`/properties/approved?${q}`);
       let props = data.data.properties;
 
-      // Client-side sort (backend sort parameter can be added in Phase 9+)
       if (sort === 'price-asc')  props = [...props].sort((a, b) => a.price - b.price);
       if (sort === 'price-desc') props = [...props].sort((a, b) => b.price - a.price);
 
@@ -80,7 +75,6 @@ const PropertiesPage = () => {
 
   const totalPages = Math.ceil(total / LIMIT);
 
-  // ── Filter sidebar content ─────────────────────────────────────────────────
   const FilterContent = () => (
     <div className="space-y-6">
       {}
@@ -137,7 +131,7 @@ const PropertiesPage = () => {
           className="w-full py-2 text-sm text-red-600 hover:text-red-300
                      hover:bg-red-500/10 rounded-xl transition-colors"
         >
-          ✕ Clear All Filters
+           Clear All Filters
         </button>
       )}
     </div>

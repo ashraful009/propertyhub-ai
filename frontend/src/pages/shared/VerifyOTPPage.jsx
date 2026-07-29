@@ -4,7 +4,7 @@ import axiosInstance from '../../api/axiosInstance';
 import useAuth from '../../hooks/useAuth';
 
 const OTP_LENGTH = 6;
-const OTP_EXPIRY_SECONDS = 600; // 10 minutes
+const OTP_EXPIRY_SECONDS = 600; 
 
 const VerifyOTPPage = () => {
   const navigate      = useNavigate();
@@ -21,7 +21,6 @@ const VerifyOTPPage = () => {
 
   const inputRefs = useRef([]);
 
-  // ── Countdown timer ──────────────────────────────────────────────────────
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((c) => (c > 0 ? c - 1 : 0));
@@ -29,7 +28,6 @@ const VerifyOTPPage = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // ── Resend cooldown ──────────────────────────────────────────────────────
   useEffect(() => {
     if (resendCooldown <= 0) return;
     const t = setInterval(() => setResendCooldown((c) => (c > 0 ? c - 1 : 0)), 1000);
@@ -42,7 +40,6 @@ const VerifyOTPPage = () => {
     return `${m}:${s}`;
   };
 
-  // ── OTP input handlers ───────────────────────────────────────────────────
   const handleDigitChange = (e, idx) => {
     const val = e.target.value.replace(/\D/g, '').slice(-1);
     const updated = [...digits];
@@ -66,12 +63,11 @@ const VerifyOTPPage = () => {
     const updated = Array(OTP_LENGTH).fill('');
     pasted.split('').forEach((char, i) => { updated[i] = char; });
     setDigits(updated);
-    // Focus last filled box
+    
     const lastIdx = Math.min(pasted.length, OTP_LENGTH - 1);
     inputRefs.current[lastIdx]?.focus();
   };
 
-  // ── Submit OTP ───────────────────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = digits.join('');
@@ -83,7 +79,7 @@ const VerifyOTPPage = () => {
     setError('');
     try {
       const { data } = await axiosInstance.post('/auth/verify-otp', { email, otp });
-      login(data.data.user); // Auto-login after verification
+      login(data.data.user); 
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed. Please try again.');
       setDigits(Array(OTP_LENGTH).fill(''));
@@ -93,7 +89,6 @@ const VerifyOTPPage = () => {
     }
   };
 
-  // ── Resend OTP ───────────────────────────────────────────────────────────
   const handleResend = async () => {
     if (resendCooldown > 0) return;
     setResending(true);

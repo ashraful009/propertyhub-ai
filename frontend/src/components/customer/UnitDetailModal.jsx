@@ -12,10 +12,9 @@ const getFlatTypeForUnit = (unit, property) => {
   const flatTypes = property?.flatTypes;
   if (!flatTypes?.length || property?.category !== 'apartment') return null;
 
-  // Extract column letter from unitNumber (e.g. "3B" → "B" → index 1)
   const match = unit.unitNumber?.match(/\d+([A-Z]+)/i);
   if (!match) return null;
-  const colIndex = match[1].charCodeAt(0) - 65; // A=0, B=1, C=2...
+  const colIndex = match[1].charCodeAt(0) - 65; 
   const typeIndex = Math.min(colIndex, flatTypes.length - 1);
   return flatTypes[typeIndex] || null;
 };
@@ -153,7 +152,7 @@ const UnitDetailModal = ({ unit, property, onClose }) => {
                 <span key={f}
                   className="text-xs px-2 py-1 bg-slate-50 border border-blue-100
                              text-gray-600 rounded-lg">
-                  ✦ {f}
+                   {f}
                 </span>
               ))}
             </div>

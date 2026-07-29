@@ -13,7 +13,6 @@ const PropertyCard = ({ property }) => {
   const totalImgs  = (mainImage ? 1 : 0) + (galleryImages?.length || 0) || images?.length || 0;
   const totalUnits = (totalFloors || 0) * (unitsPerFloor || 0);
 
-  // Compute booking money: use enriched value from API, else fallback to 20%
   const bookingAmt = bookingMoneyAmount || Math.round((price || 0) * (bookingMoneyPercentage || 20) / 100);
   const bookingPct = bookingMoneyPercentage || 20;
 

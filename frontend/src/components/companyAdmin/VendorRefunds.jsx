@@ -2,10 +2,6 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { toast } from 'react-hot-toast';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// VendorRefunds — Policy 2 vendor view: wallet balance + the refund deductions
-// taken from this vendor's account, with booking details.
-// ─────────────────────────────────────────────────────────────────────────────
 const STATUS_COLORS = {
   pending:   'bg-amber-500/15 text-amber-600 border-amber-500/30',
   approved:  'bg-blue-500/15 text-blue-600 border-blue-500/30',

@@ -12,7 +12,7 @@ const VendorApplicationForm = () => {
     phone:       '',
     description: '',
   });
-  const [location,  setLocation]  = useState(null);   // { lat, lng, address }
+  const [location,  setLocation]  = useState(null);   
   const [pdfFile,   setPdfFile]   = useState(null);
   const [loading,   setLoading]   = useState(false);
   const [error,     setError]     = useState('');
@@ -57,7 +57,7 @@ const VendorApplicationForm = () => {
     formData.append('lat',          location.lat);
     formData.append('lng',          location.lng);
     formData.append('address',      location.address || '');
-    formData.append('tradeLicense', pdfFile); // multer field name
+    formData.append('tradeLicense', pdfFile); 
 
     try {
       await axiosInstance.post('/companies/apply', formData, {
@@ -71,7 +71,6 @@ const VendorApplicationForm = () => {
     }
   };
 
-  // ── Success screen ─────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <div className="text-center py-10 animate-slideUp">

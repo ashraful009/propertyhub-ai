@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 
-// ── KYC field metadata — mirrors the booking checkout form (BookingCheckoutPage) ──
 const KYC_FIELDS = {
-  // Personal
+  
   fullName:          { label: 'Full Name (NID/Passport)', section: 'Personal Information' },
   fatherMotherName:  { label: "Father's / Mother's Name",  section: 'Personal Information' },
   spouseName:        { label: 'Spouse Name',               section: 'Personal Information' },
@@ -10,22 +9,22 @@ const KYC_FIELDS = {
   nidPassportNumber: { label: 'NID / Passport Number',     section: 'Personal Information' },
   profession:        { label: 'Profession / Company',      section: 'Personal Information' },
   nationality:       { label: 'Nationality',               section: 'Personal Information' },
-  // Contact
+  
   mobile:            { label: 'Mobile Number',             section: 'Contact Information' },
   email:             { label: 'Email Address',             section: 'Contact Information' },
   presentAddress:    { label: 'Present Address',           section: 'Contact Information' },
   permanentAddress:  { label: 'Permanent Address',         section: 'Contact Information' },
-  // Financial
+  
   tinCertificate:    { label: 'TIN Certificate Number',    section: 'Financial Information' },
   paymentSource:     { label: 'Payment Source',            section: 'Financial Information' },
   bankDetails:       { label: 'Bank Details',              section: 'Financial Information' },
-  // Property
+  
   projectNameLocation:   { label: 'Project Name / Location',  section: 'Property Details' },
   sizeFloor:             { label: 'Size / Floor',             section: 'Property Details' },
   unitNumber:            { label: 'Unit Number',              section: 'Property Details' },
   carParking:            { label: 'Car Parking Preference',   section: 'Property Details' },
   installmentPreference: { label: 'Installment Preference',   section: 'Property Details' },
-  // Nominee
+  
   nomineeName:       { label: 'Nominee Name',              section: 'Nominee Information' },
   nomineeRelation:   { label: 'Relation with Nominee',     section: 'Nominee Information' },
   nomineeNid:        { label: 'Nominee NID Number',        section: 'Nominee Information' },
@@ -83,14 +82,12 @@ const fmtDate = (d) => {
   }
 };
 
-// A stored document may be a plain filename (legacy), an http(s)/data URL, or an
-// object { name, type, url }. Normalize all three to { name, url }.
 const normalizeDoc = (val) => {
   if (val && typeof val === 'object') {
     return { name: val.name || '', url: val.url || val.data || '' };
   }
   if (typeof val === 'string') {
-    if (/^data:|^https?:\/\//i.test(val)) return { name: val, url: val };
+    if (/^data:|^https?:\/\
     return { name: val, url: '' };
   }
   return { name: '', url: '' };
@@ -114,7 +111,7 @@ const Row = ({ label, value }) => (
 );
 
 const BookingDetailModal = ({ booking, onClose }) => {
-  // Close on Escape
+  
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
@@ -131,7 +128,6 @@ const BookingDetailModal = ({ booking, onClose }) => {
   const unitNumber    = b.unitId?.unitNumber;
   const unitFloor     = b.unitId?.floor;
 
-  // Group KYC entries by section, keeping only filled values.
   const grouped = {};
   Object.entries(kyc).forEach(([key, val]) => {
     if (val == null || val === '') return;
@@ -161,7 +157,7 @@ const BookingDetailModal = ({ booking, onClose }) => {
                      text-gray-400 hover:text-gray-900 hover:bg-slate-100 transition-colors"
           aria-label="Close"
         >
-          ✕
+          
         </button>
 
         {}

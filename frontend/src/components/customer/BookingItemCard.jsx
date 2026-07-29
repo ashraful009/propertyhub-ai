@@ -26,14 +26,13 @@ const BookingItemCard = ({
   const isBookingPaid  = b.paymentStatus === 'booking_paid' || b.paymentStatus === 'paid';
   const isFullyPaid    = b.paymentStatus === 'fully_paid';
   const hasInstallPlan = !!b.installmentPlan?.active;
-  // "Pay Due" lump-sum is only available when no installment plan is active
+  
   const showDueBtn     = !isCancelled && isBookingPaid && dueAmount > 0 && !hasInstallPlan;
-  // "Set Installment" only available when booking paid, dues remain, and no plan yet
+  
   const showSetupBtn   = !isCancelled && isBookingPaid && dueAmount > 0 && !hasInstallPlan && !isFullyPaid;
-  // "Pay Installment" replaces the due button once a plan is active
+  
   const showPayInstallBtn = !isCancelled && hasInstallPlan && !isFullyPaid;
 
-  // ── Policy 1: inactivity warning (client-side mirror of the cron) ──
   const warnMonths     = settings?.inactivityWarnMonths ?? 2;
   const cancelMonths   = settings?.inactivityCancelMonths ?? 3;
   const cancelledNoRefund = isCancelled && b.noRefund;
@@ -45,7 +44,6 @@ const BookingItemCard = ({
   const monthsInactive   = inactivityRef ? monthsSince(inactivityRef) : 0;
   const showInactivityWarn = isActiveUnsettled && !!inactivityRef && monthsInactive >= warnMonths;
 
-  // ── Policy 2: refund eligibility / tracking ───────────────────────
   const refundWindowDays = settings?.refundWindowDays ?? 30;
   const retentionPct     = settings?.refundRetentionPercentage ?? 20;
   const refundStatus     = b.refundStatus || 'none';
@@ -53,7 +51,6 @@ const BookingItemCard = ({
   const canRequestRefund = !isCancelled && refundStatus === 'none' && bookingAmount > 0 && withinRefundWindow;
   const refundExpired    = !isCancelled && refundStatus === 'none' && bookingAmount > 0 && !withinRefundWindow;
 
-  // Get property image
   const propImage = b.propertyId?.mainImage || (b.propertyId?.galleryImages?.length > 0 ? b.propertyId.galleryImages[0] : null);
 
   return (
@@ -143,7 +140,7 @@ const BookingItemCard = ({
               <p className="text-gray-500 mb-0.5">Booking Money</p>
               <p className={`font-semibold ${isBookingPaid || isFullyPaid ? 'text-emerald-600' : 'text-gray-600'}`}>
                 {formatCurrency(bookingAmount)}
-                {(isBookingPaid || isFullyPaid) && <span className="text-[10px] ml-1">✓</span>}
+                {(isBookingPaid || isFullyPaid) && <span className="text-[10px] ml-1"></span>}
               </p>
             </div>
             <div>
@@ -155,7 +152,7 @@ const BookingItemCard = ({
             <div>
               <p className="text-gray-500 mb-0.5">Due</p>
               {isFullyPaid ? (
-                <p className="text-emerald-600 font-semibold">৳0 ✓</p>
+                <p className="text-emerald-600 font-semibold">৳0 </p>
               ) : showPayInstallBtn ? (
                 <button
                   onClick={() => setListBookingId(b._id)}
