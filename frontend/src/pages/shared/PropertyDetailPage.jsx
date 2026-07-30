@@ -55,9 +55,9 @@ const PropertyDetailPage = () => {
   }
 
   const {
-    title, description, price, city, address, category,
+    title, description, city, address, category,
     mainImage, galleryImages, images, totalFloors, unitsPerFloor,
-    companyId, location, villaDetails, landDetails,
+    location, villaDetails, landDetails,
   } = property;
 
   const cat = category?.toLowerCase();
@@ -147,7 +147,6 @@ const PropertyDetailPage = () => {
         {/* Unit Information */}
         <div className="mb-8">
           <h2 className="text-3xl font-blackops text-gray-900 mb-2 tracking-wider">Unit Information</h2>
-          <p className="text-gray-500 mb-8">Click on an available unit in the visualizer to view details and book.</p>
           
           <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] xl:grid-cols-[2fr_1fr] gap-8 items-start">
             <div className="bg-white border border-blue-100 rounded-3xl p-6 shadow-sm">

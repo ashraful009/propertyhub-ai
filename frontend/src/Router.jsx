@@ -8,6 +8,7 @@ import LoadingScreen from './components/shared/LoadingScreen';
 
 import LoginPage from './pages/shared/LoginPage';
 import RegisterPage from './pages/shared/RegisterPage';
+import ForgotPasswordPage from './pages/shared/ForgotPasswordPage';
 import VerifyOTPPage from './pages/shared/VerifyOTPPage';
 
 const HomePage = lazy(() => import('./pages/shared/HomePage'));
@@ -38,6 +39,7 @@ const AppRouter = () => {
 
             <Route element={<GuestRoute />}>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/verify-otp" element={<VerifyOTPPage />} />
             </Route>

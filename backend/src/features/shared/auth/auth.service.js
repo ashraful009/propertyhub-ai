@@ -106,9 +106,68 @@ const loginService = async (email, password) => {
   return user;
 };
 
+const forgotPasswordService = async (email) => {
+  if (!email) {
+    throw new ValidationError('Email is required');
+  }
+
+  const user = await findUserByEmail(email);
+  if (!user) {
+    // Return true anyway for security (don't reveal if user exists or not)
+    return true; 
+  }
+
+  const otp = generateOTP();
+  const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+  user.otp = otp;
+  user.otpExpiry = otpExpiry;
+  await saveUser(user);
+
+  await sendEmail({
+    to: email,
+    subject: 'Password Reset Request',
+    html: otpEmailTemplate(user.name, otp),
+  });
+
+  return true;
+};
+
+const resetPasswordService = async (email, otp, newPassword) => {
+  if (!email || !otp || !newPassword) {
+    throw new ValidationError('Email, OTP, and new password are required');
+  }
+
+  if (newPassword.length < 6) {
+    throw new ValidationError('Password must be at least 6 characters');
+  }
+
+  const user = await findUserByEmail(email, '+otp +otpExpiry');
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+
+  if (!user.otp || !user.otpExpiry || user.otpExpiry < new Date()) {
+    throw new ValidationError('OTP has expired or is invalid. Please request a new one.');
+  }
+
+  if (user.otp !== otp) {
+    throw new ValidationError('Invalid OTP. Please try again.');
+  }
+
+  user.password = newPassword;
+  user.otp = null;
+  user.otpExpiry = null;
+  
+  await saveUser(user);
+  return true;
+};
+
 module.exports = {
   registerService,
   verifyOTPService,
   resendOTPService,
   loginService,
+  forgotPasswordService,
+  resetPasswordService,
 };

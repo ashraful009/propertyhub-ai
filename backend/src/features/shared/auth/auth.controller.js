@@ -4,6 +4,8 @@ const {
   verifyOTPService,
   resendOTPService,
   loginService,
+  forgotPasswordService,
+  resetPasswordService,
 } = require('./auth.service');
 const { successResponse } = require('../../../responses');
 
@@ -97,4 +99,24 @@ const logout = async (req, res, next) => {
   }
 };
 
-module.exports = { register, verifyOTP, resendOTP, login, getMe, logout };
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    await forgotPasswordService(email);
+    return successResponse(res, null, 'If an account exists, a password reset OTP has been sent.', 200);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    await resetPasswordService(email, otp, newPassword);
+    return successResponse(res, null, 'Password reset successfully! You can now log in.', 200);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, verifyOTP, resendOTP, login, getMe, logout, forgotPassword, resetPassword };
