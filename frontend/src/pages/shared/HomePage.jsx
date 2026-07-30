@@ -118,8 +118,7 @@ const HomePage = () => {
         <div className="container-main">
           <div className="flex items-end justify-between mb-10">
             <div>
-              <h2 className="section-title mb-2">Featured Properties</h2>
-              <p className="text-gray-500">Handpicked listings from verified companies</p>
+              <h2 className="section-title mb-2">Properties</h2>
             </div>
             <Link to="/properties"
               className="text-primary-600 hover:text-primary-600 text-sm font-medium

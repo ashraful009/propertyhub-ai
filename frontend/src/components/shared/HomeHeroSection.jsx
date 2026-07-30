@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import heroImage from '../../assets/right hreo image.jpg';
 
 const CITIES = ['Dhaka', 'Chittagong', 'Sylhet', 'Rajshahi', 'Khulna', 'Barishal'];
 
@@ -24,7 +25,8 @@ const HomeHeroSection = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-primary-800/10 rounded-full blur-3xl" />
 
       <div className="container-main relative z-10 py-16 sm:py-20 md:py-24">
-        <div className="max-w-3xl animate-slideUp">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-8">
+          <div className="flex-1 max-w-3xl animate-slideUp">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-6 sm:mb-8 bg-primary-500/10 border border-primary-500/20">
             <span className="w-2 h-2 bg-primary-400 rounded-full animate-pulse" />
             <span className="text-primary-600 text-xs sm:text-sm md:text-base font-medium">
@@ -74,7 +76,19 @@ const HomeHeroSection = () => {
             ))}
           </div>
         </div>
+
+        <div className="hidden lg:flex lg:flex-1 justify-end items-center relative w-full" style={{ perspective: '1200px' }}>
+          <div className="relative w-[90%] max-w-[600px] aspect-[4/3] rounded-3xl overflow-hidden shadow-[0_30px_60px_-15px_rgba(8,112,184,0.3)] transition-transform duration-500 ease-out hover:[transform:rotateY(-8deg)_rotateX(5deg)_scale(1.02)] border-[6px] border-white group">
+            <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/30 to-transparent z-10 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+            <img 
+              src={heroImage} 
+              alt="Modern Home" 
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            />
+          </div>
+        </div>
       </div>
+    </div>
     </section>
   );
 };

@@ -143,11 +143,7 @@ const PropertiesPage = () => {
 
         {}
         <div className="mb-8">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
-            <Link to="/" className="hover:text-gray-900 transition-colors">Home</Link>
-            <span>/</span>
-            <span className="text-gray-600">Properties</span>
-          </nav>
+
           <div className="flex flex-col sm:flex-row sm:items-end gap-4 justify-between">
             <div>
               <h1 className="section-title mb-1">
@@ -156,11 +152,7 @@ const PropertiesPage = () => {
                   : 'All Properties'}
                 {city && <span className="text-gray-500 font-normal"> in {city}</span>}
               </h1>
-              {!loading && (
-                <p className="text-gray-500 text-sm">
-                  {total} {total === 1 ? 'property' : 'properties'} found
-                </p>
-              )}
+
             </div>
 
             {}
@@ -196,11 +188,7 @@ const PropertiesPage = () => {
           {}
           <div className="flex-1 min-w-0">
             {}
-            <div className="hidden sm:flex justify-end mb-4 gap-3">
-              <button onClick={() => applyFilters()} className="btn-primary text-sm py-2">
-                Apply Filters
-              </button>
-            </div>
+
 
             {}
             {loading ? (

@@ -35,7 +35,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Orbitron', 'system-ui', 'sans-serif'],
+        blackops: ['"Black Ops One"', 'system-ui', 'cursive'],
+        orbitron: ['Orbitron', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         shimmer: {
