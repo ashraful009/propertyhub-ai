@@ -82,12 +82,12 @@ const VendorApplicationForm = () => {
               d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted! </h2>
-        <p className="text-gray-500 text-sm max-w-sm mx-auto mb-6">
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">Application Submitted! </h2>
+        <p className="text-gray-500 text-lg max-w-xl mx-auto mb-8">
           Your vendor application is under review. We&apos;ll notify you via email
           within 3–5 business days.
         </p>
-        <button onClick={() => navigate('/')} className="btn-primary">
+        <button onClick={() => navigate('/')} className="btn-primary !text-xl !py-3 !px-8">
           Back to Home
         </button>
       </div>
@@ -104,49 +104,49 @@ const VendorApplicationForm = () => {
       )}
 
       {}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         <div>
-          <label className="form-label">Company Name *</label>
+          <label className="form-label !text-xl !mb-2">Company Name *</label>
           <input name="name" type="text" required value={form.name}
-            onChange={handleChange} className="form-input"
+            onChange={handleChange} className="form-input !text-xl !p-4"
             placeholder="Sunshine Realty Ltd." />
         </div>
         <div>
-          <label className="form-label">Business Email *</label>
+          <label className="form-label !text-xl !mb-2">Business Email *</label>
           <input name="email" type="email" required value={form.email}
-            onChange={handleChange} className="form-input"
+            onChange={handleChange} className="form-input !text-xl !p-4"
             placeholder="info@yourcompany.com" />
         </div>
         <div>
-          <label className="form-label">Phone Number *</label>
+          <label className="form-label !text-xl !mb-2">Phone Number *</label>
           <input name="phone" type="tel" required value={form.phone}
-            onChange={handleChange} className="form-input"
+            onChange={handleChange} className="form-input !text-xl !p-4"
             placeholder="+880 1700-000000" />
         </div>
         <div className="sm:col-span-2">
-          <label className="form-label">Company Description *</label>
-          <textarea name="description" required rows={3}
+          <label className="form-label !text-xl !mb-2">Company Description *</label>
+          <textarea name="description" required rows={4}
             value={form.description} onChange={handleChange}
-            className="form-input resize-none"
+            className="form-input resize-none !text-xl !p-4"
             placeholder="Tell us about your company, specializations and years of experience..." />
         </div>
       </div>
 
       {}
       <div>
-        <label className="form-label">
+        <label className="form-label !text-xl !mb-2">
           Company Location *{' '}
-          <span className="text-gray-500 font-normal">(click on map to pin)</span>
+          <span className="text-gray-500 font-normal !text-lg">(click on map to pin)</span>
         </label>
         <LocationPicker value={location} onChange={setLocation} />
       </div>
 
       {}
       <div>
-        <label className="form-label">Trade License (PDF or Image) *</label>
+        <label className="form-label !text-xl !mb-2">Trade License (PDF or Image) *</label>
         <label
           htmlFor="tradeLicense"
-          className={`flex flex-col items-center gap-3 px-6 py-8 rounded-xl border-2
+          className={`flex flex-col items-center gap-4 px-6 py-12 rounded-xl border-2
             border-dashed cursor-pointer transition-all duration-200
             ${pdfFile
               ? 'border-green-500/50 bg-green-500/5'
@@ -155,31 +155,31 @@ const VendorApplicationForm = () => {
         >
           {pdfFile ? (
             <>
-              <svg className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24"
+              <svg className="w-14 h-14 text-green-600" fill="none" viewBox="0 0 24 24"
                    stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1
                      1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <div className="text-center">
-                <p className="text-green-600 font-medium text-sm">{pdfFile.name}</p>
-                <p className="text-gray-500 text-xs mt-0.5">
+                <p className="text-green-600 font-medium text-xl">{pdfFile.name}</p>
+                <p className="text-gray-500 text-base mt-1">
                   {(pdfFile.size / 1024 / 1024).toFixed(2)} MB — click to change
                 </p>
               </div>
             </>
           ) : (
             <>
-              <svg className="w-10 h-10 text-gray-500" fill="none" viewBox="0 0 24 24"
+              <svg className="w-14 h-14 text-gray-500" fill="none" viewBox="0 0 24 24"
                    stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
               <div className="text-center">
-                <p className="text-gray-600 font-medium text-sm">
+                <p className="text-gray-600 font-medium text-xl">
                   Drop your Trade License here
                 </p>
-                <p className="text-gray-500 text-xs mt-1">
+                <p className="text-gray-500 text-base mt-2">
                   PDF, JPG, or PNG · Max 10 MB
                 </p>
               </div>
@@ -196,7 +196,7 @@ const VendorApplicationForm = () => {
       </div>
 
       {}
-      <button type="submit" disabled={loading} className="btn-primary w-full">
+      <button type="submit" disabled={loading} className="btn-primary w-full !text-2xl !py-4">
         {loading ? (
           <>
             <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">

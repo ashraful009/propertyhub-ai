@@ -81,9 +81,9 @@ const BecomeVendorPage = () => {
       {}
       <div className="container-main py-10">
         {step === 'form' ? (
-          <div className="max-w-2xl mx-auto">
-            <div className="glass-card p-6 sm:p-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-6">
+          <div className="max-w-5xl mx-auto">
+            <div className="glass-card p-10 sm:p-14">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-8">
                 Company Application
               </h2>
               <VendorApplicationForm />
