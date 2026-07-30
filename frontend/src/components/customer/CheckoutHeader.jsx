@@ -10,9 +10,6 @@ const CheckoutHeader = ({ navigate }) => {
         ← Back to Property
       </button>
       <h1 className="text-2xl sm:text-3xl font-black text-gray-900">Booking Checkout</h1>
-      <p className="text-gray-500 text-sm mt-1">
-        Complete the form below to proceed with your booking payment
-      </p>
     </div>
   );
 };
