@@ -87,7 +87,9 @@ const normalizeDoc = (val) => {
     return { name: val.name || '', url: val.url || val.data || '' };
   }
   if (typeof val === 'string') {
-    if (/^data:|^https?:\/\
+    if (/^data:|^https?:\/\//i.test(val)) {
+      return { name: 'Document', url: val };
+    }
     return { name: val, url: '' };
   }
   return { name: '', url: '' };
