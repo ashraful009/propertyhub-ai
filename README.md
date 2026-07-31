@@ -628,46 +628,6 @@ The frontend will be available at `http://localhost:5173` and the API at `http:/
 
 ---
 
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-```env
-# Server
-NODE_ENV=development
-PORT=5000
-
-# Database
-MONGO_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/flatsell
-
-# Authentication
-JWT_SECRET=your-jwt-secret-key
-JWT_EXPIRES_IN=7d
-COOKIE_SECRET=your-cookie-secret
-
-# Frontend URL (for CORS)
-CLIENT_URL=http://localhost:5173
-
-# Email (Nodemailer)
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-
-# Stripe
-STRIPE_SECRET_KEY=sk_test_your-stripe-secret-key
-```
-
-### Frontend (`frontend/.env`)
-
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
----
 
 ## Deployment
 
