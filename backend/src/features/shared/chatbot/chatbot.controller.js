@@ -144,7 +144,7 @@ ${property.category === 'land' ? JSON.stringify(property.landDetails) : ''}`;
     for (let turn = 0; turn < 5; turn++) {
       const stream = await groq.chat.completions.create({
         messages,
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-20b',
         tools,
         tool_choice: 'auto',
         stream: true,
